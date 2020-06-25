@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
+import { getPosts } from "../lib/Posts";
 import Post from "../models/Post";
-import { getPosts } from "../services/PostService";
 
 export default function Home({ posts }: HomeProps) {
   return (
