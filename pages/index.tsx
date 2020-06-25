@@ -1,8 +1,11 @@
 import Head from "next/head";
+import Link from "next/link";
+import Post from "../models/Post";
+import { getPosts } from "../services/PostService";
 
-export default function Home() {
+export default function Home({ posts }: HomeProps) {
   return (
-    <div className="container">
+    <>
       <Head>
         <title>renantatsuo.dev</title>
         <link
@@ -29,6 +32,27 @@ export default function Home() {
         <meta name="msapplication-TileColor" content="#ff235b" />
         <meta name="theme-color" content="#ff235b"></meta>
       </Head>
-    </div>
+      {posts.map(({ title, slug }) => (
+        <li key="title">
+          <Link href="/post/[slug]" as={`/post/${slug}`}>
+            <a>{title}</a>
+          </Link>
+        </li>
+      ))}
+    </>
   );
+}
+
+interface HomeProps {
+  posts: Post[];
+}
+
+export async function getStaticProps() {
+  const posts = await getPosts();
+
+  return {
+    props: {
+      posts,
+    },
+  };
 }
