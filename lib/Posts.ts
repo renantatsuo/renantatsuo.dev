@@ -1,13 +1,18 @@
-import { readdirSync, readFileSync } from "fs";
 import matter from "gray-matter";
+import "reflect-metadata";
+import { container } from "tsyringe";
 import Post from "../models/Post";
+import "./AppContainer";
+import { FileSystem } from "./filesystem/FileSystem";
 
 /**
  * Get a list of posts from the markdown files.
  */
 export async function getPosts(): Promise<Post[]> {
-  const posts = readdirSync("posts");
-  return posts.map(loadPostFromFile);
+  const fs: FileSystem = container.resolve("FileSystem");
+  const postList = await fs.listFiles("posts");
+  const posts = postList.map(loadPostFromFile);
+  return Promise.all(posts);
 }
 
 /**
@@ -15,7 +20,7 @@ export async function getPosts(): Promise<Post[]> {
  *
  * @param slug the post slug
  */
-export async function getPost(slug: string): Promise<Post> {
+export function getPost(slug: string): Promise<Post> {
   return loadPostFromFile(`${slug}.md`);
 }
 
@@ -24,13 +29,18 @@ export async function getPost(slug: string): Promise<Post> {
  *
  * @param filename the post filename
  */
-function loadPostFromFile(filename: string): Post {
-  const file = readFileSync(`posts/${filename}`);
-  const { data, content, excerpt } = matter(file, { excerpt: true });
+async function loadPostFromFile(filename: string): Promise<Post> {
+  const fs: FileSystem = container.resolve("FileSystem");
+  const file = await fs.readFile(`posts/${filename}`);
+  const { data, content, excerpt } = matter(file);
 
   return {
     ...data,
     content,
-    excerpt,
+    excerpt: createExcerpt(content),
   } as Post;
+}
+
+function createExcerpt(content: string): string {
+  return `${content.split("\n").slice(0, 4).join(" ")}...`;
 }
