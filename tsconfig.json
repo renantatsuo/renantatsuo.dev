@@ -1,5 +1,23 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": [
+        "components/*"
+      ],
+      "@models/*": [
+        "models/*"
+      ],
+      "@posts/*": [
+        "posts/*"
+      ],
+      "@lib/*": [
+        "lib/*"
+      ],
+      "@themes/*": [
+        "themes/*"
+      ]
+    },
     "target": "es5",
     "lib": [
       "dom",
@@ -27,6 +45,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "tests/jest.config.js"
+    "tests/jest.config.js",
+    "pages/_document.tss"
   ]
 }

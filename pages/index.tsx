@@ -1,11 +1,13 @@
+import Post from "@models/Post";
+import { DarkTheme } from "@themes/DarkTheme";
+import Themed from "@themes/Themed";
 import Head from "next/head";
 import Link from "next/link";
 import { getPosts } from "../lib/Posts";
-import Post from "../models/Post";
 
 export default function Home({ posts }: HomeProps) {
   return (
-    <>
+    <Themed theme={new DarkTheme()}>
       <Head>
         <title>renantatsuo.dev</title>
         <link
@@ -32,6 +34,7 @@ export default function Home({ posts }: HomeProps) {
         <meta name="msapplication-TileColor" content="#ff235b" />
         <meta name="theme-color" content="#ff235b"></meta>
       </Head>
+
       {posts.map(({ title, slug }) => (
         <li key="title">
           <Link href="/post/[slug]" as={`/post/${slug}`}>
@@ -39,7 +42,11 @@ export default function Home({ posts }: HomeProps) {
           </Link>
         </li>
       ))}
-    </>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet"
+      />
+    </Themed>
   );
 }
 
