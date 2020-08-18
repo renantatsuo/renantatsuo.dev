@@ -1,9 +1,9 @@
+import { FileSystem } from "@lib/filesystem/FileSystem";
 import matter from "gray-matter";
 import "reflect-metadata";
 import { container } from "tsyringe";
-import Post from "../models/Post";
-import "./AppContainer";
-import { FileSystem } from "./filesystem/FileSystem";
+import "../AppContainer";
+import Post from "./Post";
 
 /**
  * Get a list of posts from the markdown files.

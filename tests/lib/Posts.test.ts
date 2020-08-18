@@ -1,8 +1,8 @@
+import { FileSystem } from "@lib/filesystem/FileSystem";
+import Post from "@lib/post/Post";
+import { getPost, getPosts } from "@lib/post/Posts";
 import { mock } from "jest-mock-extended";
 import { container } from "tsyringe";
-import { getPost, getPosts } from "../../lib/Posts";
-import Post from "../../models/Post";
-import { FileSystem } from "./../../lib/filesystem/FileSystem";
 
 const fsMock = mock<FileSystem>();
 

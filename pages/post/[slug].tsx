@@ -1,7 +1,7 @@
+import Post from "@lib/post/Post";
+import { getPost, getPosts } from "@lib/post/Posts";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
-import { getPost, getPosts } from "../../lib/Posts";
-import Post from "../../models/Post";
 
 export default function PostPage({ post }: PostPageProps) {
   return (

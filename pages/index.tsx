@@ -1,9 +1,9 @@
-import Post from "@models/Post";
+import Post from "@lib/post/Post";
+import { getPosts } from "@lib/post/Posts";
 import { DarkTheme } from "@themes/DarkTheme";
 import Themed from "@themes/Themed";
 import Head from "next/head";
 import Link from "next/link";
-import { getPosts } from "../lib/Posts";
 
 export default function Home({ posts }: HomeProps) {
   return (
