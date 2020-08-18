@@ -10,10 +10,10 @@
       }
     ],
     [
-      "babel-plugin-styled-components",
+      "styled-components",
       {
         "ssr": true
       }
-    ]
+    ],
   ]
 }
