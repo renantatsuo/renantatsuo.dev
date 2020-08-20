@@ -1,13 +1,10 @@
 import Post from "@lib/post/Post";
 import { getPosts } from "@lib/post/Posts";
-import { DarkTheme } from "@themes/DarkTheme";
-import Themed from "@themes/Themed";
 import Head from "next/head";
-import Link from "next/link";
 
 export default function Home({ posts }: HomeProps) {
   return (
-    <Themed theme={new DarkTheme()}>
+    <>
       <Head>
         <title>renantatsuo.dev</title>
         <link
@@ -46,7 +43,7 @@ export default function Home({ posts }: HomeProps) {
         href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet"
       />
-    </Themed>
+    </>
   );
 }
 

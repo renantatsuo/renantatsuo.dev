@@ -1,7 +1,7 @@
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { Theme } from "./Theme";
 
-export const Style = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   :root {
     ${({ theme }: { theme: Theme }) => {
       return `
@@ -26,17 +26,16 @@ export const Style = createGlobalStyle`
   html, body {
     margin: 0;
     padding: 0;
-    width: 100vw;
-    min-height: 100vh;
-    
-    display: flex;
-    justify-content: center;
 
     background-color: var(--background);
 
     color: var(--foreground);
-    font-size: 100%;
-    font-family: Literata, Georgia, 'Times New Roman', Times, serif;
+    font: 110%/1.75 Literata, Georgia, serif;
+  }
+
+  #__next {
+    display:flex;
+    justify-content: center;
   }
 
   ::selection {
@@ -46,21 +45,42 @@ export const Style = createGlobalStyle`
   a {
     color: var(--primary);
     text-decoration: none;
-    border-bottom: 1px solid var(--primary);
+    border-bottom: 0.0625rem solid var(--primary);
+  }
+
+  @media (min-width: 801px) {
+    h1 {
+      font-size: 3rem;
+    }
+
+    h2 {
+      font-size: 2.25rem;
+    }
+
+    h3 {
+      font-size: 1.75rem;
+    }
+
+    h4 {
+      font-size: 1.5rem;
+    }
+
+    h5 {
+      font-size: 1.25rem;
+    }
+
+    h6 {
+      font-size: 1rem;
+    }
   }
 `;
 
-export default function Themed({
-  children,
-  theme,
-}: {
-  children: any;
-  theme: Theme;
-}) {
-  return (
-    <>
-      <Style theme={theme} />
-      {children}
-    </>
-  );
-}
+export const Container = styled.main`
+  width: 100%;
+  max-width: 46.25rem;
+  padding: 1rem;
+
+  display: flex;
+
+  background-color: var(--background);
+`;
