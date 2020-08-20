@@ -1,3 +1,4 @@
+import { PostList } from "@components/PostList";
 import Post from "@lib/post/Post";
 import { getPosts } from "@lib/post/Posts";
 import Head from "next/head";
@@ -31,14 +32,7 @@ export default function Home({ posts }: HomeProps) {
         <meta name="msapplication-TileColor" content="#ff235b" />
         <meta name="theme-color" content="#ff235b"></meta>
       </Head>
-
-      {posts.map(({ title, slug }) => (
-        <li key="title">
-          <Link href="/post/[slug]" as={`/post/${slug}`}>
-            <a>{title}</a>
-          </Link>
-        </li>
-      ))}
+      <PostList posts={posts} />
       <link
         href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet"
