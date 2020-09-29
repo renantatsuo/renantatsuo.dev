@@ -1,11 +1,8 @@
-export enum SocialNetworks {
-  TWITTER = "twitter",
-  GITHUB = "github",
-  CODEPEN = "codepen",
-}
+import { IconType } from "react-icons";
 
 type SocialNetwork = {
-  name: SocialNetworks;
+  name: string;
+  icon: IconType;
   url: string;
 };
 
