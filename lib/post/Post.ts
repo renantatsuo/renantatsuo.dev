@@ -1,7 +1,7 @@
 /**
  * Post specification.
  */
-export default interface Post {
+type Post = {
   /**
    * The post slug.
    * e.g. this-is-an-example-post
@@ -27,4 +27,6 @@ export default interface Post {
    * The post excerpt.
    */
   excerpt: string;
-}
+};
+
+export default Post;

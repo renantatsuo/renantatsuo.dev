@@ -1,11 +1,11 @@
 import { PostListItem } from "@components/PostListItem";
 import Post from "@lib/post/Post";
 
-type PostListProps = {
+interface PostListProps {
   posts: Post[];
-};
+}
 
-export function PostList({ posts }: PostListProps) {
+export function PostList({ posts }) {
   return (
     <>
       {posts.map((post) => (
