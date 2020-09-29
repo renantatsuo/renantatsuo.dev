@@ -32,7 +32,7 @@ export function getPost(slug: string): Promise<Post> {
 async function loadPostFromFile(filename: string): Promise<Post> {
   const fs: FileSystem = container.resolve("FileSystem");
   const file = await fs.readFile(`posts/${filename}`);
-  const { data, content, excerpt } = matter(file);
+  const { data, content } = matter(file);
 
   return {
     ...data,
@@ -41,6 +41,11 @@ async function loadPostFromFile(filename: string): Promise<Post> {
   } as Post;
 }
 
+/**
+ * Create an except to a post.
+ *
+ * @param content The post content
+ */
 function createExcerpt(content: string): string {
   return `${content.split("\n").slice(0, 4).join(" ")}...`;
 }
