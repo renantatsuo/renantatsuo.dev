@@ -1,9 +1,11 @@
 import { PostList } from "@components/PostList";
 import Post from "@lib/post/Post";
 import { getPosts } from "@lib/post/Posts";
+import User from "@lib/user/User";
+import { getUser } from "@lib/user/Users";
 import Head from "next/head";
 
-export default function Home({ posts }: HomeProps) {
+export default function Home({ posts, user }: HomeProps) {
   return (
     <>
       <Head>
@@ -20,14 +22,17 @@ export default function Home({ posts }: HomeProps) {
 
 interface HomeProps {
   posts: Post[];
+  user: User;
 }
 
 export async function getStaticProps() {
   const posts = await getPosts();
+  const user = await getUser();
 
   return {
     props: {
       posts,
+      user,
     },
   };
 }
