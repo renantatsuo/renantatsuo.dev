@@ -5,11 +5,10 @@ export const PostContainer = styled.article`
   flex-direction: column;
   width: 100%;
 
-  code {
-    font-family: "Fira Code", "Courier New", Courier, monospace;
-    font-size: 0.9rem;
+  *:not(pre) code {
     background-color: var(--background-darker);
     padding: 0.2rem;
+    border-radius: 0.3em;
   }
 `;
 
