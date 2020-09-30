@@ -83,6 +83,7 @@ export const Container = styled.main`
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  row-gap: 2rem;
 
   background-color: var(--background);
 `;
