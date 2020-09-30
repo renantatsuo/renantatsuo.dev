@@ -4,7 +4,9 @@
 export interface Theme {
   primary: string;
   background: string;
+  backgroundDarker: string;
   foreground: string;
+  foregroundDarker: string;
   selected: string;
   disabled: string;
   yellow: string;

@@ -6,7 +6,9 @@ export const GlobalStyle = createGlobalStyle`
     ${({ theme }: { theme: Theme }) => {
       return `
         --primary: ${theme.primary};
+        --background-darker: ${theme.backgroundDarker};
         --background: ${theme.background};
+        --foreground-darker: ${theme.foregroundDarker};
         --foreground: ${theme.foreground};
         --selected: ${theme.selected};
         --disabled: ${theme.disabled};
@@ -29,13 +31,14 @@ export const GlobalStyle = createGlobalStyle`
 
     background-color: var(--background);
 
-    color: var(--foreground);
+    color: var(--foreground-darker);
     font: 110%/1.75 Literata, Georgia, serif;
   }
 
   #__next {
     display:flex;
     justify-content: center;
+    max-width: 100vw;
   }
 
   ::selection {
@@ -48,25 +51,30 @@ export const GlobalStyle = createGlobalStyle`
     border-bottom: 0.0625rem solid var(--primary);
   }
 
+  h1,h2,h3,h4,h5,h6 {
+    color: var(--foreground);
+    line-height: 120%;
+  }
+
   @media (min-width: 801px) {
     h1 {
-      font-size: 3rem;
+      font-size: 2.5rem;
     }
 
     h2 {
-      font-size: 2.25rem;
+      font-size: 1.9rem;
     }
 
     h3 {
-      font-size: 1.75rem;
+      font-size: 1.55rem;
     }
 
     h4 {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
     }
 
     h5 {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
     }
 
     h6 {
