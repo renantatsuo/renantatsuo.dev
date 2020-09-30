@@ -1,5 +1,5 @@
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import theme from "./theme";
+import theme from "../../themes/CodeHighlighterTheme";
 
 type CodeHighlighterProps = {
   value: string;

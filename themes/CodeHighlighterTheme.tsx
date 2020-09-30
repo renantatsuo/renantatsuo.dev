@@ -5,6 +5,7 @@ export default {
     textShadow: "0 1px rgba(0, 0, 0, 0.3)",
     fontFamily:
       "'Fira Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+    fontSize: ".9rem",
     textAlign: "left",
     whiteSpace: "pre",
     wordSpacing: "normal",
