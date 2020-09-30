@@ -26,11 +26,13 @@ export default function PostPage({ post, user }: PostPageProps) {
           property="og:url"
           content={`https://renantatsuo.dev/post/${post.slug}`}
         />
+        <meta name="og:image" content={user.avatar} />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={post.excerpt} />
         <meta name="twitter:site" content="@renantatsuo" />
         <meta name="twitter:creator" content="@renantatsuo" />
+        <meta name="twitter:image" content={user.avatar} />
       </Head>
       <UserInfo user={user} />
       <PostContent post={post} />
