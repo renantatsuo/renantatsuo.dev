@@ -5,10 +5,9 @@ export const UserContainer = styled.div`
   grid-template-areas: "avatar username" "avatar social";
   grid-auto-columns: auto 1fr;
   grid-auto-rows: 1fr 1fr;
-  row-gap: 0.5rem;
   column-gap: 1rem;
 
-  height: 80px;
+  height: 60px;
   width: 100%;
   margin: 2rem 0;
 `;
@@ -24,5 +23,6 @@ export const Username = styled.h2`
   grid-area: username;
   margin: 0;
   font-size: 1.25rem;
-  align-self: flex-end;
+  line-height: 100%;
+  align-self: flex-start;
 `;

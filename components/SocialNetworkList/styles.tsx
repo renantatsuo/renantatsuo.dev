@@ -6,11 +6,12 @@ export const SocialList = styled.ul`
   display: flex;
   margin: 0;
   padding: 0;
+  align-self: center;
 `;
 
 export const SocialListItem = styled.li`
   grid-area: social;
-  margin: 0 1rem;
+  margin: 0 0.8rem;
 
   &:first-child {
     margin-left: 0;
