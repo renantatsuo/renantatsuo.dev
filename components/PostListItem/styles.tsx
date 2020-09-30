@@ -19,7 +19,9 @@ export const PostListItemTitle = styled.h2`
   }
 `;
 
-export const PostListItemDate = styled.small``;
+export const PostListItemDate = styled.small`
+  color: var(--selected);
+`;
 
 export const PostListItemContent = styled.p`
   margin: 0.5rem 0;
