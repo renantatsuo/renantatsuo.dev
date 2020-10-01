@@ -11,7 +11,7 @@ export const SocialList = styled.ul`
 
 export const SocialListItem = styled.li`
   grid-area: social;
-  margin: 0 0.8rem;
+  margin: 0 0.2rem;
 
   &:first-child {
     margin-left: 0;
@@ -25,5 +25,10 @@ export const SocialListItem = styled.li`
     border-bottom: none;
     display: flex;
     align-items: center;
+
+    > div {
+      display: flex;
+      height: 1.5rem;
+    }
   }
 `;

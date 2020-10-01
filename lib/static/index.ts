@@ -1,5 +1,5 @@
+import LottieType from "@components/Icons/LottieType";
 import SocialNetwork from "@lib/user/SocialNetwork";
-import { FiCodepen, FiGithub, FiLinkedin, FiTwitter } from "react-icons/fi";
 
 /**
  * Some static information.
@@ -8,23 +8,23 @@ export const GITHUB_URL = "https://api.github.com/users/renantatsuo";
 
 export const SOCIAL_NETWORKS: SocialNetwork[] = [
   {
-    name: "github",
-    icon: FiGithub,
-    url: "https://github.com/renantatsuo",
-  },
-  {
     name: "codepen",
-    icon: FiCodepen,
+    icon: LottieType.CODEPEN,
     url: "https://codepen.io/renantatsuo",
   },
   {
-    name: "twitter",
-    icon: FiTwitter,
-    url: "https://twitter.com/renantatsuo",
+    name: "github",
+    icon: LottieType.GITHUB,
+    url: "https://github.com/renantatsuo",
   },
   {
     name: "linkedin",
-    icon: FiLinkedin,
+    icon: LottieType.LINKEDIN,
     url: "https://linkedin.com/in/renantatsuo/",
+  },
+  {
+    name: "twitter",
+    icon: LottieType.TWITTER,
+    url: "https://twitter.com/renantatsuo",
   },
 ];

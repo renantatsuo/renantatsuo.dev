@@ -1,8 +1,8 @@
-import { IconType } from "react-icons";
+import LottieType from "@components/Icons/LottieType";
 
 type SocialNetwork = {
   name: string;
-  icon: IconType;
+  icon: LottieType;
   url: string;
 };
 
