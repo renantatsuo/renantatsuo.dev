@@ -25,4 +25,8 @@ export const Username = styled.h2`
   font-size: 1.25rem;
   line-height: 100%;
   align-self: flex-start;
+  > a {
+    color: inherit;
+    border: 0;
+  }
 `;
