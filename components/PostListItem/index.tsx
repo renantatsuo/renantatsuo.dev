@@ -1,4 +1,4 @@
-import { FormattedDate } from "@lib/date/FormattedDate";
+import FormattedDate from "@lib/date/FormattedDate";
 import Post from "@lib/post/Post";
 import Link from "next/link";
 import {
@@ -22,7 +22,7 @@ export function PostListItem({
     year: "numeric",
   };
   const createdAtDate = new Date(createdAt);
-  const formatterCreatedAt = new FormattedDate(createdAtDate, formatterOptions);
+  const formatterCreatedAt = FormattedDate(createdAtDate, formatterOptions);
 
   return (
     <PostListItemContainer>

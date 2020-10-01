@@ -1,5 +1,5 @@
 import CodeHighlighter from "@components/CodeHighlighter";
-import { FormattedDate } from "@lib/date/FormattedDate";
+import FormattedDate from "@lib/date/FormattedDate";
 import Post from "@lib/post/Post";
 import React from "react";
 import ReactMarkdown from "react-markdown";
@@ -16,7 +16,7 @@ export default function PostContent({ post }: PostProps) {
     year: "numeric",
   };
   const createdAtDate = new Date(post.createdAt);
-  const formattedCreatedAt = new FormattedDate(createdAtDate, formatterOptions);
+  const formattedCreatedAt = FormattedDate(createdAtDate, formatterOptions);
   return (
     <PostContainer>
       <PostHeader>

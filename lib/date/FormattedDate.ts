@@ -1,33 +1,15 @@
-import { DateFormatDecorator } from "./DateFormatDecorator";
-
 /**
- * The implementation for DateFormatDecorator using Intl.
+ * Decorates a date with a formatter.
+ *
+ * @param date the date to decorate
+ * @param formatterOptions the formatter options
  */
-export class FormattedDate extends Date implements DateFormatDecorator {
-  /**
-   * The date to decorate.
-   */
-  private date: Date;
-
-  /**
-   * The formatter options.
-   */
-  readonly formatterOptions: Intl.DateTimeFormatOptions;
-
-  /**
-   * Constructor.
-   * @param date the date to decorate.
-   */
-  constructor(date: Date, formatterOptions: Intl.DateTimeFormatOptions) {
-    super(date);
-    this.date = date;
-    this.formatterOptions = formatterOptions;
-  }
-
-  /**
-   * Overrides toString to format with Intl.
-   */
-  toString(): string {
-    return Intl.DateTimeFormat("en", this.formatterOptions).format(this.date);
-  }
+export default function FormattedDate(
+  date: Date,
+  formatterOptions: Intl.DateTimeFormatOptions
+) {
+  return {
+    ...date,
+    toString: () => Intl.DateTimeFormat("en", formatterOptions).format(date),
+  };
 }
