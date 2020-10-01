@@ -7,6 +7,9 @@ import User from "./User";
 
 const http: Http = container.resolve("Http");
 
+/**
+ * Retrieve user data from Github.
+ */
 export async function getUser(): Promise<User> {
   const user: GithubUser = await http.execute<GithubUser>(GITHUB_URL);
 

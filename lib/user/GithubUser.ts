@@ -1,3 +1,6 @@
+/**
+ * The Github user object specification.
+ */
 type GithubUser = {
   login: string;
   id: number;
