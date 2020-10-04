@@ -19,6 +19,7 @@ export const PostHeader = styled.header`
 
 export const PostTitle = styled.h1`
   margin: 0;
+  color: var(--yellow);
 `;
 
 export const PostDate = styled.small`

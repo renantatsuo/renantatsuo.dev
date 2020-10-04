@@ -11,10 +11,10 @@ export const PostListItemHeader = styled.header`
 `;
 
 export const PostListItemTitle = styled.h2`
-  color: var(--primary);
   margin: 0;
 
   a {
+    color: var(--yellow);
     border: none;
   }
 `;
