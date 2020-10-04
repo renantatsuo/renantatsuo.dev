@@ -24,7 +24,6 @@ export default function FlatColorLottie(
  */
 function flattenColor(hexColor, animationData) {
   const color = hexColorToLottieColor(hexColor, 1);
-  console.log(color);
   const string = JSON.stringify(animationData);
   const replaced = string.replace(
     /\[\d+,\d+,\d+,[\d\.]+\]/g,
