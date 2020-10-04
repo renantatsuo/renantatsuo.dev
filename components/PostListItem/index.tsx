@@ -1,5 +1,6 @@
 import FormattedDate from "@lib/date/FormattedDate";
 import Post from "@lib/post/Post";
+import { DATE_FORMATTER_OPTIONS } from "@lib/static";
 import Link from "next/link";
 import {
   PostListItemContainer,
@@ -16,13 +17,8 @@ type PostListElementProps = {
 export function PostListItem({
   post: { createdAt, excerpt, slug, title },
 }: PostListElementProps) {
-  const formatterOptions: Intl.DateTimeFormatOptions = {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  };
-  const createdAtDate = new Date(createdAt);
-  const formatterCreatedAt = FormattedDate(createdAtDate, formatterOptions);
+  const postDate = new Date(createdAt);
+  const formatterCreatedAt = FormattedDate(postDate, DATE_FORMATTER_OPTIONS);
 
   return (
     <PostListItemContainer>
@@ -32,7 +28,7 @@ export function PostListItem({
             <a>{title}</a>
           </Link>
         </PostListItemTitle>
-        <PostListItemDate>{`${formatterCreatedAt}`}</PostListItemDate>
+        <PostListItemDate>{`${formatterCreatedAt.toString()}`}</PostListItemDate>
       </PostListItemHeader>
       <PostListItemContent>{excerpt}</PostListItemContent>
     </PostListItemContainer>

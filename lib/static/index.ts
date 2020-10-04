@@ -4,6 +4,12 @@ import SocialNetwork from "@lib/user/SocialNetwork";
 /**
  * Some static information.
  */
+export const DATE_FORMATTER_OPTIONS: Intl.DateTimeFormatOptions = {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+};
+
 export const GITHUB_URL = "https://api.github.com/users/renantatsuo";
 
 export const SOCIAL_NETWORKS: SocialNetwork[] = [
