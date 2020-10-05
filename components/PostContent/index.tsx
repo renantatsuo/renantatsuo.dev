@@ -18,7 +18,7 @@ export default function PostContent({ post }: PostProps) {
     <PostContainer>
       <PostHeader>
         <PostTitle>{post.title}</PostTitle>
-        <PostDate>posted on {formattedCreatedAt.toString()}</PostDate>
+        <PostDate>published on {formattedCreatedAt.toString()}</PostDate>
       </PostHeader>
       <ReactMarkdown
         source={post.content}
