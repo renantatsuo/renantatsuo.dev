@@ -1,7 +1,9 @@
+import GoogleAnalytics from "@components/GoogleAnalytics";
+import { GA_ID } from "@lib/static";
 import Document, { Head, Html, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
 
-export default class MyDocument extends Document {
+export default class MyDocument extends Document<MyDocumentProps> {
   static async getInitialProps(ctx) {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
@@ -14,8 +16,12 @@ export default class MyDocument extends Document {
         });
 
       const initialProps = await Document.getInitialProps(ctx);
+
+      const isProduction = process.env.NODE_ENV === "production";
+
       return {
         ...initialProps,
+        isProduction,
         styles: (
           <>
             {initialProps.styles}
@@ -29,9 +35,11 @@ export default class MyDocument extends Document {
   }
 
   render() {
+    const { isProduction } = this.props;
     return (
       <Html>
         <Head>
+          {isProduction && <GoogleAnalytics gaId={GA_ID} />}
           <link
             rel="apple-touch-icon"
             sizes="180x180"
@@ -73,3 +81,7 @@ export default class MyDocument extends Document {
     );
   }
 }
+
+type MyDocumentProps = {
+  isProduction: boolean;
+};

@@ -4,6 +4,8 @@ import SocialNetwork from "@lib/user/SocialNetwork";
 /**
  * Some static information.
  */
+export const GA_ID = "UA-179716494-1";
+
 export const DATE_FORMATTER_OPTIONS: Intl.DateTimeFormatOptions = {
   month: "long",
   day: "numeric",
