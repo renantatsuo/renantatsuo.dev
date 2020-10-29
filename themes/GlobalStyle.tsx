@@ -1,24 +1,6 @@
 import styled, { createGlobalStyle } from "styled-components";
-import { Theme } from "./Theme";
 
 export const GlobalStyle = createGlobalStyle`
-  :root {
-    ${({ theme }: { theme: Theme }) => {
-      return `
-        --primary: ${theme.primary};
-        --background-darker: ${theme.backgroundDarker};
-        --background: ${theme.background};
-        --foreground-darker: ${theme.foregroundDarker};
-        --foreground: ${theme.foreground};
-        --selected: ${theme.selected};
-        --disabled: ${theme.disabled};
-        --yellow: ${theme.yellow};
-        --blue: ${theme.blue};
-        --green: ${theme.green};
-      `;
-    }}
-  }
-
   *,
   *::before,
   *::after {
@@ -29,9 +11,9 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
 
-    background-color: var(--background);
+    background-color: ${({ theme }) => theme.background};
 
-    color: var(--foreground-darker);
+    color: ${({ theme }) => theme.foregroundDarker};
     font: 110%/1.75 Literata, Georgia, serif;
   }
 
@@ -42,13 +24,13 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   ::selection {
-    background: var(--selected);
+    background: ${({ theme }) => theme.selected};
   }
 
   a {
-    color: var(--primary);
+    color: ${({ theme }) => theme.primary};
     text-decoration: none;
-    border-bottom: 0.0625rem solid var(--primary);
+    border-bottom: 0.0625rem solid ${({ theme }) => theme.primary};
   }
 
   h1,h2,h3,h4,h5,h6 {
@@ -93,5 +75,5 @@ export const Container = styled.main`
   flex-direction: column;
   row-gap: 2rem;
 
-  background-color: var(--background);
+  background-color: ${({ theme }) => theme.background};
 `;

@@ -4,7 +4,7 @@ import { ThemeProvider } from "styled-components";
 
 export default function MyApp({ Component, pageProps }) {
   return (
-    <ThemeProvider theme={new DarkTheme()}>
+    <ThemeProvider theme={DarkTheme}>
       <GlobalStyle />
       <Container>
         <Component {...pageProps} />

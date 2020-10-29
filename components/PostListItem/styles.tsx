@@ -14,13 +14,13 @@ export const PostListItemTitle = styled.h2`
   margin: 0;
 
   a {
-    color: var(--yellow);
+    color: ${({ theme }) => theme.yellow};
     border: none;
   }
 `;
 
 export const PostListItemDate = styled.small`
-  color: var(--selected);
+  color: ${({ theme }) => theme.selected};
 `;
 
 export const PostListItemContent = styled.p`

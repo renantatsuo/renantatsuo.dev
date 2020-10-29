@@ -6,7 +6,7 @@ export const PostContainer = styled.article`
   width: 100%;
 
   *:not(pre) code {
-    background-color: var(--background-darker);
+    background-color: ${({ theme }) => theme.backgroundDarker};
     padding: 0.2rem;
     border-radius: 0.3em;
   }
@@ -19,9 +19,9 @@ export const PostHeader = styled.header`
 
 export const PostTitle = styled.h1`
   margin: 0;
-  color: var(--yellow);
+  color: ${({ theme }) => theme.yellow};
 `;
 
 export const PostDate = styled.small`
-  color: var(--selected);
+  color: ${({ theme }) => theme.selected};
 `;
