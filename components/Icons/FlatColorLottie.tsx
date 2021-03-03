@@ -1,7 +1,7 @@
 import Lottie from "./Lottie";
 
 /**
- * Decorates an animationswith a flat color.
+ * Decorates an animation with a flat color.
  *
  * @param animation the animation to decorate
  * @param hexColor the color to replace as css hex color (#rrggbb)
