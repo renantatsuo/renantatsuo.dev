@@ -1,5 +1,4 @@
 import FormattedDate from "@lib/date/FormattedDate";
-import Post from "@lib/post/Post";
 import { DATE_FORMATTER_OPTIONS } from "@lib/static";
 import Link from "next/link";
 import {

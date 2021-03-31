@@ -1,6 +1,5 @@
 import { PostList } from "@components/PostList";
 import UserInfo from "@components/UserInfo";
-import Post from "@lib/post/Post";
 import * as Posts from "@lib/post/Posts";
 import User from "@lib/user/User";
 import * as Users from "@lib/user/Users";

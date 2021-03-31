@@ -1,5 +1,4 @@
 import { PostListItem } from "@components/PostListItem";
-import Post from "@lib/post/Post";
 
 type PostListProps = {
   posts: Post[];

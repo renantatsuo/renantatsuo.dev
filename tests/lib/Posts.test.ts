@@ -1,5 +1,4 @@
 import { FileSystem } from "@lib/filesystem/FileSystem";
-import Post from "@lib/post/Post";
 import { getPost, getPosts } from "@lib/post/Posts";
 import { mock } from "jest-mock-extended";
 import { container } from "tsyringe";

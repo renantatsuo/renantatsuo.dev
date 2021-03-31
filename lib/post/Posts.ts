@@ -3,7 +3,6 @@ import matter from "gray-matter";
 import "reflect-metadata";
 import { container } from "tsyringe";
 import "../AppContainer";
-import Post from "./Post";
 
 /**
  * Get a list of posts from the markdown files.

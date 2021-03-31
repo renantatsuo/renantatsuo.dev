@@ -27,6 +27,9 @@ type Post = {
    * The post excerpt.
    */
   excerpt: string;
-};
 
-export default Post;
+  /**
+   * The post keywords.
+   */
+  keywords: Array<string>;
+};
