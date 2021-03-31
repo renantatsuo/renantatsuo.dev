@@ -14,6 +14,9 @@ export default function PostPage({ post, user }: PostPageProps) {
         <title>{post.title}</title>
         meta
         <meta name="description" content={post.excerpt} />
+        {post.keywords && (
+          <meta name="keywords" content={post.keywords.join()} />
+        )}
         <meta property="og:type" content="article" />
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={post.excerpt} />

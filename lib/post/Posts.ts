@@ -1,5 +1,6 @@
 import { FileSystem } from "@lib/filesystem/FileSystem";
 import matter from "gray-matter";
+import R from "ramda";
 import "reflect-metadata";
 import { container } from "tsyringe";
 import "../AppContainer";
@@ -32,9 +33,11 @@ async function loadPostFromFile(filename: string): Promise<Post> {
   const fs: FileSystem = container.resolve("FileSystem");
   const file = await fs.readFile(`posts/${filename}`);
   const { data, content } = matter(file);
+  const keywords = data.keywords?.split(",") ?? [];
 
   return {
     ...data,
+    keywords: keywords.map(R.trim),
     content,
     excerpt: createExcerpt(content),
   } as Post;

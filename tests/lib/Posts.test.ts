@@ -44,6 +44,7 @@ describe("Test getPost()", () => {
       createdAt: "1970-01-01",
       content: "this is a test post",
       excerpt: "this is a test post...",
+      keywords: [],
     };
 
     expect(await getPost(FILENAME)).toStrictEqual(expectedPost);
