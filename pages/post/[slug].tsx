@@ -1,13 +1,10 @@
 import PostContent from "@components/PostContent";
 import UserInfo from "@components/UserInfo";
-import * as Posts from "@lib/post/Posts";
-import User from "@lib/user/User";
-import * as Users from "@lib/user/Users";
-import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import React from "react";
 
 export default function PostPage({ post, user }: PostPageProps) {
+  const postUrl = `https://renantatsuo.dev/post/${post.slug}`;
   return (
     <>
       <Head>
@@ -20,15 +17,13 @@ export default function PostPage({ post, user }: PostPageProps) {
         <meta property="og:type" content="article" />
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={post.excerpt} />
-        <meta
-          property="og:url"
-          content={`https://renantatsuo.dev/post/${post.slug}`}
-        />
-        <meta name="og:image" content={user.avatar} />
-        <meta name="twitter:card" content="summary" />
+        <meta property="og:url" content={postUrl} />
+        <meta property="og:image" content={user.avatar} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="renantatsuo.dev" />
+        <meta property="twitter:url" content={postUrl} />
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={post.excerpt} />
-        <meta name="twitter:site" content="@renantatsuo" />
         <meta name="twitter:creator" content="@renantatsuo" />
         <meta name="twitter:image" content={user.avatar} />
       </Head>
