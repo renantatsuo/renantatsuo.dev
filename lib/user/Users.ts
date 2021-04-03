@@ -3,7 +3,6 @@ import { GITHUB_URL } from "@lib/static";
 import { container } from "tsyringe";
 import "../AppContainer";
 import GithubUser from "./GithubUser";
-import User from "./User";
 
 const http: Http = container.resolve("Http");
 

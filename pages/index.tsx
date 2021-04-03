@@ -1,7 +1,6 @@
 import { PostList } from "@components/PostList";
 import UserInfo from "@components/UserInfo";
 import * as Posts from "@lib/post/Posts";
-import User from "@lib/user/User";
 import * as Users from "@lib/user/Users";
 import { GetStaticProps } from "next";
 import Head from "next/head";
