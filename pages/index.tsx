@@ -1,6 +1,7 @@
 import { PostList } from "@components/PostList";
 import UserInfo from "@components/UserInfo";
-import * as Posts from "@lib/post/Posts";
+import AppContainer from "@lib/AppContainer";
+import Posts from "@lib/post/Posts";
 import * as Users from "@lib/user/Users";
 import { GetStaticProps } from "next";
 import Head from "next/head";
@@ -34,7 +35,8 @@ export default function Home({ posts, user }: HomeProps) {
 }
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  const posts = await Posts.getPosts();
+  const PostsService = AppContainer.resolve<Posts>(Posts);
+  const posts = await PostsService.getPosts();
   const user = await Users.getUser();
 
   return {

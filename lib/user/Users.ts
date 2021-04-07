@@ -1,10 +1,9 @@
+import AppContainer from "@lib/AppContainer";
 import Http from "@lib/http/Http";
 import { GITHUB_URL } from "@lib/static";
-import { container } from "tsyringe";
-import "../AppContainer";
 import GithubUser from "./GithubUser";
 
-const http: Http = container.resolve("Http");
+const http: Http = AppContainer.get<Http>("Http");
 
 /**
  * Retrieve user data from Github.

@@ -1,53 +1,57 @@
 import { FileSystem } from "@lib/filesystem/FileSystem";
+import { POSTS_LOCATION } from "@lib/static";
 import matter from "gray-matter";
-import R from "ramda";
-import "reflect-metadata";
-import { container } from "tsyringe";
-import "../AppContainer";
+import * as R from "ramda";
 
-/**
- * Get a list of posts from the markdown files.
- */
-export async function getPosts(): Promise<Post[]> {
-  const fs: FileSystem = container.resolve("FileSystem");
-  const postList = await fs.listFiles("posts");
-  const posts = postList.map(loadPostFromFile);
-  return Promise.all(posts);
-}
+export default class Posts {
+  private fs: FileSystem;
 
-/**
- * Get a post from its slug.
- *
- * @param slug the post slug
- */
-export function getPost(slug: string): Promise<Post> {
-  return loadPostFromFile(`${slug}.md`);
-}
+  constructor(fs: FileSystem) {
+    this.fs = fs;
+  }
 
-/**
- * Load a post from the post filename.
- *
- * @param filename the post filename
- */
-async function loadPostFromFile(filename: string): Promise<Post> {
-  const fs: FileSystem = container.resolve("FileSystem");
-  const file = await fs.readFile(`posts/${filename}`);
-  const { data, content } = matter(file);
-  const keywords = data.keywords?.split(",") ?? [];
+  /**
+   * Get a list of posts from the markdown files.
+   */
+  async getPosts(): Promise<Post[]> {
+    const postList = await this.fs.listFiles(`${POSTS_LOCATION}`);
+    const posts = postList.map(this.loadPostFromFile);
+    return Promise.all(posts);
+  }
 
-  return {
-    ...data,
-    keywords: keywords.map(R.trim),
-    content,
-    excerpt: createExcerpt(content),
-  } as Post;
-}
+  /**
+   * Get a post from its slug.
+   *
+   * @param slug the post slug
+   */
+  async getPost(slug: string): Promise<Post> {
+    return this.loadPostFromFile(`${slug}.md`);
+  }
 
-/**
- * Create an except to a post.
- *
- * @param content The post content
- */
-function createExcerpt(content: string): string {
-  return `${content.split("\n").slice(0, 4).join(" ")}...`;
+  /**
+   * Load a post from the post filename.
+   *
+   * @param filename the post filename
+   */
+  private loadPostFromFile = async (filename: string): Promise<Post> => {
+    const file = await this.fs.readFile(`${POSTS_LOCATION}/${filename}`);
+    const { data, content } = matter(file);
+    const keywords = data.keywords?.split(",") ?? [];
+
+    return {
+      ...data,
+      keywords: keywords.map(R.trim),
+      content,
+      excerpt: this.createExcerpt(content),
+    } as Post;
+  };
+
+  /**
+   * Create an except to a post.
+   *
+   * @param content The post content
+   */
+  private createExcerpt(content: string): string {
+    return `${content.split("\n").slice(0, 4).join(" ")}...`;
+  }
 }

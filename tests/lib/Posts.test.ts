@@ -1,19 +1,23 @@
 import { FileSystem } from "@lib/filesystem/FileSystem";
-import { getPost, getPosts } from "@lib/post/Posts";
+import Posts from "@lib/post/Posts";
+import * as Inversify from "inversify";
 import { mock } from "jest-mock-extended";
-import { container } from "tsyringe";
 
 const fsMock = mock<FileSystem>();
+const container = new Inversify.Container();
 
-container.register("FileSystem", {
-  useValue: fsMock,
-});
+container.bind<FileSystem>("FileSystem").toConstantValue(fsMock);
+
+Inversify.decorate(Inversify.injectable(), Posts);
+Inversify.decorate(Inversify.inject("FileSystem"), Posts, 0);
+
+const PostsInstance = container.resolve<Posts>(Posts);
 
 describe("Test getPosts()", () => {
   it("Should return no posts", async () => {
     fsMock.listFiles.mockResolvedValueOnce([]);
 
-    expect(await getPosts()).toStrictEqual([]);
+    expect(await PostsInstance.getPosts()).toStrictEqual([]);
   });
 
   it("Should return [2] posts", async () => {
@@ -21,7 +25,7 @@ describe("Test getPosts()", () => {
     fsMock.listFiles.mockResolvedValueOnce([FILENAME, FILENAME]);
     fsMock.readFile.mockResolvedValue(Buffer.of());
 
-    expect(await getPosts()).toHaveLength(2);
+    expect(await PostsInstance.getPosts()).toHaveLength(2);
   });
 });
 
@@ -47,6 +51,6 @@ describe("Test getPost()", () => {
       keywords: [],
     };
 
-    expect(await getPost(FILENAME)).toStrictEqual(expectedPost);
+    expect(await PostsInstance.getPost(FILENAME)).toStrictEqual(expectedPost);
   });
 });

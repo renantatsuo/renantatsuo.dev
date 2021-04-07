@@ -1,5 +1,4 @@
 import fs from "fs";
-import { singleton } from "tsyringe";
 import util from "util";
 import { FileSystem } from "./FileSystem";
 
@@ -9,7 +8,6 @@ const readFileAsync = util.promisify(fs.readFile);
 /**
  * The FileSystem implementation using local fs module.
  */
-@singleton()
 export class LocalFileSystem implements FileSystem {
   listFiles(path: string): Promise<string[]> {
     return readDirAsync(path);

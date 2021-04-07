@@ -14,7 +14,7 @@ export const DATE_FORMATTER_OPTIONS: Intl.DateTimeFormatOptions = {
 
 export const GITHUB_URL = "https://api.github.com/users/renantatsuo";
 
-export const SOCIAL_NETWORKS: SocialNetwork[] = [
+export const SOCIAL_NETWORKS: Array<SocialNetwork> = [
   {
     name: "codepen",
     icon: LottieType.CODEPEN,
@@ -36,3 +36,5 @@ export const SOCIAL_NETWORKS: SocialNetwork[] = [
     url: "https://twitter.com/renantatsuo",
   },
 ];
+
+export const POSTS_LOCATION = "resources/posts";
