@@ -4,7 +4,6 @@ import { LocalFileSystem } from "./filesystem/LocalFileSystem";
 import Http from "./http/Http";
 import { TypedFetch } from "./http/TypedFetch";
 import Posts from "./post/Posts";
-import Resume from "./resume/Resume";
 
 /**
  * Define dependency injection impls.
@@ -21,8 +20,5 @@ AppContainer.bind<FileSystem>("FileSystem")
 
 Inversify.decorate(Inversify.injectable(), Posts);
 Inversify.decorate(Inversify.inject("FileSystem"), Posts, 0);
-
-Inversify.decorate(Inversify.injectable(), Resume);
-Inversify.decorate(Inversify.inject("FileSystem"), Resume, 0);
 
 export default AppContainer;
