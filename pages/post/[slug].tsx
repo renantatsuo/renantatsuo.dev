@@ -1,6 +1,7 @@
 import PostContent from "@components/PostContent";
 import UserInfo from "@components/UserInfo";
-import * as Posts from "@lib/post/Posts";
+import AppContainer from "@lib/AppContainer";
+import Posts from "@lib/post/Posts";
 import * as Users from "@lib/user/Users";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
@@ -37,7 +38,8 @@ export default function PostPage({ post, user }: PostPageProps) {
 }
 
 export const getStaticPaths: GetStaticPaths<PostParsedUrlQuery> = async () => {
-  const posts = await Posts.getPosts();
+  const PostsInstance = AppContainer.resolve<Posts>(Posts);
+  const posts = await PostsInstance.getPosts();
   const paths = posts.map(({ slug }) => ({
     params: {
       slug,
@@ -54,8 +56,9 @@ export const getStaticProps: GetStaticProps<
   PostPageProps,
   PostParsedUrlQuery
 > = async ({ params: { slug } }) => {
+  const PostsInstance = AppContainer.resolve<Posts>(Posts);
   const user = await Users.getUser();
-  const post = await Posts.getPost(slug);
+  const post = await PostsInstance.getPost(slug);
   return { props: { post, user } };
 };
 
