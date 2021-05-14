@@ -1,5 +1,3 @@
-import FormattedDate from "@lib/date/FormattedDate";
-import { DATE_FORMATTER_OPTIONS } from "@lib/static";
 import Link from "next/link";
 import {
   PostListItemContainer,
@@ -17,7 +15,6 @@ export function PostListItem({
   post: { createdAt, excerpt, slug, title },
 }: PostListElementProps) {
   const postDate = new Date(createdAt);
-  const formatterCreatedAt = FormattedDate(postDate, DATE_FORMATTER_OPTIONS);
 
   return (
     <PostListItemContainer>
@@ -27,7 +24,7 @@ export function PostListItem({
             <a>{title}</a>
           </Link>
         </PostListItemTitle>
-        <PostListItemDate>{`${formatterCreatedAt.toString()}`}</PostListItemDate>
+        <PostListItemDate>{`published on ${postDate.toLocaleDateString()}`}</PostListItemDate>
       </PostListItemHeader>
       <PostListItemContent>{excerpt}</PostListItemContent>
     </PostListItemContainer>

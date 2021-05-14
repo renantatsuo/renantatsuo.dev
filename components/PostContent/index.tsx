@@ -1,6 +1,4 @@
 import CH from "@components/CodeHighlighter";
-import FormattedDate from "@lib/date/FormattedDate";
-import { DATE_FORMATTER_OPTIONS } from "@lib/static";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
@@ -12,13 +10,12 @@ type PostProps = {
 
 export default function PostContent({ post }: PostProps) {
   const postDate = new Date(post.createdAt);
-  const formattedCreatedAt = FormattedDate(postDate, DATE_FORMATTER_OPTIONS);
 
   return (
     <PostContainer>
       <PostHeader>
         <PostTitle>{post.title}</PostTitle>
-        <PostDate>published on {formattedCreatedAt.toString()}</PostDate>
+        <PostDate>published on {postDate.toLocaleDateString()}</PostDate>
       </PostHeader>
       <ReactMarkdown
         children={post.content}

@@ -1,14 +1,21 @@
 import styled from "styled-components";
 
 export const PostContainer = styled.article`
-  display: flex;
-  flex-direction: column;
   width: 100%;
 
   *:not(pre) code {
     background-color: ${({ theme }) => theme.backgroundDarker};
     padding: 0.2rem;
     border-radius: 0.3em;
+  }
+
+  table {
+    border-collapse: collapse;
+
+    td {
+      border: 2px solid ${({ theme }) => theme.selected};
+      padding: 0.4rem 0.8rem;
+    }
   }
 `;
 
