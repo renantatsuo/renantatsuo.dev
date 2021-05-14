@@ -1,6 +1,6 @@
 export default {
   'code[class*="language-"]': {
-    color: "#f8f8f2",
+    color: "#bd93f9",
     background: "none",
     textShadow: "0 1px rgba(0, 0, 0, 0.3)",
     fontFamily:
@@ -69,19 +69,19 @@ export default {
     Opacity: ".7",
   },
   property: {
-    color: "#FF235B",
+    color: "#ff79c6",
   },
   tag: {
-    color: "#FF235B",
+    color: "#ff79c6",
   },
   constant: {
-    color: "#FF235B",
+    color: "#ff79c6",
   },
   symbol: {
-    color: "#FF235B",
+    color: "#ff79c6",
   },
   deleted: {
-    color: "#FF235B",
+    color: "#ff79c6",
   },
   boolean: {
     color: "#bd93f9",
@@ -90,25 +90,25 @@ export default {
     color: "#bd93f9",
   },
   selector: {
-    color: "#7AFF23",
+    color: "#f1fa8c",
   },
   "attr-name": {
-    color: "#7AFF23",
+    color: "#f1fa8c",
   },
   string: {
-    color: "#7AFF23",
+    color: "#f1fa8c",
   },
   char: {
-    color: "#7AFF23",
+    color: "#f1fa8c",
   },
   builtin: {
-    color: "#7AFF23",
+    color: "#50fa7b",
   },
   inserted: {
-    color: "#7AFF23",
+    color: "#50fa7b",
   },
   operator: {
-    color: "#f8f8f2",
+    color: "#ff79c6",
   },
   entity: {
     color: "#f8f8f2",
@@ -127,19 +127,19 @@ export default {
     color: "#f8f8f2",
   },
   atrule: {
-    color: "#FFCB23",
+    color: "#f1fa8c",
   },
   "attr-value": {
-    color: "#FFCB23",
+    color: "#f1fa8c",
   },
   function: {
-    color: "#FFCB23",
+    color: "#50fa7b",
   },
   "class-name": {
-    color: "#FFCB23",
+    color: "#8be9fd",
   },
   keyword: {
-    color: "#8be9fd",
+    color: "#ff79c6",
   },
   regex: {
     color: "#ffb86c",

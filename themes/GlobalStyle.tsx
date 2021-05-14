@@ -14,7 +14,11 @@ export const GlobalStyle = createGlobalStyle`
     background-color: ${({ theme }) => theme.background};
 
     color: ${({ theme }) => theme.foregroundDarker};
-    font: 110%/1.75 Literata, Georgia, serif;
+    font: 115%/1.75 Literata, Georgia, serif;
+  }
+
+  p {
+    margin: .75em 0;
   }
 
   #__next {
