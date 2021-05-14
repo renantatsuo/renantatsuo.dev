@@ -15,8 +15,10 @@ export default class Posts {
    */
   async getPosts(): Promise<Post[]> {
     const postList = await this.fs.listFiles(`${POSTS_LOCATION}`);
-    const posts = postList.map(this.loadPostFromFile);
-    return Promise.all(posts);
+    const posts = await Promise.all(postList.map(this.loadPostFromFile));
+    return posts.sort(
+      (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+    );
   }
 
   /**
