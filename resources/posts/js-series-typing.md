@@ -21,7 +21,7 @@ But what if we want to check types before running some logic? We have some optio
 
 When we want to compare the equality in our logic, we can use double equals(`==`) or triple equals(`===`).
 
-The simple difference between these operators are that the triple `===` compares **type** and **value**, and the double `==` will perform a _type coercion_, meaning that it will try to convert the values to a common type before comparing it.
+The simple difference between these operators is that the triple `===` compares **type** and **value**, and the double `==` will perform a _type coercion_, meaning that it will try to convert the values to a common type before comparing it.
 
 Eg.
 
@@ -32,7 +32,7 @@ Eg.
 
 ### Falsy values
 
-Something we need to be concerned about is that when javascript performs the type coercion for us, there are some values that are considered `false` when it is used in a Boolean context.
+Something we need to be concerned about is that when javascript performs the type coercion for us, some values are considered `false` when it is used in a Boolean context.
 
 E.g.
 
@@ -41,7 +41,7 @@ E.g.
 | `0 == false`  | `true`  |
 | `0 === false` | `false` |
 
-This is useful because we cant do something like `if (!value)`, but we need to be concerned about what we are doing.
+This is useful because we can't do something like `if (!value)`, but we need to be concerned about what we are doing.
 
 These are the falsy values:
 
@@ -54,7 +54,7 @@ These are the falsy values:
 
 ## Type checking
 
-Now we have talked a little about how typing works, coercion, etc. Let's how we can check this types.
+Now we have talked a little about how typing works, coercion, etc. Let's how we can check these types.
 The most common approach is to use `typeof`. This will give us the type of the variable we pass to id.
 
 E.g.
@@ -72,9 +72,9 @@ typeof myArray; // "object"
 
 ### Arrays
 
-You may have noticed that `typeof myArray` gave us and output of `object`. WTF?
+You may have noticed that `typeof myArray` gave us an output of `object`. WTF?
 
-As you can see, in Javascript arrays are objects, so whenever we call `typeof` for it, we'll get `object` as type.
+As you can see, in Javascript, arrays are objects, so whenever we call `typeof` for it, we'll get `object` as type.
 
 So, when we need to check if a given object is an Array, we have a few options:
 
@@ -96,7 +96,7 @@ So, when we need to check if a given object is an Array, we have a few options:
 
 ### null, undefined
 
-Another types we should be aware of are `null` and `undefined`. Although they both are falsy, they are not equal, as the name itself says, `null` is a variable with `null` value, `undefined` is a variable which **value** was not defined.
+Other types we should be aware of are `null` and `undefined`. Although they both are falsy, they are not equal, as the name itself says, `null` is a variable with `null` value, `undefined` is a variable which **value** was not defined.
 
 ## Further reading
 
