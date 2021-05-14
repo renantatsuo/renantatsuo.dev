@@ -1,6 +1,9 @@
 export default {
-  'code[class*="language-"]': {
+  'code[class*="language-js"]': {
     color: "#bd93f9",
+  },
+  'code[class*="language-"]': {
+    color: "#f8f8f2",
     background: "none",
     textShadow: "0 1px rgba(0, 0, 0, 0.3)",
     fontFamily:
