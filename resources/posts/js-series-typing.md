@@ -23,7 +23,7 @@ When we want to compare the equality in our logic, we can use double equals(`==`
 
 The simple difference between these operators is that the triple `===` compares **type** and **value**, and the double `==` will perform a _type coercion_, meaning that it will try to convert the values to a common type before comparing it.
 
-Eg.
+E.g.
 
 |             |         |
 | ----------- | ------- |
