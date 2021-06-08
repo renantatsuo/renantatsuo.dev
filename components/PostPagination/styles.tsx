@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const PaginationContainer = styled.article`
+export const PostPaginationContainer = styled.article`
   display: grid;
   grid-template: "next next" "prev prev";
   grid-row-gap: 1rem;
@@ -16,11 +16,11 @@ export const PaginationContainer = styled.article`
   }
 `;
 
-type PaginationLinkProps = {
+type PostPaginationLinkProps = {
   position: "next" | "prev";
 };
 
-export const PaginationLink = styled.a<PaginationLinkProps>`
+export const PostPaginationLink = styled.a<PostPaginationLinkProps>`
   grid-area: ${(props) => props.position};
   cursor: pointer;
   max-width: 11rem;
