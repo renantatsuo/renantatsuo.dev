@@ -1,4 +1,5 @@
 import PostContent from "@components/PostContent";
+import { PostPagination } from "@components/PostPagination";
 import UserInfo from "@components/UserInfo";
 import AppContainer from "@lib/AppContainer";
 import Posts from "@lib/post/Posts";
@@ -7,7 +8,12 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import React from "react";
 
-export default function PostPage({ post, user }: PostPageProps) {
+export default function PostPage({
+  post,
+  user,
+  nextPost,
+  prevPost,
+}: PostPageProps) {
   const postUrl = `https://renantatsuo.dev/post/${post.slug}`;
   return (
     <>
@@ -33,6 +39,7 @@ export default function PostPage({ post, user }: PostPageProps) {
       </Head>
       <UserInfo user={user} />
       <PostContent post={post} />
+      <PostPagination nextPost={nextPost} prevPost={prevPost} />
     </>
   );
 }
@@ -52,18 +59,22 @@ export const getStaticPaths: GetStaticPaths<PostParsedUrlQuery> = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<
-  PostPageProps,
-  PostParsedUrlQuery
-> = async ({ params: { slug } }) => {
-  const PostsInstance = AppContainer.resolve<Posts>(Posts);
-  const user = await Users.getUser();
-  const post = await PostsInstance.getPost(slug);
-  return { props: { post, user } };
-};
+export const getStaticProps: GetStaticProps<PostPageProps, PostParsedUrlQuery> =
+  async ({ params: { slug } }) => {
+    const PostsInstance = AppContainer.resolve<Posts>(Posts);
+    const user = await Users.getUser();
+    const posts = await PostsInstance.getPosts();
+    const postIndex = posts.findIndex((currPost) => currPost.slug === slug);
+    const post = posts[postIndex];
+    const nextPost = posts[postIndex - 1] || null;
+    const prevPost = posts[postIndex + 1] || null;
+    return { props: { post, user, nextPost, prevPost } };
+  };
 
 type PostPageProps = {
   post: Post;
+  nextPost: Post;
+  prevPost: Post;
   user: User;
 };
 
