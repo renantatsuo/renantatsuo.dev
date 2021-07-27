@@ -1,4 +1,4 @@
-import { PostList } from "@components/PostList";
+import PostList from "@components/PostList";
 import UserInfo from "@components/UserInfo";
 import AppContainer from "@lib/AppContainer";
 import Posts from "@lib/post/Posts";

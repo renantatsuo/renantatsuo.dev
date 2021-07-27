@@ -1,5 +1,5 @@
 import PostContent from "@components/PostContent";
-import { PostPagination } from "@components/PostPagination";
+import PostPagination from "@components/PostPagination";
 import UserInfo from "@components/UserInfo";
 import AppContainer from "@lib/AppContainer";
 import Posts from "@lib/post/Posts";
