@@ -1,7 +1,6 @@
-import AppContainer from "@lib/AppContainer";
-import Http from "@lib/http/Http";
-import { GITHUB_URL } from "@lib/static";
-import GithubUser from "./GithubUser";
+import AppContainer from "~/lib/AppContainer";
+import Http from "~/lib/http/Http";
+import { GITHUB_URL } from "~/lib/static";
 
 const http: Http = AppContainer.get<Http>("Http");
 

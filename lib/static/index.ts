@@ -1,5 +1,5 @@
-import LottieType from "@components/Icons/LottieType";
-import SocialNetwork from "@lib/user/SocialNetwork";
+import LottieType from "~/components/Icons/LottieType";
+import SocialNetwork from "~/lib/user/SocialNetwork";
 
 /**
  * Some static information.

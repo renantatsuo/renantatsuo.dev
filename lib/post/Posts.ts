@@ -1,7 +1,7 @@
-import { FileSystem } from "@lib/filesystem/FileSystem";
-import { POSTS_LOCATION } from "@lib/static";
 import matter from "gray-matter";
 import * as R from "ramda";
+import { FileSystem } from "~/lib/filesystem/FileSystem";
+import { POSTS_LOCATION } from "~/lib/static";
 
 export default class Posts {
   private fs: FileSystem;

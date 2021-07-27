@@ -1,7 +1,7 @@
-import CH from "@components/CodeHighlighter";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
+import CH from "~/components/CodeHighlighter";
 import {
   PostContainer,
   PostDate,

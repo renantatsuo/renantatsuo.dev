@@ -1,12 +1,12 @@
-import PostContent from "@components/PostContent";
-import PostPagination from "@components/PostPagination";
-import UserInfo from "@components/UserInfo";
-import AppContainer from "@lib/AppContainer";
-import Posts from "@lib/post/Posts";
-import * as Users from "@lib/user/Users";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import React from "react";
+import PostContent from "~/components/PostContent";
+import PostPagination from "~/components/PostPagination";
+import UserInfo from "~/components/UserInfo";
+import AppContainer from "~/lib/AppContainer";
+import Posts from "~/lib/post/Posts";
+import * as Users from "~/lib/user/Users";
 
 export default function PostPage({
   post,

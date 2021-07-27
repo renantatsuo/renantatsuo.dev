@@ -1,7 +1,7 @@
-import HoverLottie from "@components/Icons/HoverLottie";
-import SocialNetwork from "@lib/user/SocialNetwork";
 import React, { useContext } from "react";
 import { ThemeContext } from "styled-components";
+import HoverLottie from "~/components/Icons/HoverLottie";
+import SocialNetwork from "~/lib/user/SocialNetwork";
 import { SocialList, SocialListItem } from "./SocialNetworkList.styled";
 
 type SocialNetworkListProps = {

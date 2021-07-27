@@ -1,7 +1,7 @@
-import SocialNetworkList from "@components/SocialNetworkList";
-import { SOCIAL_NETWORKS } from "@lib/static";
 import Link from "next/link";
 import React from "react";
+import SocialNetworkList from "~/components/SocialNetworkList";
+import { SOCIAL_NETWORKS } from "~/lib/static";
 import { UserAvatar, UserContainer, Username } from "./UserInfo.styled";
 
 type UserInfoProps = {

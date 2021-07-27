@@ -1,7 +1,7 @@
-import GoogleAnalytics from "@components/GoogleAnalytics";
-import { GA_ID } from "@lib/static";
 import Document, { Head, Html, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
+import GoogleAnalytics from "~/components/GoogleAnalytics";
+import { GA_ID } from "~/lib/static";
 
 export default class MyDocument extends Document<MyDocumentProps> {
   static async getInitialProps(ctx) {

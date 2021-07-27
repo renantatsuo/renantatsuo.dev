@@ -1,7 +1,7 @@
-import { FileSystem } from "@lib/filesystem/FileSystem";
-import Posts from "@lib/post/Posts";
 import * as Inversify from "inversify";
 import { mock } from "jest-mock-extended";
+import { FileSystem } from "~/lib/filesystem/FileSystem";
+import Posts from "~/lib/post/Posts";
 
 const fsMock = mock<FileSystem>();
 const container = new Inversify.Container();

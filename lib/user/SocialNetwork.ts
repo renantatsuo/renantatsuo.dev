@@ -1,4 +1,4 @@
-import LottieType from "@components/Icons/LottieType";
+import LottieType from "~/components/Icons/LottieType";
 
 /**
  * SocialNetwork object specification.

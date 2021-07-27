@@ -20,5 +20,3 @@ type GithubUser = {
   type: string;
   site_admin: boolean;
 };
-
-export default GithubUser;
