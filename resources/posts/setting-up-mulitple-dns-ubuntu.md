@@ -2,7 +2,7 @@
 title: Setting up multiple DNS servers on Ubuntu
 slug: setting-up-mulitple-dns-ubuntu
 createdAt: "2020-09-29"
-keywords: multiple dns,dns,dnsmasq,ubuntu,linux
+keywords: multiple dns,dns,dnsmasq,ubuntu,linux,resolv,resolv conf
 ---
 
 Sometimes, for some reason, we are connected through multiple VPNs that may have different DNS servers to provide domains for all internal VPN stuff, the issue is that `/etc/resolv.conf` accepts only a single server.
