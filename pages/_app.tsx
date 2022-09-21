@@ -1,3 +1,4 @@
+// @ts-nocheck
 import "reflect-metadata";
 import { ThemeProvider } from "styled-components";
 import { DarkTheme } from "~/themes/DarkTheme";

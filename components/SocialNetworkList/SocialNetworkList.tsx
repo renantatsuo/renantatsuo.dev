@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { ThemeContext } from "styled-components";
+import { useTheme } from "styled-components";
 import HoverLottie from "~/components/Icons/HoverLottie";
 import SocialNetwork from "~/lib/user/SocialNetwork";
 import { SocialList, SocialListItem } from "./SocialNetworkList.styled";
@@ -9,7 +8,7 @@ type SocialNetworkListProps = {
 };
 
 function SocialNetworkList({ socialNetworks }: SocialNetworkListProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
   return (
     <SocialList>
       {socialNetworks.map(({ icon, name, url }) => (
