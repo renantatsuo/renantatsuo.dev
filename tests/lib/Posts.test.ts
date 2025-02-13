@@ -1,5 +1,5 @@
 import * as Inversify from "inversify";
-import { mock } from "jest-mock-extended";
+import { mock } from "vitest-mock-extended";
 import { FileSystem } from "~/lib/filesystem/FileSystem";
 import Posts from "~/lib/post/Posts";
 
