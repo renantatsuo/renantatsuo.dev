@@ -21,7 +21,7 @@ function PostListItem({
       <PostListItemHeader>
         <PostListItemTitle>
           <Link href="/post/[slug]" as={`/post/${slug}`}>
-            <a>{title}</a>
+            {title}
           </Link>
         </PostListItemTitle>
         <PostListItemDate>{`published on ${postDate.toLocaleDateString()}`}</PostListItemDate>

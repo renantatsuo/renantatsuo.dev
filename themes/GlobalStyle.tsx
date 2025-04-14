@@ -7,6 +7,10 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  :root {
+    --foreground: ${({ theme }) => theme.foreground};
+  }
+
   html, body {
     margin: 0;
     padding: 0;

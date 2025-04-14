@@ -14,7 +14,7 @@ function UserInfo({ user }: UserInfoProps) {
       <UserAvatar src={user.avatar} />
       <Username>
         <Link href="/" as="/">
-          <a>@{user.username}</a>
+          @{user.username}
         </Link>
       </Username>
       <SocialNetworkList socialNetworks={SOCIAL_NETWORKS} />

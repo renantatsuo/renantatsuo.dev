@@ -13,14 +13,14 @@ function PostPagination({ nextPost, prevPost }: PostPaginationProps) {
   return (
     <PostPaginationContainer>
       {nextPost && (
-        <Link href="/post/[slug]" as={`/post/${nextPost.slug}`}>
+        <Link href="/post/[slug]" as={`/post/${nextPost.slug}`} legacyBehavior>
           <PostPaginationLink position="next">
             {"<= "} {nextPost.title}
           </PostPaginationLink>
         </Link>
       )}
       {prevPost && (
-        <Link href="/post/[slug]" as={`/post/${prevPost.slug}`}>
+        <Link href="/post/[slug]" as={`/post/${prevPost.slug}`} legacyBehavior>
           <PostPaginationLink position="prev">
             {prevPost.title}
             {" =>"}
