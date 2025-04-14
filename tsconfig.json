@@ -19,7 +19,8 @@
     "jsx": "preserve",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "incremental": true
+    "incremental": true,
+    "types": ["vitest/globals"]
   },
   "exclude": ["node_modules"],
   "include": [

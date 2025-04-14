@@ -1,17 +1,9 @@
-import * as Inversify from "inversify";
 import { mock } from "vitest-mock-extended";
 import { FileSystem } from "~/lib/filesystem/FileSystem";
 import Posts from "~/lib/post/Posts";
 
 const fsMock = mock<FileSystem>();
-const container = new Inversify.Container();
-
-container.bind<FileSystem>("FileSystem").toConstantValue(fsMock);
-
-Inversify.decorate(Inversify.injectable(), Posts);
-Inversify.decorate(Inversify.inject("FileSystem"), Posts, 0);
-
-const PostsInstance = container.resolve<Posts>(Posts);
+const PostsInstance = new Posts(fsMock);
 
 describe("Test getPosts()", () => {
   it("Should return no posts", async () => {

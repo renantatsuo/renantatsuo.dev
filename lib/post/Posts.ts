@@ -1,12 +1,21 @@
 import matter from "gray-matter";
 import { FileSystem } from "~/lib/filesystem/FileSystem";
+import { LocalFileSystem } from "~/lib/filesystem/LocalFileSystem";
 import { POSTS_LOCATION } from "~/lib/static";
 
 export default class Posts {
   private fs: FileSystem;
+  private static instance: Posts;
 
   constructor(fs: FileSystem) {
     this.fs = fs;
+  }
+
+  static getInstance(): Posts {
+    if (!this.instance) {
+      this.instance = new Posts(new LocalFileSystem());
+    }
+    return this.instance;
   }
 
   /**

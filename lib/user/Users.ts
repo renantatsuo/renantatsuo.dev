@@ -1,14 +1,13 @@
-import AppContainer from "~/lib/AppContainer";
-import Http from "~/lib/http/Http";
+import { HttpClient } from "~/lib/http/HttpClient";
+import { TypedFetch } from "~/lib/http/TypedFetch";
 import { GITHUB_URL } from "~/lib/static";
-
-const http: Http = AppContainer.get<Http>("Http");
 
 /**
  * Retrieve user data from Github.
  */
 export async function getUser(): Promise<User> {
-  const user: GithubUser = await http.execute<GithubUser>(GITHUB_URL);
+  const httpClient: HttpClient = new TypedFetch();
+  const user: GithubUser = await httpClient.get<GithubUser>(GITHUB_URL);
 
   return {
     avatar: user.avatar_url,

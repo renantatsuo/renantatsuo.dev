@@ -11,16 +11,13 @@
         "react-dom": "^18.3.1",
         "react-markdown": "^6.0.3",
         "react-syntax-highlighter": "^15.6.1",
-        "reflect-metadata": "^0.1.14",
         "remark-gfm": "^1.0.0",
         "styled-components": "^5.3.11",
       },
       "devDependencies": {
-        "@types/jest": "^27.5.2",
         "@types/node": "^22.14.1",
         "@types/react": "^18.3.20",
         "@types/styled-components": "^5.1.34",
-        "inversify": "^5.1.1",
         "typescript": "^4.9.5",
         "vitest": "^3.1.1",
         "vitest-mock-extended": "^2.0.2",
@@ -159,8 +156,6 @@
 
     "@types/hoist-non-react-statics": ["@types/hoist-non-react-statics@3.3.6", "", { "dependencies": { "@types/react": "*", "hoist-non-react-statics": "^3.3.0" } }, ""],
 
-    "@types/jest": ["@types/jest@27.5.2", "", { "dependencies": { "jest-matcher-utils": "^27.0.0", "pretty-format": "^27.0.0" } }, ""],
-
     "@types/mdast": ["@types/mdast@3.0.15", "", { "dependencies": { "@types/unist": "^2" } }, ""],
 
     "@types/node": ["@types/node@22.14.1", "", { "dependencies": { "undici-types": "~6.21.0" } }, ""],
@@ -187,10 +182,6 @@
 
     "@vitest/utils": ["@vitest/utils@3.1.1", "", { "dependencies": { "@vitest/pretty-format": "3.1.1", "loupe": "^3.1.3", "tinyrainbow": "^2.0.0" } }, ""],
 
-    "ansi-regex": ["ansi-regex@5.0.1", "", {}, ""],
-
-    "ansi-styles": ["ansi-styles@5.2.0", "", {}, ""],
-
     "argparse": ["argparse@1.0.10", "", { "dependencies": { "sprintf-js": "~1.0.2" } }, ""],
 
     "assertion-error": ["assertion-error@2.0.1", "", {}, ""],
@@ -213,8 +204,6 @@
 
     "chai": ["chai@5.2.0", "", { "dependencies": { "assertion-error": "^2.0.1", "check-error": "^2.1.1", "deep-eql": "^5.0.1", "loupe": "^3.1.0", "pathval": "^2.0.0" } }, ""],
 
-    "chalk": ["chalk@4.1.2", "", { "dependencies": { "ansi-styles": "^4.1.0", "supports-color": "^7.1.0" } }, ""],
-
     "character-entities": ["character-entities@1.2.4", "", {}, ""],
 
     "character-entities-legacy": ["character-entities-legacy@1.1.4", "", {}, ""],
@@ -224,10 +213,6 @@
     "check-error": ["check-error@2.1.1", "", {}, ""],
 
     "client-only": ["client-only@0.0.1", "", {}, ""],
-
-    "color-convert": ["color-convert@2.0.1", "", { "dependencies": { "color-name": "~1.1.4" } }, ""],
-
-    "color-name": ["color-name@1.1.4", "", {}, ""],
 
     "comma-separated-tokens": ["comma-separated-tokens@1.0.8", "", {}, ""],
 
@@ -242,8 +227,6 @@
     "debug": ["debug@4.4.0", "", { "dependencies": { "ms": "^2.1.3" } }, ""],
 
     "deep-eql": ["deep-eql@5.0.2", "", {}, ""],
-
-    "diff-sequences": ["diff-sequences@27.5.1", "", {}, ""],
 
     "electron-to-chromium": ["electron-to-chromium@1.5.99", "", {}, ""],
 
@@ -293,8 +276,6 @@
 
     "inline-style-parser": ["inline-style-parser@0.1.1", "", {}, ""],
 
-    "inversify": ["inversify@5.1.1", "", {}, ""],
-
     "is-alphabetical": ["is-alphabetical@1.0.4", "", {}, ""],
 
     "is-alphanumerical": ["is-alphanumerical@1.0.4", "", { "dependencies": { "is-alphabetical": "^1.0.0", "is-decimal": "^1.0.0" } }, ""],
@@ -308,12 +289,6 @@
     "is-hexadecimal": ["is-hexadecimal@1.0.4", "", {}, ""],
 
     "is-plain-obj": ["is-plain-obj@2.1.0", "", {}, ""],
-
-    "jest-diff": ["jest-diff@27.5.1", "", { "dependencies": { "chalk": "^4.0.0", "diff-sequences": "^27.5.1", "jest-get-type": "^27.5.1", "pretty-format": "^27.5.1" } }, ""],
-
-    "jest-get-type": ["jest-get-type@27.5.1", "", {}, ""],
-
-    "jest-matcher-utils": ["jest-matcher-utils@27.5.1", "", { "dependencies": { "chalk": "^4.0.0", "jest-diff": "^27.5.1", "jest-get-type": "^27.5.1", "pretty-format": "^27.5.1" } }, ""],
 
     "js-tokens": ["js-tokens@4.0.0", "", {}, ""],
 
@@ -407,8 +382,6 @@
 
     "postcss-value-parser": ["postcss-value-parser@4.2.0", "", {}, ""],
 
-    "pretty-format": ["pretty-format@27.5.1", "", { "dependencies": { "ansi-regex": "^5.0.1", "ansi-styles": "^5.0.0", "react-is": "^17.0.1" } }, ""],
-
     "prismjs": ["prismjs@1.30.0", "", {}, "sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw=="],
 
     "prop-types": ["prop-types@15.8.1", "", { "dependencies": { "loose-envify": "^1.4.0", "object-assign": "^4.1.1", "react-is": "^16.13.1" } }, ""],
@@ -424,8 +397,6 @@
     "react-markdown": ["react-markdown@6.0.3", "", { "dependencies": { "@types/hast": "^2.0.0", "@types/unist": "^2.0.3", "comma-separated-tokens": "^1.0.0", "prop-types": "^15.7.2", "property-information": "^5.3.0", "react-is": "^17.0.0", "remark-parse": "^9.0.0", "remark-rehype": "^8.0.0", "space-separated-tokens": "^1.1.0", "style-to-object": "^0.3.0", "unified": "^9.0.0", "unist-util-visit": "^2.0.0", "vfile": "^4.0.0" }, "peerDependencies": { "@types/react": ">=16", "react": ">=16" } }, ""],
 
     "react-syntax-highlighter": ["react-syntax-highlighter@15.6.1", "", { "dependencies": { "@babel/runtime": "^7.3.1", "highlight.js": "^10.4.1", "highlightjs-vue": "^1.0.0", "lowlight": "^1.17.0", "prismjs": "^1.27.0", "refractor": "^3.6.0" }, "peerDependencies": { "react": ">= 0.14.0" } }, ""],
-
-    "reflect-metadata": ["reflect-metadata@0.1.14", "", {}, ""],
 
     "refractor": ["refractor@3.6.0", "", { "dependencies": { "hastscript": "^6.0.0", "parse-entities": "^2.0.0", "prismjs": "~1.27.0" } }, ""],
 
@@ -531,10 +502,6 @@
 
     "zwitch": ["zwitch@1.0.5", "", {}, ""],
 
-    "chalk/ansi-styles": ["ansi-styles@4.3.0", "", { "dependencies": { "color-convert": "^2.0.1" } }, ""],
-
-    "chalk/supports-color": ["supports-color@7.2.0", "", { "dependencies": { "has-flag": "^4.0.0" } }, ""],
-
     "hoist-non-react-statics/react-is": ["react-is@16.13.1", "", {}, ""],
 
     "prop-types/react-is": ["react-is@16.13.1", "", {}, ""],
@@ -542,7 +509,5 @@
     "refractor/prismjs": ["prismjs@1.27.0", "", {}, ""],
 
     "vite/postcss": ["postcss@8.5.3", "", { "dependencies": { "nanoid": "^3.3.8", "picocolors": "^1.1.1", "source-map-js": "^1.2.1" } }, "sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A=="],
-
-    "chalk/supports-color/has-flag": ["has-flag@4.0.0", "", {}, ""],
   }
 }
