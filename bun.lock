@@ -27,6 +27,9 @@
         "vitest": "^3.1.1",
         "vitest-mock-extended": "^2.0.2",
       },
+      "optionalDependencies": {
+        "@rollup/rollup-linux-x64-gnu": "^4.40.0",
+      },
     },
   },
   "packages": {
@@ -143,6 +146,8 @@
     "@next/swc-darwin-arm64": ["@next/swc-darwin-arm64@14.2.28", "", { "os": "darwin", "cpu": "arm64" }, ""],
 
     "@rollup/rollup-darwin-arm64": ["@rollup/rollup-darwin-arm64@4.34.6", "", { "os": "darwin", "cpu": "arm64" }, ""],
+
+    "@rollup/rollup-linux-x64-gnu": ["@rollup/rollup-linux-x64-gnu@4.40.0", "", { "os": "linux", "cpu": "x64" }, "sha512-RcDGMtqF9EFN8i2RYN2W+64CdHruJ5rPqrlYw+cgM3uOVPSsnAQps7cpjXe9be/yDp8UC7VLoCoKC8J3Kn2FkQ=="],
 
     "@swc/counter": ["@swc/counter@0.1.3", "", {}, ""],
 
