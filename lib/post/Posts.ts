@@ -1,5 +1,4 @@
 import matter from "gray-matter";
-import * as R from "ramda";
 import { FileSystem } from "~/lib/filesystem/FileSystem";
 import { POSTS_LOCATION } from "~/lib/static";
 
@@ -42,7 +41,7 @@ export default class Posts {
 
     return {
       ...data,
-      keywords: keywords.map(R.trim),
+      keywords: keywords.map((s: string) => s.trim()),
       content,
       excerpt: this.createExcerpt(content),
     } as Post;
