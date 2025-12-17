@@ -1,11 +1,4 @@
 import Link from "next/link";
-import {
-  PostListItemContainer,
-  PostListItemContent,
-  PostListItemDate,
-  PostListItemHeader,
-  PostListItemTitle,
-} from "./PostListItem.styled";
 
 type PostListElementProps = {
   post: Post;
@@ -17,17 +10,21 @@ function PostListItem({
   const postDate = new Date(createdAt);
 
   return (
-    <PostListItemContainer>
-      <PostListItemHeader>
-        <PostListItemTitle>
-          <Link href="/post/[slug]" as={`/post/${slug}`}>
+    <article className="flex flex-col">
+      <header className="flex flex-col">
+        <h2 className="m-0">
+          <Link
+            href="/post/[slug]"
+            as={`/post/${slug}`}
+            className="text-yellow! border-none! font-bold"
+          >
             {title}
           </Link>
-        </PostListItemTitle>
-        <PostListItemDate>{`published on ${postDate.toLocaleDateString()}`}</PostListItemDate>
-      </PostListItemHeader>
-      <PostListItemContent>{excerpt}</PostListItemContent>
-    </PostListItemContainer>
+        </h2>
+        <small className="text-selected">{`published on ${postDate.toLocaleDateString()}`}</small>
+      </header>
+      <p className="my-2!">{excerpt}</p>
+    </article>
   );
 }
 

@@ -1,14 +1,9 @@
-import { ThemeProvider } from "styled-components";
-import { DarkTheme } from "~/themes/DarkTheme";
-import { Container, GlobalStyle } from "~/themes/GlobalStyle";
+import "~/styles/globals.css";
 
 export default function MyApp({ Component, pageProps }) {
   return (
-    <ThemeProvider theme={DarkTheme}>
-      <GlobalStyle />
-      <Container>
-        <Component {...pageProps} />
-      </Container>
-    </ThemeProvider>
+    <main className="w-full max-w-185 p-4 flex items-start flex-col gap-8 bg-background">
+      <Component {...pageProps} />
+    </main>
   );
 }

@@ -1,24 +1,23 @@
-import { useTheme } from "styled-components";
 import HoverLottie from "~/components/Icons/HoverLottie";
 import SocialNetwork from "~/lib/user/SocialNetwork";
-import { SocialList, SocialListItem } from "./SocialNetworkList.styled";
 
 type SocialNetworkListProps = {
   socialNetworks: SocialNetwork[];
 };
 
 function SocialNetworkList({ socialNetworks }: SocialNetworkListProps) {
-  const theme = useTheme();
   return (
-    <SocialList>
+    <ul className="list-none flex m-0 p-0 self-center" style={{ gridArea: 'social' }}>
       {socialNetworks.map(({ icon, name, url }) => (
-        <SocialListItem key={name}>
-          <a href={url} target="_blank">
-            <HoverLottie icon={icon} title={name} color={theme.primary} />
+        <li key={name} className="mx-1 first:ml-0 last:mr-0" style={{ gridArea: 'social' }}>
+          <a href={url} target="_blank" className="!border-none flex items-center">
+            <div className="flex h-6">
+              <HoverLottie icon={icon} title={name} color="#FF235B" />
+            </div>
           </a>
-        </SocialListItem>
+        </li>
       ))}
-    </SocialList>
+    </ul>
   );
 }
 

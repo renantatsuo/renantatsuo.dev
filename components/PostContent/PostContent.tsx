@@ -1,13 +1,6 @@
-import React from "react";
-import ReactMarkdown from "react-markdown";
-import gfm from "remark-gfm";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import CH from "~/components/CodeHighlighter";
-import {
-  PostContainer,
-  PostDate,
-  PostHeader,
-  PostTitle,
-} from "./PostContent.styled";
 
 type PostProps = {
   post: Post;
@@ -17,20 +10,23 @@ function PostContent({ post }: PostProps) {
   const postDate = new Date(post.createdAt);
 
   return (
-    <PostContainer>
-      <PostHeader>
-        <PostTitle>{post.title}</PostTitle>
-        <PostDate>published on {postDate.toLocaleDateString()}</PostDate>
-      </PostHeader>
-      <ReactMarkdown
-        children={post.content}
-        remarkPlugins={[gfm]}
+    <article className="w-full [&_:not(pre)_code]:bg-background-darker [&_:not(pre)_code]:px-1 [&_:not(pre)_code]:rounded [&_table]:border-collapse [&_table_td]:border-2 [&_table_td]:border-selected [&_table_td]:px-3 [&_table_td]:py-2">
+      <header className="flex flex-col">
+        <h1 className="m-0 text-yellow! font-bold!">{post.title}</h1>
+        <small className="text-selected">
+          published on {postDate.toLocaleDateString()}
+        </small>
+      </header>
+      <Markdown
+        remarkPlugins={[remarkGfm]}
         components={{
           pre: FixedPreComponent,
           code: CodeHighlighter,
         }}
-      />
-    </PostContainer>
+      >
+        {post.content}
+      </Markdown>
+    </article>
   );
 }
 
@@ -45,6 +41,9 @@ function FixedPreComponent(component) {
 }
 
 function CodeHighlighter({ node, ...props }) {
+  if (!props.className) {
+    return <code>{props.children}</code>;
+  }
   return (
     <CH
       className={props.className}
