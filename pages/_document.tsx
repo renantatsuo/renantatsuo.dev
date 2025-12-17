@@ -1,37 +1,16 @@
 import Document, { Head, Html, Main, NextScript } from "next/document";
-import { ServerStyleSheet } from "styled-components";
 import GoogleAnalytics from "~/components/GoogleAnalytics";
 import { GA_ID } from "~/lib/static";
 
 export default class MyDocument extends Document<MyDocumentProps> {
   static async getInitialProps(ctx) {
-    const sheet = new ServerStyleSheet();
-    const originalRenderPage = ctx.renderPage;
+    const initialProps = await Document.getInitialProps(ctx);
+    const isProduction = process.env.NODE_ENV === "production";
 
-    try {
-      ctx.renderPage = () =>
-        originalRenderPage({
-          enhanceApp: (App) => (props) =>
-            sheet.collectStyles(<App {...props} />),
-        });
-
-      const initialProps = await Document.getInitialProps(ctx);
-
-      const isProduction = process.env.NODE_ENV === "production";
-
-      return {
-        ...initialProps,
-        isProduction,
-        styles: (
-          <>
-            {initialProps.styles}
-            {sheet.getStyleElement()}
-          </>
-        ),
-      };
-    } finally {
-      sheet.seal();
-    }
+    return {
+      ...initialProps,
+      isProduction,
+    };
   }
 
   render() {

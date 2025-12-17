@@ -42,7 +42,7 @@ export default {
     MozHyphens: "none",
     msHyphens: "none",
     hyphens: "none",
-    padding: "1em",
+    padding: "1.25em",
     margin: ".5em 0",
     overflow: "auto",
     borderRadius: "0.3em",
@@ -69,7 +69,7 @@ export default {
     color: "#f8f8f2",
   },
   ".namespace": {
-    Opacity: ".7",
+    opacity: ".7",
   },
   property: {
     color: "#ff79c6",
@@ -157,4 +157,4 @@ export default {
   italic: {
     fontStyle: "italic",
   },
-};
+} satisfies { [key: string]: React.CSSProperties };
