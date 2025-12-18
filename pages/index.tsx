@@ -1,51 +1,70 @@
-import { GetStaticProps } from "next";
-import Head from "next/head";
+import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { staticFunctionMiddleware } from "@tanstack/start-static-server-functions";
 import PostList from "~/components/PostList";
 import UserInfo from "~/components/UserInfo";
 import Posts from "~/lib/post/Posts";
 import * as Users from "~/lib/user/Users";
 
-export default function Home({ posts, user }: HomeProps) {
-  const title = "Renan Tatsuo — renantatsuo.dev";
-  const description = `Renan Tatsuo's personal blog. Trying to share some knowledge and experiences.`;
+export const loadPosts = createServerFn({ method: "GET" })
+  .middleware([staticFunctionMiddleware])
+  .handler(async () => {
+    const PostsInstance = Posts.getInstance();
+    const posts = await PostsInstance.getPosts();
+    return posts;
+  });
+
+export const loadUser = createServerFn({ method: "GET" })
+  .middleware([staticFunctionMiddleware])
+  .handler(async () => {
+    const user = await Users.getUser();
+    return user;
+  });
+
+export const Route = createFileRoute("/")({
+  component: Home,
+  loader: async () => {
+    const posts = await loadPosts();
+    const user = await loadUser();
+    return { posts, user };
+  },
+  head: ({ loaderData: { user } = {} }) => ({
+    meta: [
+      { title: "Renan Tatsuo — renan.dev" },
+      {
+        description:
+          "Renan Tatsuo's personal blog. Trying to share some knowledge and experiences.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:title", content: "Renan Tatsuo — renan.dev" },
+      {
+        property: "og:description",
+        content:
+          "Renan Tatsuo's personal blog. Trying to share some knowledge and experiences.",
+      },
+      { property: "og:url", content: "https://renan.dev/" },
+      { property: "og:image", content: user?.avatar },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:domain", content: "renan.dev" },
+      { name: "twitter:url", content: "https://renan.dev/" },
+      { name: "twitter:title", content: "Renan Tatsuo — renan.dev" },
+      {
+        name: "twitter:description",
+        content:
+          "Renan Tatsuo's personal blog. Trying to share some knowledge and experiences.",
+      },
+      { name: "twitter:creator", content: "@renantatsuo" },
+      { name: "twitter:image", content: user?.avatar },
+    ],
+  }),
+});
+
+function Home() {
+  const { user, posts } = Route.useLoaderData();
   return (
     <>
-      <Head>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:url" content={`https://renantatsuo.dev/`} />
-        <meta property="og:image" content={user.avatar} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:domain" content="renantatsuo.dev" />
-        <meta property="twitter:url" content="https://renantatsuo.dev" />
-        <meta name="twitter:title" content={title} />
-        <meta name="twitter:description" content={description} />
-        <meta name="twitter:creator" content="@renantatsuo" />
-        <meta name="twitter:image" content={user.avatar} />
-      </Head>
       <UserInfo user={user} />
       <PostList posts={posts} />
     </>
   );
 }
-
-export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  const PostsInstance = Posts.getInstance();
-  const posts = await PostsInstance.getPosts();
-  const user = await Users.getUser();
-
-  return {
-    props: {
-      posts,
-      user,
-    },
-  };
-};
-
-type HomeProps = {
-  posts: Post[];
-  user: User;
-};

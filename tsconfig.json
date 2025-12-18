@@ -1,11 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "~/*": ["./*"]
-    },
-    "target": "es5",
+    "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "baseUrl": ".",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -13,21 +10,19 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "incremental": true,
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "vite/client", "bun"],
+    "paths": {
+      "~/*": ["./*"]
+    },
+    "strictNullChecks": true
   },
-  "exclude": ["node_modules"],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "tests/jest.config.js",
-    "pages/_document.tss"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "tests/jest.config.js"],
+  "exclude": ["node_modules"]
 }

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import SocialNetworkList from "~/components/SocialNetworkList";
 import { SOCIAL_NETWORKS } from "~/lib/static";
 
@@ -22,11 +22,7 @@ function UserInfo({ user }: UserInfoProps) {
         className="m-0 text-xl! leading-none self-start grid-area"
         style={{ gridArea: "username" }}
       >
-        <Link
-          href="/"
-          as="/"
-          className="font-bold text-foreground! border-none!"
-        >
+        <Link to="/" className="font-bold text-foreground! border-none!">
           @{user.username}
         </Link>
       </h2>

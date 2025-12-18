@@ -13,8 +13,8 @@
   --color-green: #7aff23;
 
   --font-serif: Literata, Georgia, serif;
-  --font-mono: "Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono",
-    monospace;
+  --font-mono:
+    "Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
 }
 
 @layer utilities {
@@ -129,7 +129,7 @@ p {
   margin: 0.75em 0;
 }
 
-#__next {
+body {
   display: flex;
   justify-content: center;
   max-width: 100vw;
