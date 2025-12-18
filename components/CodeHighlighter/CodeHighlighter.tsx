@@ -12,9 +12,9 @@ function CodeHighlighter({ value, inline, className }: CodeHighlighterProps) {
     return <code className={className}>{value}</code>;
   }
   const language = /language-(\w+)/.exec(className ?? "");
-  console.log(value);
+
   return (
-    <SyntaxHighlighter language={language[1]} style={theme}>
+    <SyntaxHighlighter language={language?.[1]} style={theme}>
       {String(value).replace(/\n$/, "")}
     </SyntaxHighlighter>
   );

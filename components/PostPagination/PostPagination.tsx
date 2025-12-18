@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 
 type PostPaginationProps = {
   nextPost: Post;
@@ -12,7 +12,7 @@ function PostPagination({ nextPost, prevPost }: PostPaginationProps) {
       style={{ gridTemplate: '"next prev"' }}
     >
       {nextPost && (
-        <Link href="/post/[slug]" as={`/post/${nextPost.slug}`} legacyBehavior>
+        <Link to="/post/$slug" params={{ slug: nextPost.slug }}>
           <a
             className="cursor-pointer max-w-44 border-none md:max-w-88 md:m-0"
             style={{ gridArea: "next" }}
@@ -22,7 +22,7 @@ function PostPagination({ nextPost, prevPost }: PostPaginationProps) {
         </Link>
       )}
       {prevPost && (
-        <Link href="/post/[slug]" as={`/post/${prevPost.slug}`} legacyBehavior>
+        <Link to="/post/$slug" params={{ slug: prevPost.slug }}>
           <a
             className="cursor-pointer max-w-44 border-none md:max-w-88 md:m-0"
             style={{ gridArea: "prev" }}

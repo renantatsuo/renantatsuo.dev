@@ -1,9 +1,8 @@
-import dynamic from 'next/dynamic';
+import Lottie from "lottie-react";
 import { useState } from "react";
 import FlatColorLottie from "./FlatColorLottie";
 import LottieFactory from "./LottieFactory";
 import LottieType from "./LottieType";
-const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 type HoverLottieProps = {
   icon: LottieType;
   title?: string;

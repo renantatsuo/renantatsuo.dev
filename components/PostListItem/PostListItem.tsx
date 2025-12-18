@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 
 type PostListElementProps = {
   post: Post;
@@ -14,8 +14,8 @@ function PostListItem({
       <header className="flex flex-col">
         <h2 className="m-0">
           <Link
-            href="/post/[slug]"
-            as={`/post/${slug}`}
+            to="/post/$slug"
+            params={{ slug }}
             className="text-yellow! border-none! font-bold"
           >
             {title}
