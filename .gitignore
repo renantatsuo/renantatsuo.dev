@@ -8,12 +8,12 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
-# production
-/build
+# output
+.output
+.vercel
+.nitro
+.tanstack
+dist
 
 # misc
 .DS_Store

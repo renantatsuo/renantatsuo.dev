@@ -17,21 +17,12 @@ export default defineConfig({
       router: {
         routesDirectory: "pages",
       },
-      prerender: {
-        enabled: true,
-        autoStaticPathsDiscovery: true,
-        crawlLinks: true,
-        concurrency: 10,
-        failOnError: true,
-        onSuccess: ({ page }) => {
-          console.log(`Rendered ${page.path}!`);
-        },
+      sitemap: {
+        host: "https://renan.dev",
       },
     }),
     nitro(),
     viteReact(),
   ],
-  nitro: {
-    preset: "vercel-static",
-  },
+  nitro: {},
 });
