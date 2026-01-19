@@ -44,11 +44,6 @@ export default defineConfig({
         maxAge: 60 * 60 * 24 * 30, // 30 days
       },
     ],
-    vercel: {
-      functions: {
-        runtime: "bun1.x",
-      },
-    },
   },
 });
 
