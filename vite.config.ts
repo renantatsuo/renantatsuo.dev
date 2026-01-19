@@ -59,7 +59,7 @@ async function copyResources(): Promise<Plugin> {
   const fs = await import("fs");
   const path = await import("path");
   const posts = path.resolve(__dirname, "resources");
-  const dist = path.resolve(__dirname, ".vercel/resources");
+  const dist = path.resolve(__dirname, ".vercel/output/resources");
   fs.cpSync(posts, dist, { recursive: true });
   return {
     name: "copy-resources",
