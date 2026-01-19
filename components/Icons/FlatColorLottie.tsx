@@ -50,9 +50,9 @@ const hexColorToLottieColor = (color: string, alpha: number) => {
 
   const colors = HEX_COLOR_REGEX.exec(color);
 
-  const red = hexToDec(colors[1]);
-  const green = hexToDec(colors[2]);
-  const blue = hexToDec(colors[3]);
+  const red = hexToDec(colors?.[1] ?? "");
+  const green = hexToDec(colors?.[2] ?? "");
+  const blue = hexToDec(colors?.[3] ?? "");
 
   return [red, green, blue, alpha];
 };
