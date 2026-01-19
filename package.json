@@ -16,9 +16,9 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@tanstack/react-router": "^1.141.6",
-    "@tanstack/react-start": "^1.141.7",
-    "@tanstack/start-static-server-functions": "^1.141.7",
+    "@tanstack/react-router": "^1.153.1",
+    "@tanstack/react-start": "^1.153.1",
+    "@tanstack/start-static-server-functions": "^1.153.1",
     "gray-matter": "^4.0.3",
     "lottie-react": "^2.4.1",
     "react": "^19.2.3",
@@ -29,14 +29,17 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/devtools-vite": "^0.4.1",
     "@types/bun": "^1.3.4",
     "@types/node": "^22.14.1",
     "@types/react": "^18.3.20",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@vitejs/plugin-react": "^5.1.2",
+    "nitro": "npm:nitro-nightly@latest",
+    "prettier-eslint": "^16.4.2",
     "tailwindcss": "^4.1.18",
     "typescript": "^4.9.5",
-    "vite": "^7.3.0",
+    "vite": "^7.3.1",
     "vite-tsconfig-paths": "^6.0.3",
     "vitest": "^3.1.1",
     "vitest-mock-extended": "^2.0.2"
