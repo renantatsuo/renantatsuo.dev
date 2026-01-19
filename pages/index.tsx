@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { staticFunctionMiddleware } from "@tanstack/start-static-server-functions";
-import PostList from "~/components/PostList";
+import PostListItem from "~/components/PostListItem";
 import UserInfo from "~/components/UserInfo";
 import Posts from "~/lib/post/Posts";
 import * as Users from "~/lib/user/Users";
@@ -64,7 +64,9 @@ function Home() {
   return (
     <>
       <UserInfo user={user} />
-      <PostList posts={posts} />
+      {posts.map((post) => (
+        <PostListItem key={post.slug} post={post} />
+      ))}
     </>
   );
 }
