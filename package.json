@@ -11,8 +11,9 @@
   "type": "module",
   "scripts": {
     "dev": "bun run --bun vite dev",
-    "build": "bun run --bun vite build --mode prod",
+    "build": "npx vite build --mode prod && bun run --bun copy-tsr",
     "start": "bun .output/server/index.mjs",
+    "copy-tsr": "cp -r .vercel/output/dist/client/__tsr .vercel/output/static/__tsr",
     "test": "vitest run"
   },
   "dependencies": {

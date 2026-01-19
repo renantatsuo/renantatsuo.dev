@@ -23,7 +23,6 @@ export default defineConfig({
       prerender: {
         enabled: true,
         crawlLinks: true,
-        autoStaticPathsDiscovery: true,
       },
       sitemap: {
         enabled: true,
@@ -39,7 +38,7 @@ export default defineConfig({
     preset: "vercel",
     publicAssets: [
       {
-        dir: "dist/client/__tsr",
+        dir: ".vercel/output/dist/client/__tsr",
         baseURL: "/__tsr",
         maxAge: 60 * 60 * 24 * 30, // 30 days
       },
