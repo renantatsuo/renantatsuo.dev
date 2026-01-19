@@ -36,7 +36,7 @@ export default defineConfig({
     viteReact(),
   ],
   nitro: {
-    preset: "bun",
+    preset: "vercel",
     publicAssets: [
       {
         dir: "dist/client/__tsr",
@@ -44,6 +44,11 @@ export default defineConfig({
         maxAge: 60 * 60 * 24 * 30, // 30 days
       },
     ],
+    vercel: {
+      functions: {
+        runtime: "bun1.x",
+      },
+    },
   },
 });
 
@@ -54,7 +59,7 @@ async function copyResources(): Promise<Plugin> {
   const fs = await import("fs");
   const path = await import("path");
   const posts = path.resolve(__dirname, "resources");
-  const dist = path.resolve(__dirname, ".output/resources");
+  const dist = path.resolve(__dirname, ".vercel/resources");
   fs.cpSync(posts, dist, { recursive: true });
   return {
     name: "copy-resources",
