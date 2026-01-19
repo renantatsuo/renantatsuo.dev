@@ -36,6 +36,7 @@ export default defineConfig({
     viteReact(),
   ],
   nitro: {
+    preset: "bun",
     publicAssets: [
       {
         dir: "dist/client/__tsr",
