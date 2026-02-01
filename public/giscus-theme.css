@@ -1,0 +1,118 @@
+/*
+ * Custom giscus theme for renantatsuo.dev
+ * Based on the site's Dracula-inspired dark purple palette
+ */
+
+main {
+  /* Syntax highlighting (Dracula-inspired, matching CodeHighlighterTheme) */
+  --color-prettylights-syntax-comment: #6272a4;
+  --color-prettylights-syntax-constant: #bd93f9;
+  --color-prettylights-syntax-entity: #bd93f9;
+  --color-prettylights-syntax-storage-modifier-import: #f8f8f2;
+  --color-prettylights-syntax-entity-tag: #ff79c6;
+  --color-prettylights-syntax-keyword: #ff79c6;
+  --color-prettylights-syntax-string: #f1fa8c;
+  --color-prettylights-syntax-variable: #ffb86c;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #ff235b;
+  --color-prettylights-syntax-invalid-illegal-text: #f8f8f2;
+  --color-prettylights-syntax-invalid-illegal-bg: #ff235b;
+  --color-prettylights-syntax-carriage-return-text: #f8f8f2;
+  --color-prettylights-syntax-carriage-return-bg: #ff235b;
+  --color-prettylights-syntax-string-regexp: #50fa7b;
+  --color-prettylights-syntax-markup-list: #f1fa8c;
+  --color-prettylights-syntax-markup-heading: #4d42ff;
+  --color-prettylights-syntax-markup-italic: #f8f8f2;
+  --color-prettylights-syntax-markup-bold: #f8f8f2;
+  --color-prettylights-syntax-markup-deleted-text: #ff235b;
+  --color-prettylights-syntax-markup-deleted-bg: #3b0a14;
+  --color-prettylights-syntax-markup-inserted-text: #50fa7b;
+  --color-prettylights-syntax-markup-inserted-bg: #0d2b14;
+  --color-prettylights-syntax-markup-changed-text: #ffb86c;
+  --color-prettylights-syntax-markup-changed-bg: #3b1e0a;
+  --color-prettylights-syntax-markup-ignored-text: #f8f8f2;
+  --color-prettylights-syntax-markup-ignored-bg: #4d42ff;
+  --color-prettylights-syntax-meta-diff-range: #bd93f9;
+  --color-prettylights-syntax-brackethighlighter-angle: #6272a4;
+  --color-prettylights-syntax-sublimelinter-gutter-mark: #4b4460;
+  --color-prettylights-syntax-constant-other-reference-link: #f1fa8c;
+
+  /* Buttons */
+  --color-btn-text: #d8d8d2;
+  --color-btn-bg: #362f42;
+  --color-btn-border: rgb(172 156 180 / 20%);
+  --color-btn-shadow: 0 0 transparent;
+  --color-btn-inset-shadow: 0 0 transparent;
+  --color-btn-hover-bg: #413a4e;
+  --color-btn-hover-border: #ac9cb4;
+  --color-btn-active-bg: #2c2836;
+  --color-btn-active-border: #ac9cb4;
+  --color-btn-selected-bg: #1a091c;
+  --color-btn-primary-text: #fff;
+  --color-btn-primary-bg: #ff235b;
+  --color-btn-primary-border: rgb(172 156 180 / 20%);
+  --color-btn-primary-shadow: 0 0 transparent;
+  --color-btn-primary-inset-shadow: 0 0 transparent;
+  --color-btn-primary-hover-bg: #e0204f;
+  --color-btn-primary-hover-border: rgb(172 156 180 / 20%);
+  --color-btn-primary-selected-bg: #ff235b;
+  --color-btn-primary-selected-shadow: 0 0 transparent;
+  --color-btn-primary-disabled-text: rgb(248 248 242 / 50%);
+  --color-btn-primary-disabled-bg: rgb(255 35 91 / 60%);
+  --color-btn-primary-disabled-border: rgb(172 156 180 / 20%);
+
+  /* Action list */
+  --color-action-list-item-default-hover-bg: rgb(172 156 180 / 12%);
+
+  /* Segmented control */
+  --color-segmented-control-bg: rgb(98 114 164 / 10%);
+  --color-segmented-control-button-bg: #1a091c;
+  --color-segmented-control-button-selected-border: #ac9cb4;
+
+  /* Foreground */
+  --color-fg-default: #f8f8f2;
+  --color-fg-muted: #ac9cb4;
+  --color-fg-subtle: #6272a4;
+
+  /* Canvas / backgrounds */
+  --color-canvas-default: #2c2836;
+  --color-canvas-overlay: #1a091c;
+  --color-canvas-inset: #1a091c;
+  --color-canvas-subtle: #362f42;
+
+  /* Borders */
+  --color-border-default: #4b4460;
+  --color-border-muted: #362f42;
+
+  /* Neutral */
+  --color-neutral-muted: rgb(98 114 164 / 40%);
+
+  /* Accent (links, highlights) */
+  --color-accent-fg: #ff235b;
+  --color-accent-emphasis: #ff235b;
+  --color-accent-muted: rgb(255 35 91 / 40%);
+  --color-accent-subtle: rgb(255 35 91 / 10%);
+
+  /* Status colors */
+  --color-success-fg: #7aff23;
+  --color-attention-fg: #ffcb23;
+  --color-attention-muted: rgb(255 203 35 / 40%);
+  --color-attention-subtle: rgb(255 203 35 / 15%);
+  --color-danger-fg: #ff235b;
+  --color-danger-muted: rgb(255 35 91 / 40%);
+  --color-danger-subtle: rgb(255 35 91 / 10%);
+
+  /* Misc */
+  --color-primer-shadow-inset: 0 0 transparent;
+  --color-scale-gray-7: #362f42;
+  --color-scale-blue-8: #1a0a2e;
+  --color-social-reaction-bg-hover: var(--color-scale-gray-7);
+  --color-social-reaction-bg-reacted-hover: var(--color-scale-blue-8);
+}
+
+main .pagination-loader-container {
+  background-image: url("https://github.com/images/modules/pulls/progressive-disclosure-line-dark.svg");
+}
+
+main .gsc-loading-image {
+  background-image: url("https://github.githubassets.com/images/mona-loading-dimmed.gif");
+}
