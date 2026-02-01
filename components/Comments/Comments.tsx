@@ -7,6 +7,8 @@ function Comments() {
     return null;
   }
 
+  const theme = `${window.location.origin}/giscus-theme.css`;
+
   return (
     <Suspense>
       <Giscus
@@ -19,7 +21,7 @@ function Comments() {
         reactionsEnabled="1"
         emitMetadata="0"
         inputPosition="top"
-        theme="https://renan.dev/giscus-theme.css"
+        theme={theme}
         lang="en"
         loading="lazy"
       />
