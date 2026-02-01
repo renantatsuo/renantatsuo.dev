@@ -75,8 +75,8 @@ main {
 
   /* Canvas / backgrounds */
   --color-canvas-default: #2c2836;
-  --color-canvas-overlay: #1a091c;
-  --color-canvas-inset: #1a091c;
+  --color-canvas-overlay: #2c2836;
+  --color-canvas-inset: #2c2836;
   --color-canvas-subtle: #362f42;
 
   /* Borders */
