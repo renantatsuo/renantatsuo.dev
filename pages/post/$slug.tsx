@@ -48,8 +48,8 @@ function PostPage() {
     <>
       <UserInfo user={user} />
       <PostContent post={post} />
-      <Comments />
       <PostPagination nextPost={nextPost} prevPost={prevPost} />
+      <Comments />
     </>
   );
 }
