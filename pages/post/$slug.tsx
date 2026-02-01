@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import Comments from "~/components/Comments";
 import PostContent from "~/components/PostContent";
 import PostPagination from "~/components/PostPagination";
 import UserInfo from "~/components/UserInfo";
@@ -48,6 +49,7 @@ function PostPage() {
       <UserInfo user={user} />
       <PostContent post={post} />
       <PostPagination nextPost={nextPost} prevPost={prevPost} />
+      <Comments />
     </>
   );
 }

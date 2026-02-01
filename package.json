@@ -17,6 +17,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@giscus/react": "^3.1.0",
     "@tanstack/react-router": "^1.153.1",
     "@tanstack/react-start": "^1.153.1",
     "@tanstack/start-static-server-functions": "^1.153.1",
