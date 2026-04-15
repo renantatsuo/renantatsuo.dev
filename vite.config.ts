@@ -36,13 +36,6 @@ export default defineConfig({
   ],
   nitro: {
     preset: "vercel",
-    publicAssets: [
-      {
-        dir: ".vercel/output/dist/client/__tsr",
-        baseURL: "/__tsr",
-        maxAge: 60 * 60 * 24 * 30, // 30 days
-      },
-    ],
   },
 });
 
