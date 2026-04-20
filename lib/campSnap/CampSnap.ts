@@ -46,6 +46,8 @@ export function parseFlt(text: string): ParseFltResult {
 
   const params = lines[0]
     .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean)
     .map((value) => Number.parseFloat(value.trim()));
 
   if (params.length !== PARAM_COUNT || params.some(Number.isNaN)) {
@@ -54,7 +56,12 @@ export function parseFlt(text: string): ParseFltResult {
 
   const values = lines
     .slice(1)
-    .flatMap((line) => line.split(","))
+    .flatMap((line) =>
+      line
+        .split(",")
+        .map((value) => value.trim())
+        .filter(Boolean),
+    )
     .map((value) => Number.parseFloat(value.trim()));
 
   if (values.some(Number.isNaN)) {
