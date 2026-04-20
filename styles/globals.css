@@ -275,6 +275,9 @@
     margin: 0.75em 0;
   }
 
+  .text-muted::selection {
+    background: var(--muted-foreground);
+  }
   ::selection {
     background: var(--muted);
   }
