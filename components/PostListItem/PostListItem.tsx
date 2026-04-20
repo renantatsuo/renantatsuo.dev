@@ -16,12 +16,12 @@ function PostListItem({
           <Link
             to="/post/$slug"
             params={{ slug }}
-            className="text-yellow! border-none! font-bold"
+            className="text-accent! border-none! font-bold"
           >
             {title}
           </Link>
         </h2>
-        <small className="text-selected">{`published on ${postDate.toLocaleDateString()}`}</small>
+        <small className="text-muted">{`published on ${postDate.toLocaleDateString()}`}</small>
       </header>
       <p className="my-2!">{excerpt}</p>
     </article>
