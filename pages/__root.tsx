@@ -65,7 +65,10 @@ function RootLayout() {
         <HeadContent />
       </head>
       <body>
-        <main className="w-full max-w-185 p-4 flex items-start flex-col gap-8 bg-background">
+        <main
+          className="bg-background flex w-full max-w-185 flex-col items-start
+            gap-8 p-4"
+        >
           <Outlet />
         </main>
         <Scripts />

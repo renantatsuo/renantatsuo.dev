@@ -10,6 +10,7 @@
   ],
   "type": "module",
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks && chmod +x .githooks/*",
     "dev": "bun run --bun vite dev",
     "build": "npx vite build --mode prod",
     "start": "bun .vercel/output/functions/__server.func/index.mjs",
@@ -38,6 +39,9 @@
     "@vitejs/plugin-react": "^5.2.0",
     "nitro": "^3.0.260415-beta",
     "prettier-eslint": "^16.4.2",
+    "prettier-plugin-classnames": "^0.10.1",
+    "prettier-plugin-merge": "^0.10.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.2.2",
     "typescript": "^4.9.5",
     "vite": "^7.3.2",

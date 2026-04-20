@@ -8,7 +8,7 @@ import Lottie from "./Lottie";
  */
 export default function FlatColorLottie(
   animation: Lottie,
-  hexColor: string
+  hexColor: string,
 ): Lottie {
   return {
     type: animation.type,
@@ -27,7 +27,7 @@ function flattenColor(hexColor, animationData) {
   const string = JSON.stringify(animationData);
   const replaced = string.replace(
     /\[\d+,\d+,\d+,[\d\.]+\]/g,
-    `[${color.join(",")}]`
+    `[${color.join(",")}]`,
   );
   return JSON.parse(replaced);
 }

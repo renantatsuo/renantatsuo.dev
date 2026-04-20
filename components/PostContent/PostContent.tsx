@@ -10,9 +10,14 @@ function PostContent({ post }: PostProps) {
   const postDate = new Date(post.createdAt);
 
   return (
-    <article className="w-full [&_:not(pre)_code]:bg-card [&_:not(pre)_code]:px-1 [&_:not(pre)_code]:rounded [&_table]:border-collapse [&_table_td]:border-2 [&_table_td]:border-border [&_table_td]:px-3 [&_table_td]:py-2">
+    <article
+      className="[&_:not(pre)_code]:bg-card [&_table_td]:border-border w-full
+        [&_:not(pre)_code]:rounded [&_:not(pre)_code]:px-1
+        [&_table]:border-collapse [&_table_td]:border-2 [&_table_td]:px-3
+        [&_table_td]:py-2"
+    >
       <header className="flex flex-col">
-        <h1 className="m-0 text-accent! font-bold!">{post.title}</h1>
+        <h1 className="text-accent! m-0 font-bold!">{post.title}</h1>
         <small className="text-muted">
           published on {postDate.toLocaleDateString()}
         </small>
