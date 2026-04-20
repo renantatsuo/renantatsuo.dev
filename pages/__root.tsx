@@ -59,7 +59,7 @@ function RootLayout() {
   const { environment } = Route.useLoaderData();
   const isProduction = environment === "production";
   return (
-    <html>
+    <html className="dark">
       <head>
         {isProduction && <GoogleAnalytics gaId={GA_ID} />}
         <HeadContent />
