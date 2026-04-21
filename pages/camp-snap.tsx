@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
+  ChevronsLeftRight,
   Download,
   Image as ImageIcon,
   Images,
@@ -453,7 +454,17 @@ function BeforeAfterPreview({
             className="bg-primary absolute top-0 bottom-0 z-10 w-0.5
               -translate-x-1/2"
             style={{ left: `${comparisonPosition}%` }}
-          />
+          >
+            <div
+              className="border-background bg-primary text-primary-foreground
+                absolute top-1/2 left-1/2 flex size-10 -translate-x-1/2
+                -translate-y-1/2 items-center justify-center rounded-full
+                border-2 shadow-md"
+              aria-hidden="true"
+            >
+              <ChevronsLeftRight className="size-5" />
+            </div>
+          </div>
           <div
             className="absolute right-3 bottom-3 left-3 flex justify-between
               text-xs font-bold"
