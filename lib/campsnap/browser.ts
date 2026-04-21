@@ -1,14 +1,16 @@
 import {
-  applyCampSnapV105,
-  applyGammaTableRGBA,
-  applyInverseGammaTableRGBA,
-  applyMatrixRGBAFloat,
   createCampSnapOutputName,
   createCampSnapZipName,
   serializeFlt,
   type ParsedFilter,
   type RGBAImage,
 } from "~/lib/campsnap/CampSnap";
+import {
+  applyCampSnapLutImage,
+  buildCampSnapPreLutImage,
+  processCampSnapImage,
+  terminateCampSnapWorker,
+} from "~/lib/campsnap/workerClient";
 import { createZipArchive } from "~/lib/zip";
 
 export const CAMP_SNAP_LIMITS = {
@@ -106,7 +108,7 @@ export async function renderCampSnapPhoto(
 
   const originalPreviewBlob = await createPreviewBlob(canvas);
   const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-  const processed = applyCampSnapV105(toRgbaImage(imageData), filter);
+  const processed = await processCampSnapImage(toRgbaImage(imageData), filter);
   const processedImageData = new ImageData(
     toImageDataArray(processed.data),
     processed.width,
@@ -195,13 +197,46 @@ export async function buildCampSnapPreLutBytes(
   image.close?.();
 
   const imageData = context.getImageData(0, 0, width, height);
-  const pixels = new Uint8ClampedArray(imageData.data);
+  const processed = await buildCampSnapPreLutImage(
+    toRgbaImage(imageData),
+    filter,
+  );
 
-  applyInverseGammaTableRGBA(pixels);
-  applyMatrixRGBAFloat(pixels, filter.matrix);
-  applyGammaTableRGBA(pixels);
+  return {
+    pixels: processed.data,
+    width: processed.width,
+    height: processed.height,
+  };
+}
 
-  return { pixels, width, height };
+export async function applyCampSnapPreviewLutBytes(
+  pixels: Uint8ClampedArray,
+  width: number,
+  height: number,
+  lutR: number[],
+  lutG: number[],
+  lutB: number[],
+) {
+  const processed = await applyCampSnapLutImage(
+    {
+      data: toImageDataArray(pixels),
+      width,
+      height,
+    },
+    lutR,
+    lutG,
+    lutB,
+  );
+
+  return {
+    pixels: processed.data,
+    width: processed.width,
+    height: processed.height,
+  };
+}
+
+export function cleanupCampSnapProcessingWorker() {
+  terminateCampSnapWorker();
 }
 
 export async function exportCampSnapPhotos(
@@ -227,7 +262,9 @@ function toRgbaImage(imageData: ImageData): RGBAImage {
   };
 }
 
-function toImageDataArray(data: Uint8ClampedArray) {
+function toImageDataArray(
+  data: Uint8ClampedArray,
+): Uint8ClampedArray<ArrayBuffer> {
   const copy = new Uint8ClampedArray(data.length);
 
   copy.set(data);

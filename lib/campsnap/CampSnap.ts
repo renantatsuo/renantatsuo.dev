@@ -24,7 +24,7 @@ export type ParsedFilter = {
 export type ParseFltResult = Result<ParsedFilter>;
 
 export type RGBAImage = {
-  data: Uint8ClampedArray;
+  data: Uint8ClampedArray<ArrayBuffer>;
   width: number;
   height: number;
 };

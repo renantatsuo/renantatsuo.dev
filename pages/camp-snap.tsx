@@ -29,9 +29,10 @@ import { Label } from "~/components/ui/label";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Separator } from "~/components/ui/separator";
 import {
-  applyPerChannelLUT,
+  applyCampSnapPreviewLutBytes,
   buildCampSnapPreLutBytes,
   CampSnapBrowserError,
+  cleanupCampSnapProcessingWorker,
   createBaselineCurvePoints,
   curvePointsToLut,
   exportCampSnapFilter,
@@ -209,6 +210,7 @@ function CampSnapPage() {
   React.useEffect(() => {
     return () => {
       isMountedRef.current = false;
+      cleanupCampSnapProcessingWorker();
       revokeCampSnapPhotoUrls(processedPhotosRef.current);
     };
   }, []);
@@ -649,7 +651,6 @@ async function createEditedPreviewUrl(
   cache: CampSnapPreLutPreview,
   editedLuts: LutsByChannel,
 ) {
-  const pixels = new Uint8ClampedArray(cache.pixels);
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
 
@@ -659,11 +660,22 @@ async function createEditedPreviewUrl(
     );
   }
 
-  applyPerChannelLUT(pixels, editedLuts.R, editedLuts.G, editedLuts.B);
+  const processed = await applyCampSnapPreviewLutBytes(
+    cache.pixels,
+    cache.width,
+    cache.height,
+    editedLuts.R,
+    editedLuts.G,
+    editedLuts.B,
+  );
 
-  canvas.width = cache.width;
-  canvas.height = cache.height;
-  context.putImageData(new ImageData(pixels, cache.width, cache.height), 0, 0);
+  canvas.width = processed.width;
+  canvas.height = processed.height;
+  context.putImageData(
+    new ImageData(processed.pixels, processed.width, processed.height),
+    0,
+    0,
+  );
 
   const blob = await canvasToBlob(canvas, "image/webp", 0.9);
 

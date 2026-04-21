@@ -24,8 +24,10 @@ export type { ParseFltResult, ParsedFilter, RGBAImage } from "./CampSnap";
 
 export {
   CAMP_SNAP_LIMITS,
+  applyCampSnapPreviewLutBytes,
   CampSnapBrowserError,
   buildCampSnapPreLutBytes,
+  cleanupCampSnapProcessingWorker,
   createProcessedCampSnapPhotoId,
   exportCampSnapFilter,
   exportCampSnapPhotos,
