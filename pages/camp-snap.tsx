@@ -801,11 +801,21 @@ type BeforeAfterPreviewProps = {
   overrideProcessedUrl?: string | null;
 };
 
+type BeforeAfterPreviewImagePair = {
+  height: number;
+  id: string;
+  name: string;
+  originalUrl: string;
+  processedUrl: string;
+  width: number;
+};
+
 function BeforeAfterPreview({
   photo,
   overrideProcessedUrl,
 }: BeforeAfterPreviewProps) {
   const [comparisonPosition, setComparisonPosition] = React.useState(50);
+  const displayPhoto = useDecodedBeforeAfterPhoto(photo, overrideProcessedUrl);
 
   React.useEffect(() => {
     setComparisonPosition(50);
@@ -861,7 +871,7 @@ function BeforeAfterPreview({
     setClampedComparisonPosition(nextPosition);
   }
 
-  if (!photo) {
+  if (!displayPhoto) {
     return (
       <Card className="rounded-lg">
         <CardContent
@@ -878,8 +888,6 @@ function BeforeAfterPreview({
     );
   }
 
-  const processedUrl = overrideProcessedUrl ?? photo.processedUrl;
-
   return (
     <Card className="rounded-lg">
       <CardHeader className="pb-0">
@@ -889,10 +897,10 @@ function BeforeAfterPreview({
               <SlidersHorizontal className="size-4" />
               Before / After
             </CardTitle>
-            <CardDescription>{photo.name}</CardDescription>
+            <CardDescription>{displayPhoto.name}</CardDescription>
           </div>
           <Badge variant="outline">
-            {photo.width}x{photo.height}
+            {displayPhoto.width}x{displayPhoto.height}
           </Badge>
         </div>
       </CardHeader>
@@ -912,18 +920,18 @@ function BeforeAfterPreview({
           onKeyDown={handleComparisonKeyDown}
         >
           <img
-            src={processedUrl}
-            alt={`${photo.name} processed`}
+            src={displayPhoto.processedUrl}
+            alt={`${displayPhoto.name} processed`}
             draggable={false}
             className="pointer-events-none absolute inset-0 size-full
               object-contain"
-            decoding="async"
+            decoding="sync"
           />
           <img
-            src={photo.originalUrl}
-            alt={`${photo.name} original`}
+            src={displayPhoto.originalUrl}
+            alt={`${displayPhoto.name} original`}
             draggable={false}
-            decoding="async"
+            decoding="sync"
             className="pointer-events-none absolute inset-0 size-full
               object-contain"
             style={{
@@ -956,6 +964,80 @@ function BeforeAfterPreview({
       </CardContent>
     </Card>
   );
+}
+
+function useDecodedBeforeAfterPhoto(
+  photo: ProcessedCampSnapPhoto | null,
+  overrideProcessedUrl?: string | null,
+) {
+  const requestedPair =
+    React.useMemo<BeforeAfterPreviewImagePair | null>(() => {
+      if (!photo) {
+        return null;
+      }
+
+      return {
+        height: photo.height,
+        id: photo.id,
+        name: photo.name,
+        originalUrl: photo.originalUrl,
+        processedUrl: overrideProcessedUrl ?? photo.processedUrl,
+        width: photo.width,
+      };
+    }, [photo, overrideProcessedUrl]);
+  const [displayPair, setDisplayPair] =
+    React.useState<BeforeAfterPreviewImagePair | null>(requestedPair);
+
+  React.useEffect(() => {
+    let isCurrent = true;
+
+    if (!requestedPair) {
+      setDisplayPair(null);
+      return () => {
+        isCurrent = false;
+      };
+    }
+
+    void decodeBeforeAfterPair(requestedPair).then(
+      () => {
+        if (isCurrent) {
+          setDisplayPair(requestedPair);
+        }
+      },
+      () => undefined,
+    );
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [requestedPair]);
+
+  return displayPair;
+}
+
+async function decodeBeforeAfterPair(pair: BeforeAfterPreviewImagePair) {
+  await Promise.all([
+    decodeImageUrl(pair.originalUrl),
+    decodeImageUrl(pair.processedUrl),
+  ]);
+}
+
+async function decodeImageUrl(url: string) {
+  const image = new Image();
+
+  image.decoding = "sync";
+
+  if (image.decode) {
+    image.src = url;
+    await image.decode();
+    return;
+  }
+
+  await new Promise<void>((resolve, reject) => {
+    image.onload = () => resolve();
+    image.onerror = () => reject(new Error("Failed to decode preview image"));
+    image.src = url;
+  });
 }
 
 type ControlsSidebarProps = {
