@@ -1,5 +1,5 @@
 import Lottie from "lottie-react";
-import { useState } from "react";
+import * as React from "react";
 import FlatColorLottie from "./FlatColorLottie";
 import LottieFactory from "./LottieFactory";
 import LottieType from "./LottieType";
@@ -14,7 +14,7 @@ export default function HoverLottie({ icon, title, color }: HoverLottieProps) {
   const animationData = color
     ? FlatColorLottie(animation, color).data
     : animation.data;
-  const [isHover, setIsHover] = useState(false);
+  const [isHover, setIsHover] = React.useState(false);
 
   return (
     <Lottie

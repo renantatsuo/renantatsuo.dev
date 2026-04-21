@@ -1,6 +1,6 @@
-import { lazy, Suspense } from "react";
+import * as React from "react";
 
-const Giscus = lazy(() => import("@giscus/react"));
+const Giscus = React.lazy(() => import("@giscus/react"));
 
 function Comments() {
   if (typeof window === "undefined") {
@@ -10,7 +10,7 @@ function Comments() {
   const theme = `${window.location.origin}/giscus-theme.css`;
 
   return (
-    <Suspense>
+    <React.Suspense>
       <Giscus
         id="comments"
         repo="renantatsuo/renantatsuo.dev"
@@ -25,7 +25,7 @@ function Comments() {
         lang="en"
         loading="lazy"
       />
-    </Suspense>
+    </React.Suspense>
   );
 }
 
