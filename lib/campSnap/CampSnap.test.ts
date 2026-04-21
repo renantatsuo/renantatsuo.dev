@@ -6,7 +6,7 @@ import {
   applyPerChannelLUT,
   parseFlt,
   type ParsedFilter,
-} from "~/lib/campSnap";
+} from "~/lib/campsnap";
 
 describe("parseFlt()", () => {
   it("parses the baked matrix and LUTs", () => {

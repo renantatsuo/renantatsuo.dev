@@ -1,4 +1,4 @@
-import { createZipArchive, sanitizeFileName } from "~/lib/campSnap";
+import { createZipArchive, sanitizeFileName } from "~/lib/zip";
 
 describe("sanitizeFileName()", () => {
   it("normalizes names to safe zip entries", () => {

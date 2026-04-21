@@ -5,8 +5,8 @@ import {
   parseFlt,
   type ParsedFilter,
   type RGBAImage,
-} from "~/lib/campSnap";
-import { createZipArchive, sanitizeFileName } from "~/lib/campSnap/Zip";
+} from "~/lib/campsnap";
+import { createZipArchive, sanitizeFileName } from "~/lib/zip";
 
 type ProcessedPhoto = {
   id: string;
@@ -332,8 +332,8 @@ function PreviewCard({ title, src, alt, meta }: PreviewCardProps) {
       <img
         src={src}
         alt={alt}
-        className="bg-background aspect-auto max-h-[28rem] w-full rounded-md
-          border object-contain"
+        className="bg-background aspect-auto max-h-112 w-full rounded-md border
+          object-contain"
       />
     </article>
   );
@@ -361,7 +361,7 @@ async function renderPhoto(
   const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
   const processed = applyCampSnapV105(toRgbaImage(imageData), filter);
   const processedImageData = new ImageData(
-    processed.data,
+    toImageDataArray(processed.data),
     processed.width,
     processed.height,
   );
@@ -386,10 +386,18 @@ async function renderPhoto(
 
 function toRgbaImage(imageData: ImageData): RGBAImage {
   return {
-    data: new Uint8ClampedArray(imageData.data),
+    data: toImageDataArray(imageData.data),
     width: imageData.width,
     height: imageData.height,
   };
+}
+
+function toImageDataArray(data: Uint8ClampedArray) {
+  const copy = new Uint8ClampedArray(data.length);
+
+  copy.set(data);
+
+  return copy;
 }
 
 function loadImage(url: string) {

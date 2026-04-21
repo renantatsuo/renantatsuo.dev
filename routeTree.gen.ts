@@ -8,80 +8,80 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./pages/__root";
-import { Route as CampSnapRouteImport } from "./pages/camp-snap";
-import { Route as IndexRouteImport } from "./pages/index";
-import { Route as PostSlugRouteImport } from "./pages/post/$slug";
+import { Route as rootRouteImport } from './pages/__root'
+import { Route as CampSnapRouteImport } from './pages/camp-snap'
+import { Route as IndexRouteImport } from './pages/index'
+import { Route as PostSlugRouteImport } from './pages/post/$slug'
 
 const CampSnapRoute = CampSnapRouteImport.update({
-  id: "/camp-snap",
-  path: "/camp-snap",
+  id: '/camp-snap',
+  path: '/camp-snap',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const PostSlugRoute = PostSlugRouteImport.update({
-  id: "/post/$slug",
-  path: "/post/$slug",
+  id: '/post/$slug',
+  path: '/post/$slug',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/camp-snap": typeof CampSnapRoute;
-  "/post/$slug": typeof PostSlugRoute;
+  '/': typeof IndexRoute
+  '/camp-snap': typeof CampSnapRoute
+  '/post/$slug': typeof PostSlugRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/camp-snap": typeof CampSnapRoute;
-  "/post/$slug": typeof PostSlugRoute;
+  '/': typeof IndexRoute
+  '/camp-snap': typeof CampSnapRoute
+  '/post/$slug': typeof PostSlugRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/camp-snap": typeof CampSnapRoute;
-  "/post/$slug": typeof PostSlugRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/camp-snap': typeof CampSnapRoute
+  '/post/$slug': typeof PostSlugRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/camp-snap" | "/post/$slug";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/camp-snap" | "/post/$slug";
-  id: "__root__" | "/" | "/camp-snap" | "/post/$slug";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/camp-snap' | '/post/$slug'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/camp-snap' | '/post/$slug'
+  id: '__root__' | '/' | '/camp-snap' | '/post/$slug'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  CampSnapRoute: typeof CampSnapRoute;
-  PostSlugRoute: typeof PostSlugRoute;
+  IndexRoute: typeof IndexRoute
+  CampSnapRoute: typeof CampSnapRoute
+  PostSlugRoute: typeof PostSlugRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/camp-snap": {
-      id: "/camp-snap";
-      path: "/camp-snap";
-      fullPath: "/camp-snap";
-      preLoaderRoute: typeof CampSnapRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/post/$slug": {
-      id: "/post/$slug";
-      path: "/post/$slug";
-      fullPath: "/post/$slug";
-      preLoaderRoute: typeof PostSlugRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+    '/camp-snap': {
+      id: '/camp-snap'
+      path: '/camp-snap'
+      fullPath: '/camp-snap'
+      preLoaderRoute: typeof CampSnapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/post/$slug': {
+      id: '/post/$slug'
+      path: '/post/$slug'
+      fullPath: '/post/$slug'
+      preLoaderRoute: typeof PostSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,16 +89,16 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CampSnapRoute: CampSnapRoute,
   PostSlugRoute: PostSlugRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from "./router.ts";
-import type { createStart } from "@tanstack/react-start";
-declare module "@tanstack/react-start" {
+import type { getRouter } from './router.ts'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
   }
 }

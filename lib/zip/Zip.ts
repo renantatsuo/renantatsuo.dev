@@ -4,9 +4,14 @@ const END_OF_CENTRAL_DIRECTORY_SIGNATURE = 0x06054b50;
 const VERSION = 20;
 const TEXT_ENCODER = new TextEncoder();
 
-export function createZipArchive(files: { name: string; data: Uint8Array }[]) {
-  const localParts: Uint8Array[] = [];
-  const centralParts: Uint8Array[] = [];
+export type ZipEntry = {
+  name: string;
+  data: Uint8Array;
+};
+
+export function createZipArchive(files: ZipEntry[]) {
+  const localParts: ArrayBuffer[] = [];
+  const centralParts: ArrayBuffer[] = [];
   let offset = 0;
 
   for (const file of files) {
@@ -51,14 +56,17 @@ export function createZipArchive(files: { name: string; data: Uint8Array }[]) {
     centralHeaderView.setUint32(42, offset, true);
     centralHeader.set(fileNameBytes, 46);
 
-    localParts.push(localHeader, file.data);
-    centralParts.push(centralHeader);
+    localParts.push(
+      toExactArrayBuffer(localHeader),
+      toExactArrayBuffer(file.data),
+    );
+    centralParts.push(toExactArrayBuffer(centralHeader));
 
     offset += localHeader.length + file.data.length;
   }
 
   const centralDirectorySize = centralParts.reduce(
-    (total, part) => total + part.length,
+    (total, part) => total + part.byteLength,
     0,
   );
   const endRecord = new Uint8Array(22);
@@ -73,7 +81,7 @@ export function createZipArchive(files: { name: string; data: Uint8Array }[]) {
   endRecordView.setUint32(16, offset, true);
   endRecordView.setUint16(20, 0, true);
 
-  return new Blob([...localParts, ...centralParts, endRecord], {
+  return new Blob([...localParts, ...centralParts, toExactArrayBuffer(endRecord)], {
     type: "application/zip",
   });
 }
@@ -117,4 +125,12 @@ function createCrcTable() {
 
     return current >>> 0;
   });
+}
+
+function toExactArrayBuffer(data: Uint8Array) {
+  const copy = new Uint8Array(data.length);
+
+  copy.set(data);
+
+  return copy.buffer;
 }

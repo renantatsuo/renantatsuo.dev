@@ -14,7 +14,8 @@
     "dev": "bun run --bun vite dev",
     "build": "npx vite build --mode prod",
     "start": "bun .vercel/output/functions/__server.func/index.mjs",
-    "test": "vitest run"
+    "test": "vitest run",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@giscus/react": "^3.1.0",
@@ -43,7 +44,7 @@
     "prettier-plugin-merge": "^0.10.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.2.2",
-    "typescript": "^4.9.5",
+    "typescript": "^6.0.3",
     "vite": "^7.3.2",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^3.2.4",
