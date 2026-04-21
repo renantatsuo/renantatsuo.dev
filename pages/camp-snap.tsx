@@ -43,6 +43,10 @@ type ProcessingState = {
   message: string;
 };
 
+const PHOTO_ACCEPT = "image/jpeg,image/png,image/webp";
+const PHOTO_EXTENSION_PATTERN = /\.(jpe?g|png|webp)$/i;
+const PHOTO_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+
 export const Route = createFileRoute("/camp-snap")({
   component: CampSnapPage,
   loader: async () => {
@@ -150,8 +154,13 @@ function CampSnapPage() {
   }
 
   function handlePhotoChange(event: React.ChangeEvent<HTMLInputElement>) {
+    handlePhotoFiles(Array.from(event.target.files ?? []));
+    event.currentTarget.value = "";
+  }
+
+  function handlePhotoFiles(files: File[]) {
     clearProcessedPhotos();
-    setSourceFiles(Array.from(event.target.files ?? []));
+    setSourceFiles(files.filter(isAcceptedPhotoFile));
   }
 
   async function handleProcessPhotos() {
@@ -271,6 +280,7 @@ function CampSnapPage() {
             onExportZip={handleExportZip}
             onFilterChange={handleFilterChange}
             onPhotoChange={handlePhotoChange}
+            onPhotoFiles={handlePhotoFiles}
             onProcessPhotos={handleProcessPhotos}
             processingState={processingState}
             selectedPhoto={selectedPhoto}
@@ -279,6 +289,12 @@ function CampSnapPage() {
         </div>
       </article>
     </main>
+  );
+}
+
+function isAcceptedPhotoFile(file: File) {
+  return (
+    PHOTO_MIME_TYPES.has(file.type) || PHOTO_EXTENSION_PATTERN.test(file.name)
   );
 }
 
@@ -417,28 +433,25 @@ function BeforeAfterPreview({
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div
-          className="bg-background relative grid min-h-96 overflow-hidden
-            rounded-lg border"
+          className="bg-background relative isolate h-[min(70vh,34rem)] min-h-96
+            overflow-hidden rounded-lg border"
         >
           <img
             src={photo.processedUrl}
             alt={`${photo.name} processed`}
-            className="max-h-136 w-full self-center object-contain"
+            className="absolute inset-0 size-full object-contain"
+          />
+          <img
+            src={photo.originalUrl}
+            alt={`${photo.name} original`}
+            className="absolute inset-0 size-full object-contain"
+            style={{
+              clipPath: `inset(0 ${100 - comparisonPosition}% 0 0)`,
+            }}
           />
           <div
-            className="border-primary absolute inset-0 overflow-hidden
-              border-r-2"
-            style={{ width: `${comparisonPosition}%` }}
-          >
-            <img
-              src={photo.originalUrl}
-              alt={`${photo.name} original`}
-              className="h-full w-[min(100vw,calc(100vw-2rem))] max-w-none
-                object-contain lg:w-[calc(100vw-26rem)]"
-            />
-          </div>
-          <div
-            className="bg-primary absolute top-0 bottom-0 w-0.5"
+            className="bg-primary absolute top-0 bottom-0 z-10 w-0.5
+              -translate-x-1/2"
             style={{ left: `${comparisonPosition}%` }}
           />
           <div
@@ -457,6 +470,7 @@ function BeforeAfterPreview({
           value={[comparisonPosition]}
           onValueChange={(value) => onComparisonPositionChange(value[0] ?? 50)}
           aria-label="Before after comparison"
+          className="cursor-pointer"
         />
       </CardContent>
     </Card>
@@ -471,6 +485,7 @@ type ControlsSidebarProps = {
   onExportZip: () => void;
   onFilterChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onPhotoChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onPhotoFiles: (files: File[]) => void;
   onProcessPhotos: () => void;
   processingState: ProcessingState;
   selectedPhoto: ProcessedCampSnapPhoto | null;
@@ -485,6 +500,7 @@ function ControlsSidebar({
   onExportZip,
   onFilterChange,
   onPhotoChange,
+  onPhotoFiles,
   onProcessPhotos,
   processingState,
   selectedPhoto,
@@ -516,12 +532,11 @@ function ControlsSidebar({
 
             <div className="grid gap-2">
               <Label htmlFor="camp-snap-photos">Photos</Label>
-              <Input
-                id="camp-snap-photos"
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                multiple
+              <PhotoDropzone
+                inputId="camp-snap-photos"
+                files={sourceFiles}
                 onChange={onPhotoChange}
+                onDropFiles={onPhotoFiles}
               />
             </div>
           </div>
@@ -606,6 +621,115 @@ function ControlsSidebar({
         </CardContent>
       </Card>
     </aside>
+  );
+}
+
+type PhotoDropzoneProps = {
+  inputId: string;
+  files: File[];
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onDropFiles: (files: File[]) => void;
+};
+
+function PhotoDropzone({
+  inputId,
+  files,
+  onChange,
+  onDropFiles,
+}: PhotoDropzoneProps) {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = React.useState(false);
+  const selectedLabel =
+    files.length === 0
+      ? "JPEG, PNG, or WebP"
+      : `${files.length} photo${files.length === 1 ? "" : "s"} selected`;
+  const previewNames = files.slice(0, 3).map((file) => file.name);
+
+  function openFilePicker() {
+    inputRef.current?.click();
+  }
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+
+    event.preventDefault();
+    openFilePicker();
+  }
+
+  function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+    setIsDragging(true);
+  }
+
+  function handleDragLeave(event: React.DragEvent<HTMLDivElement>) {
+    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+      setIsDragging(false);
+    }
+  }
+
+  function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    setIsDragging(false);
+    onDropFiles(Array.from(event.dataTransfer.files));
+  }
+
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={openFilePicker}
+      onKeyDown={handleKeyDown}
+      onDragOver={handleDragOver}
+      onDragEnter={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      className={`border-border bg-background hover:border-primary/60
+        hover:bg-muted/40 focus-visible:border-ring focus-visible:ring-ring/50
+        flex min-h-36 cursor-pointer flex-col items-center justify-center gap-3
+        rounded-lg border border-dashed p-4 text-center transition-colors
+        outline-none focus-visible:ring-3 ${
+          isDragging ? "border-primary bg-primary/10" : ""
+        }`}
+    >
+      <Input
+        ref={inputRef}
+        id={inputId}
+        type="file"
+        accept={PHOTO_ACCEPT}
+        multiple
+        onChange={onChange}
+        className="sr-only"
+        tabIndex={-1}
+      />
+      <span
+        className="bg-secondary text-secondary-foreground flex size-10
+          items-center justify-center rounded-lg"
+      >
+        <ImageIcon className="size-5" />
+      </span>
+      <span className="grid gap-1">
+        <strong className="text-sm">Drop photos here or click to upload</strong>
+        <span className="text-muted-foreground text-xs">{selectedLabel}</span>
+      </span>
+      {previewNames.length > 0 && (
+        <span
+          className="text-muted-foreground flex max-w-full flex-col gap-1
+            text-xs"
+        >
+          {previewNames.map((name) => (
+            <span key={name} className="max-w-64 truncate">
+              {name}
+            </span>
+          ))}
+          {files.length > previewNames.length && (
+            <span>+{files.length - previewNames.length} more</span>
+          )}
+        </span>
+      )}
+    </div>
   );
 }
 
