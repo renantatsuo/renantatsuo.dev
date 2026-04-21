@@ -477,7 +477,6 @@ function CampSnapPage() {
             curvePoints={curvePoints}
             editedLuts={editedLuts}
             filterState={filterState}
-            filterSummary={filterSummary}
             isPhotosStale={arePhotosStale}
             onActiveCurveChannelChange={setActiveCurveChannel}
             onCurvePointsChange={handleCurvePointsChange}
@@ -490,7 +489,6 @@ function CampSnapPage() {
             onResetAllCurves={handleResetAllCurves}
             onResetCurveChannel={handleResetCurveChannel}
             processingState={processingState}
-            selectedPhoto={selectedPhoto}
             sourceFiles={sourceFiles}
           />
         </div>
@@ -944,7 +942,6 @@ type ControlsSidebarProps = {
   curvePoints: CurvePointsByChannel | null;
   editedLuts: LutsByChannel | null;
   filterState: FilterState;
-  filterSummary: readonly (readonly [string, number])[];
   isPhotosStale: boolean;
   onActiveCurveChannelChange: (channel: ChannelKey) => void;
   onCurvePointsChange: (channel: ChannelKey, points: CurvePoint[]) => void;
@@ -957,7 +954,6 @@ type ControlsSidebarProps = {
   onResetAllCurves: () => void;
   onResetCurveChannel: (channel: ChannelKey) => void;
   processingState: ProcessingState;
-  selectedPhoto: ProcessedCampSnapPhoto | null;
   sourceFiles: File[];
 };
 
@@ -970,7 +966,6 @@ function ControlsSidebar({
   curvePoints,
   editedLuts,
   filterState,
-  filterSummary,
   isPhotosStale,
   onActiveCurveChannelChange,
   onCurvePointsChange,
@@ -983,7 +978,6 @@ function ControlsSidebar({
   onResetAllCurves,
   onResetCurveChannel,
   processingState,
-  selectedPhoto,
   sourceFiles,
 }: ControlsSidebarProps) {
   return (
@@ -1075,60 +1069,10 @@ function ControlsSidebar({
             </div>
           )}
 
-          <Separator />
-
-          <InfoRows
-            rows={[
-              ["Filter", filterState.fileName ?? "none selected"],
-              ["Queued", `${sourceFiles.length}`],
-              ["Processed", selectedPhoto ? selectedPhoto.outputName : "none"],
-            ]}
-          />
-
           {filterState.error && (
             <p className="text-destructive m-0 text-sm font-bold">
               {filterState.error}
             </p>
-          )}
-
-          {selectedPhoto && (
-            <>
-              <Separator />
-              <InfoRows
-                rows={[
-                  ["Selected", selectedPhoto.name],
-                  ["Output", selectedPhoto.outputName],
-                  ["Size", `${selectedPhoto.width}x${selectedPhoto.height}`],
-                ]}
-              />
-            </>
-          )}
-
-          {filterSummary.length > 0 && (
-            <>
-              <Separator />
-              <div className="grid gap-2">
-                <h2 className="m-0 text-base!">Filter Metadata</h2>
-                <div className="grid grid-cols-2 gap-2">
-                  {filterSummary.map(([label, value]) => (
-                    <div
-                      key={label}
-                      className="bg-background rounded-lg border px-3 py-2"
-                    >
-                      <span
-                        className="text-muted-foreground block truncate text-xs
-                          uppercase"
-                      >
-                        {label}
-                      </span>
-                      <strong className="block truncate text-sm">
-                        {value}
-                      </strong>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
           )}
         </CardContent>
       </Card>
@@ -1243,22 +1187,5 @@ function PhotoDropzone({
         </span>
       )}
     </div>
-  );
-}
-
-type InfoRowsProps = {
-  rows: Array<[string, string]>;
-};
-
-function InfoRows({ rows }: InfoRowsProps) {
-  return (
-    <dl className="m-0 grid gap-2 text-sm">
-      {rows.map(([label, value]) => (
-        <div key={label} className="grid gap-1">
-          <dt className="text-muted-foreground text-xs uppercase">{label}</dt>
-          <dd className="m-0 truncate font-bold">{value}</dd>
-        </div>
-      ))}
-    </dl>
   );
 }
