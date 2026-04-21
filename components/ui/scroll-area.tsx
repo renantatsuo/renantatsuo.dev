@@ -1,4 +1,3 @@
-import * as React from "react";
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 
 import { cn } from "~/lib/utils";
@@ -30,7 +29,7 @@ function ScrollArea({
           transition-[color,box-shadow] outline-none focus-visible:ring-[3px]
           focus-visible:outline-1"
       >
-        {children}
+        <ScrollAreaPrimitive.Content>{children}</ScrollAreaPrimitive.Content>
       </ScrollAreaPrimitive.Viewport>
       {showVerticalScrollbar && <ScrollBar orientation="vertical" />}
       {showHorizontalScrollbar && <ScrollBar orientation="horizontal" />}
