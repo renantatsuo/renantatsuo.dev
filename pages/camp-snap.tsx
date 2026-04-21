@@ -215,11 +215,17 @@ function CampSnapPage() {
   }
 
   return (
-    <main className="bg-background flex min-h-screen w-full justify-center p-4">
-      <div className="flex w-full max-w-7xl flex-col gap-6">
-        <header className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
+    <main
+      className="bg-background flex min-h-screen w-full flex-col items-center
+        gap-8 p-4"
+    >
+      <header className="w-full max-w-185">
+        <UserInfo user={user} />
+      </header>
+
+      <article className="flex w-full max-w-7xl flex-col gap-6">
+        <section className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
           <div className="flex max-w-3xl flex-col gap-3">
-            <UserInfo user={user} />
             <div>
               <Badge variant="outline" className="mb-3 w-fit">
                 Camp Snap V105
@@ -240,7 +246,7 @@ function CampSnapPage() {
               value={filterState.data ? "ready" : "none"}
             />
           </div>
-        </header>
+        </section>
 
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_22rem]">
           <section className="grid min-w-0 gap-4">
@@ -271,7 +277,7 @@ function CampSnapPage() {
             sourceFiles={sourceFiles}
           />
         </div>
-      </div>
+      </article>
     </main>
   );
 }
