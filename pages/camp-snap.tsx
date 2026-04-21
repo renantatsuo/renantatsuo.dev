@@ -544,6 +544,11 @@ type CampSnapPreLutPreview = {
   height: number;
 };
 
+type CampSnapLivePreviewUrl = {
+  photoId: string;
+  url: string;
+};
+
 function useCampSnapLivePreview({
   selectedPhoto,
   sourceFile,
@@ -554,10 +559,12 @@ function useCampSnapLivePreview({
   const cacheRef = React.useRef<CampSnapPreLutPreview | null>(null);
   const previewUrlRef = React.useRef<string | null>(null);
   const [cacheVersion, setCacheVersion] = React.useState(0);
-  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] =
+    React.useState<CampSnapLivePreviewUrl | null>(null);
+  const selectedPhotoId = selectedPhoto?.id ?? null;
 
   React.useEffect(() => {
-    previewUrlRef.current = previewUrl;
+    previewUrlRef.current = previewUrl?.url ?? null;
   }, [previewUrl]);
 
   React.useEffect(() => {
@@ -571,8 +578,8 @@ function useCampSnapLivePreview({
 
     cacheRef.current = null;
     setCacheVersion((version) => version + 1);
-    setPreviewUrl((currentUrl) => {
-      if (currentUrl) URL.revokeObjectURL(currentUrl);
+    setPreviewUrl((currentPreviewUrl) => {
+      if (currentPreviewUrl) URL.revokeObjectURL(currentPreviewUrl.url);
       return null;
     });
 
@@ -603,12 +610,12 @@ function useCampSnapLivePreview({
     return () => {
       isCurrent = false;
     };
-  }, [enabled, selectedPhoto?.id, sourceFile, filter]);
+  }, [enabled, selectedPhotoId, sourceFile, filter]);
 
   React.useEffect(() => {
     if (!enabled || !editedLuts) {
-      setPreviewUrl((currentUrl) => {
-        if (currentUrl) URL.revokeObjectURL(currentUrl);
+      setPreviewUrl((currentPreviewUrl) => {
+        if (currentPreviewUrl) URL.revokeObjectURL(currentPreviewUrl.url);
         return null;
       });
       return;
@@ -629,9 +636,15 @@ function useCampSnapLivePreview({
             return;
           }
 
-          setPreviewUrl((currentUrl) => {
-            if (currentUrl) URL.revokeObjectURL(currentUrl);
-            return nextUrl;
+          setPreviewUrl((currentPreviewUrl) => {
+            if (currentPreviewUrl) URL.revokeObjectURL(currentPreviewUrl.url);
+
+            return selectedPhotoId
+              ? {
+                  photoId: selectedPhotoId,
+                  url: nextUrl,
+                }
+              : null;
           });
         },
         () => undefined,
@@ -642,9 +655,9 @@ function useCampSnapLivePreview({
       isCurrent = false;
       window.clearTimeout(timeout);
     };
-  }, [enabled, editedLuts, cacheVersion]);
+  }, [enabled, editedLuts, cacheVersion, selectedPhotoId]);
 
-  return previewUrl;
+  return previewUrl?.photoId === selectedPhotoId ? previewUrl.url : null;
 }
 
 async function createEditedPreviewUrl(
