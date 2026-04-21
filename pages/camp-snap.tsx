@@ -452,29 +452,19 @@ function CampSnapPage() {
               compare the result, and export the processed batch as a ZIP.
             </p>
           </div>
-
-          <div className="grid grid-cols-3 gap-2 text-sm lg:min-w-80">
-            <Metric label="queued" value={sourceFiles.length} />
-            <Metric label="processed" value={processedPhotos.length} />
-            <Metric
-              label="filter"
-              value={filterState.data ? "ready" : "none"}
-            />
-          </div>
         </section>
 
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_22rem]">
           <section className="flex min-w-0 flex-col gap-4">
+            <BeforeAfterPreview
+              photo={selectedPhoto}
+              overrideProcessedUrl={livePreviewUrl}
+            />
             <PhotoCarousel
               photos={processedPhotos}
               selectedPhoto={selectedPhoto}
               arePhotosStale={arePhotosStale}
               onSelectPhoto={handleSelectPhoto}
-            />
-
-            <BeforeAfterPreview
-              photo={selectedPhoto}
-              overrideProcessedUrl={livePreviewUrl}
             />
           </section>
 
@@ -701,22 +691,6 @@ function canvasToBlob(
       quality,
     );
   });
-}
-
-type MetricProps = {
-  label: string;
-  value: React.ReactNode;
-};
-
-function Metric({ label, value }: MetricProps) {
-  return (
-    <div className="bg-card text-card-foreground rounded-lg border px-3 py-2">
-      <span className="text-muted-foreground block text-xs uppercase">
-        {label}
-      </span>
-      <strong className="block truncate text-lg leading-tight">{value}</strong>
-    </div>
-  );
 }
 
 type PhotoCarouselProps = {
@@ -1065,7 +1039,7 @@ function ControlsSidebar({
               className="w-full"
             >
               <Download className="size-4" />
-              Export
+              Export Photos
             </Button>
             <Button
               type="button"
