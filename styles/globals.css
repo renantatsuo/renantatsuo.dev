@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -178,6 +180,10 @@
   --tracking-wide: calc(var(--tracking-normal) + 0.025em);
   --tracking-wider: calc(var(--tracking-normal) + 0.05em);
   --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+  --font-heading: var(--font-sans);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 @layer base {
