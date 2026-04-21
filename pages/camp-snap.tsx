@@ -467,8 +467,8 @@ function BeforeAfterPreview({
           min={0}
           max={100}
           step={1}
-          value={[comparisonPosition]}
-          onValueChange={(value) => onComparisonPositionChange(value[0] ?? 50)}
+          value={comparisonPosition}
+          onValueChange={onComparisonPositionChange}
           aria-label="Before after comparison"
           className="cursor-pointer"
         />
