@@ -258,7 +258,7 @@ function CampSnapPage() {
         </section>
 
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_22rem]">
-          <section className="grid min-w-0 gap-4">
+          <section className="flex min-w-0 flex-col gap-4">
             <PhotoCarousel
               photos={processedPhotos}
               selectedPhoto={selectedPhoto}
@@ -341,8 +341,8 @@ function PhotoCarousel({
       </CardHeader>
       <CardContent>
         {photos.length > 0 ? (
-          <ScrollArea className="w-full">
-            <div className="flex gap-3 pb-3">
+          <ScrollArea scrollbars="horizontal" className="w-full">
+            <div className="flex w-max gap-3 pb-3">
               {photos.map((photo) => {
                 const isSelected = photo.id === selectedPhoto?.id;
 
