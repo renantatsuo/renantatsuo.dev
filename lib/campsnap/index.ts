@@ -10,3 +10,11 @@ export {
 } from "./CampSnap";
 
 export type { ParseFltResult, ParsedFilter, RGBAImage } from "./CampSnap";
+
+export {
+  exportCampSnapPhotos,
+  renderCampSnapPhoto,
+  revokeCampSnapPhotoUrls,
+} from "./browser";
+
+export type { ProcessedCampSnapPhoto } from "./browser";

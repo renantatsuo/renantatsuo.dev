@@ -2,26 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import UserInfo from "~/components/UserInfo";
 import {
-  applyCampSnapV105,
-  createCampSnapOutputName,
-  createCampSnapZipName,
+  exportCampSnapPhotos,
   parseFlt,
+  renderCampSnapPhoto,
+  revokeCampSnapPhotoUrls,
   type ParsedFilter,
-  type RGBAImage,
+  type ProcessedCampSnapPhoto,
 } from "~/lib/campsnap";
-import { createZipArchive } from "~/lib/zip";
 import { loadUser } from "~/pages";
-
-type ProcessedPhoto = {
-  id: string;
-  name: string;
-  outputName: string;
-  originalUrl: string;
-  processedUrl: string;
-  blob: Blob;
-  width: number;
-  height: number;
-};
 
 type FilterState =
   | { data: ParsedFilter; error?: never; fileName: string }
@@ -56,7 +44,9 @@ function CampSnapPage() {
   const { user } = Route.useLoaderData();
   const [filterState, setFilterState] = useState<FilterState>({});
   const [sourceFiles, setSourceFiles] = useState<File[]>([]);
-  const [processedPhotos, setProcessedPhotos] = useState<ProcessedPhoto[]>([]);
+  const [processedPhotos, setProcessedPhotos] = useState<
+    ProcessedCampSnapPhoto[]
+  >([]);
   const [selectedPhotoId, setSelectedPhotoId] = useState<string | null>(null);
   const [processingState, setProcessingState] = useState<ProcessingState>({
     isProcessing: false,
@@ -95,10 +85,7 @@ function CampSnapPage() {
 
   useEffect(() => {
     return () => {
-      for (const photo of processedPhotos) {
-        URL.revokeObjectURL(photo.originalUrl);
-        URL.revokeObjectURL(photo.processedUrl);
-      }
+      revokeCampSnapPhotoUrls(processedPhotos);
     };
   }, [processedPhotos]);
 
@@ -142,7 +129,7 @@ function CampSnapPage() {
       message: `Processing 0/${sourceFiles.length} photos`,
     });
 
-    const nextPhotos: ProcessedPhoto[] = [];
+    const nextPhotos: ProcessedCampSnapPhoto[] = [];
 
     for (const [index, file] of sourceFiles.entries()) {
       setProcessingState({
@@ -150,7 +137,7 @@ function CampSnapPage() {
         message: `Processing ${index + 1}/${sourceFiles.length} photos`,
       });
 
-      const processedPhoto = await renderPhoto(
+      const processedPhoto = await renderCampSnapPhoto(
         file,
         filterState.data,
         filterState.fileName,
@@ -171,23 +158,12 @@ function CampSnapPage() {
       return;
     }
 
-    const files = await Promise.all(
-      processedPhotos.map(async (photo) => {
-        const bytes = new Uint8Array(await photo.blob.arrayBuffer());
-        return { name: photo.outputName, data: bytes };
-      }),
-    );
-    const zipBlob = createZipArchive(files);
-    const zipName = createCampSnapZipName(filterState.fileName);
-    downloadBlob(zipBlob, zipName);
+    await exportCampSnapPhotos(processedPhotos, filterState.fileName);
   }
 
   function clearProcessedPhotos() {
     setProcessedPhotos((currentPhotos) => {
-      for (const photo of currentPhotos) {
-        URL.revokeObjectURL(photo.originalUrl);
-        URL.revokeObjectURL(photo.processedUrl);
-      }
+      revokeCampSnapPhotoUrls(currentPhotos);
       return [];
     });
     setSelectedPhotoId(null);
@@ -347,96 +323,4 @@ function PreviewCard({ title, src, alt, meta }: PreviewCardProps) {
       />
     </article>
   );
-}
-
-async function renderPhoto(
-  file: File,
-  filter: ParsedFilter,
-  filterFileName: string,
-) {
-  const originalUrl = URL.createObjectURL(file);
-  const image = await loadImage(originalUrl);
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d");
-
-  if (!context) {
-    URL.revokeObjectURL(originalUrl);
-    throw new Error("Canvas rendering is not available in this browser");
-  }
-
-  canvas.width = image.naturalWidth;
-  canvas.height = image.naturalHeight;
-  context.drawImage(image, 0, 0);
-
-  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-  const processed = applyCampSnapV105(toRgbaImage(imageData), filter);
-  const processedImageData = new ImageData(
-    toImageDataArray(processed.data),
-    processed.width,
-    processed.height,
-  );
-  context.putImageData(processedImageData, 0, 0);
-
-  const blob = await canvasToBlob(canvas);
-  const processedUrl = URL.createObjectURL(blob);
-
-  return {
-    id: `${file.name}-${file.lastModified}`,
-    name: file.name,
-    outputName: createCampSnapOutputName(file.name, filterFileName),
-    originalUrl,
-    processedUrl,
-    blob,
-    width: canvas.width,
-    height: canvas.height,
-  } satisfies ProcessedPhoto;
-}
-
-function toRgbaImage(imageData: ImageData): RGBAImage {
-  return {
-    data: toImageDataArray(imageData.data),
-    width: imageData.width,
-    height: imageData.height,
-  };
-}
-
-function toImageDataArray(data: Uint8ClampedArray) {
-  const copy = new Uint8ClampedArray(data.length);
-
-  copy.set(data);
-
-  return copy;
-}
-
-function loadImage(url: string) {
-  return new Promise<HTMLImageElement>((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error("Failed to decode image"));
-    image.src = url;
-  });
-}
-
-function canvasToBlob(canvas: HTMLCanvasElement) {
-  return new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob((blob) => {
-      if (!blob) {
-        reject(new Error("Failed to encode image"));
-        return;
-      }
-
-      resolve(blob);
-    }, "image/png");
-  });
-}
-
-function downloadBlob(blob: Blob, fileName: string) {
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-
-  anchor.href = url;
-  anchor.download = fileName;
-  anchor.click();
-
-  setTimeout(() => URL.revokeObjectURL(url), 0);
 }
