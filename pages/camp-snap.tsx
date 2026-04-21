@@ -438,24 +438,23 @@ function CampSnapPage() {
     >
       <header className="w-full max-w-185">
         <UserInfo user={user} />
-      </header>
-
-      <article className="flex w-full max-w-7xl flex-col gap-6">
         <section className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
-          <div className="flex max-w-3xl flex-col gap-3">
+          <div className="flex flex-col">
             <div>
               <Badge variant="outline" className="mb-3 w-fit">
                 Camp Snap V105
               </Badge>
-              <h1 className="m-0 text-4xl!">Filter Workbench</h1>
+              <h1 className="text-accent m-0">Filter Workbench</h1>
             </div>
-            <p className="text-muted-foreground m-0 max-w-3xl text-base">
+            <small className="text-muted">
               Apply a V105 <code>.flt</code> file to local photos offline,
               compare the result, and export the processed batch as a ZIP.
-            </p>
+            </small>
           </div>
         </section>
+      </header>
 
+      <article className="flex w-full max-w-7xl flex-col gap-6">
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_22rem]">
           <section className="flex min-w-0 flex-col gap-4">
             <BeforeAfterPreview
