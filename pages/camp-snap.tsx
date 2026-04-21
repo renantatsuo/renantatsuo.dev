@@ -340,7 +340,7 @@ function PhotoCarousel({
                     <img
                       src={photo.processedUrl}
                       alt={`${photo.name} processed thumbnail`}
-                      className="bg-muted aspect-[4/3] w-full rounded-md
+                      className="bg-muted aspect-4/3 w-full rounded-md
                         object-cover"
                     />
                     <span className="mt-2 block truncate px-1 text-sm font-bold">
@@ -380,8 +380,8 @@ function BeforeAfterPreview({
     return (
       <Card className="rounded-lg">
         <CardContent
-          className="text-muted-foreground flex min-h-[28rem] flex-col
-            items-center justify-center gap-3 text-center"
+          className="text-muted-foreground flex min-h-112 flex-col items-center
+            justify-center gap-3 text-center"
         >
           <ImageIcon className="size-10" />
           <p className="m-0 max-w-sm">
@@ -411,13 +411,13 @@ function BeforeAfterPreview({
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div
-          className="bg-background relative grid min-h-[24rem] overflow-hidden
+          className="bg-background relative grid min-h-96 overflow-hidden
             rounded-lg border"
         >
           <img
             src={photo.processedUrl}
             alt={`${photo.name} processed`}
-            className="max-h-[34rem] w-full self-center object-contain"
+            className="max-h-136 w-full self-center object-contain"
           />
           <div
             className="border-primary absolute inset-0 overflow-hidden
