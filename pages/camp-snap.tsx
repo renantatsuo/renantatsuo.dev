@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
+import UserInfo from "~/components/UserInfo";
 import {
   applyCampSnapV105,
   parseFlt,
@@ -7,6 +8,7 @@ import {
   type RGBAImage,
 } from "~/lib/campsnap";
 import { createZipArchive, sanitizeFileName } from "~/lib/zip";
+import { loadUser } from "~/pages";
 
 type ProcessedPhoto = {
   id: string;
@@ -31,6 +33,11 @@ type ProcessingState = {
 
 export const Route = createFileRoute("/camp-snap")({
   component: CampSnapPage,
+  loader: async () => {
+    return {
+      user: await loadUser(),
+    };
+  },
   head: () => ({
     meta: [
       { title: "Camp Snap V105 Filter Tool — renan.dev" },
@@ -44,6 +51,7 @@ export const Route = createFileRoute("/camp-snap")({
 });
 
 function CampSnapPage() {
+  const { user } = Route.useLoaderData();
   const [filterState, setFilterState] = useState<FilterState>({});
   const [sourceFiles, setSourceFiles] = useState<File[]>([]);
   const [processedPhotos, setProcessedPhotos] = useState<ProcessedPhoto[]>([]);
@@ -185,8 +193,9 @@ function CampSnapPage() {
   }
 
   return (
-    <section className="flex w-full flex-col gap-6 py-8">
-      <header className="flex flex-col gap-3">
+    <main className="bg-background flex flex-col items-center gap-8 p-4">
+      <header className="flex max-w-185 flex-col gap-3">
+        <UserInfo user={user} />
         <h1 className="m-0 text-4xl!">Camp Snap V105 Filter Tool</h1>
         <p className="m-0 max-w-3xl">
           Apply a V105 <code>.flt</code> file to local photos offline. The tool
@@ -196,8 +205,8 @@ function CampSnapPage() {
       </header>
 
       <section
-        className="bg-card text-card-foreground flex flex-col gap-4 rounded-lg
-          border p-4 shadow-sm"
+        className="bg-card text-card-foreground flex w-full flex-col gap-4
+          rounded-lg border p-4 shadow-sm"
       >
         <div className="grid gap-4 md:grid-cols-2">
           <label className="flex flex-col gap-2">
@@ -308,7 +317,7 @@ function CampSnapPage() {
           </div>
         </section>
       )}
-    </section>
+    </main>
   );
 }
 

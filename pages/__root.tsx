@@ -4,8 +4,6 @@ import {
   Outlet,
   Scripts,
 } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
-import { staticFunctionMiddleware } from "@tanstack/start-static-server-functions";
 import GoogleAnalytics from "~/components/GoogleAnalytics";
 import { GA_ID } from "~/lib/static";
 import appCss from "~/styles/globals.css?url";
@@ -43,21 +41,10 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootLayout,
-  loader: async () => {
-    const environment = await getEnvironment();
-    return { environment };
-  },
 });
 
-const getEnvironment = createServerFn({ method: "GET" })
-  .middleware([staticFunctionMiddleware])
-  .handler(() => {
-    return process.env.ENVIRONMENT;
-  });
-
 function RootLayout() {
-  const { environment } = Route.useLoaderData();
-  const isProduction = environment === "production";
+  const isProduction = import.meta.env.PROD;
   return (
     <html className="dark">
       <head>
@@ -65,12 +52,7 @@ function RootLayout() {
         <HeadContent />
       </head>
       <body>
-        <main
-          className="bg-background flex w-full max-w-185 flex-col items-start
-            gap-8 p-4"
-        >
-          <Outlet />
-        </main>
+        <Outlet />
         <Scripts />
 
         <link rel="preconnect" href="https://fonts.gstatic.com" />
