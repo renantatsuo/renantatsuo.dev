@@ -7,6 +7,7 @@ import {
   createCampSnapOutputName,
   createCampSnapZipName,
   parseFlt,
+  serializeFlt,
   type ParsedFilter,
 } from "~/lib/campsnap";
 
@@ -157,6 +158,41 @@ describe("pixel transforms", () => {
     );
 
     expect(Array.from(result.data)).toStrictEqual([48, 70, 91, 70]);
+  });
+});
+
+describe("serializeFlt()", () => {
+  it("round-trips through parseFlt", () => {
+    const original = parseFlt(createDisposableFltWithTrailingCommas());
+
+    if (original.error || !original.data) {
+      throw original.error ?? new Error("Expected parsed filter");
+    }
+
+    const serialized = serializeFlt(original.data);
+    const reparsed = parseFlt(serialized);
+
+    expect(reparsed.error).toBeUndefined();
+    expect(reparsed.data).toStrictEqual(original.data);
+  });
+
+  it("preserves edited LUTs when round-tripped", () => {
+    const parsed = parseFlt(createDisposableFlt());
+
+    if (parsed.error || !parsed.data) {
+      throw parsed.error ?? new Error("Expected parsed filter");
+    }
+
+    const edited: ParsedFilter = {
+      ...parsed.data,
+      lutR: parsed.data.lutR.map((value) => Math.min(255, value + 7)),
+    };
+    const reparsed = parseFlt(serializeFlt(edited));
+
+    expect(reparsed.error).toBeUndefined();
+    expect(reparsed.data?.lutR).toStrictEqual(edited.lutR);
+    expect(reparsed.data?.lutG).toStrictEqual(edited.lutG);
+    expect(reparsed.data?.matrix1024).toStrictEqual(edited.matrix1024);
   });
 });
 

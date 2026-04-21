@@ -52,6 +52,24 @@ export function createCampSnapZipName(filterFileName: string | undefined) {
   return sanitizeCampSnapFileName(`camp-snap-${filterName}.zip`);
 }
 
+export function serializeFlt(filter: ParsedFilter) {
+  const params = [
+    filter.brightness,
+    filter.contrast,
+    filter.saturation,
+    filter.hue,
+    filter.gammaR,
+    filter.gammaG,
+    filter.gammaB,
+  ].join(",");
+  const matrixRows = filter.matrix1024.map((row) => row.join(","));
+  const luts = [filter.lutR, filter.lutG, filter.lutB].map((lut) =>
+    lut.join(","),
+  );
+
+  return [params, ...matrixRows, ...luts].join("\n");
+}
+
 export function parseFlt(text: string): ParseFltResult {
   const lines = text
     .split(/\r?\n/)

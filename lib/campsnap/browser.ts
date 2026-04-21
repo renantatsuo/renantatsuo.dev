@@ -1,7 +1,11 @@
 import {
   applyCampSnapV105,
+  applyGammaTableRGBA,
+  applyInverseGammaTableRGBA,
+  applyMatrixRGBAFloat,
   createCampSnapOutputName,
   createCampSnapZipName,
+  serializeFlt,
   type ParsedFilter,
   type RGBAImage,
 } from "~/lib/campsnap/CampSnap";
@@ -156,6 +160,50 @@ export function revokeCampSnapPhotoUrls(photos: ProcessedCampSnapPhoto[]) {
   }
 }
 
+export function exportCampSnapFilter(
+  filter: ParsedFilter,
+  filterFileName: string | undefined,
+) {
+  const text = serializeFlt(filter);
+  const blob = new Blob([text], { type: "text/plain" });
+
+  downloadBlob(blob, createEditedFilterFileName(filterFileName));
+}
+
+export async function buildCampSnapPreLutBytes(
+  file: File,
+  filter: ParsedFilter,
+  maxEdge: number,
+) {
+  const image = await decodePhoto(file);
+  const scale = Math.min(1, maxEdge / Math.max(image.width, image.height, 1));
+  const width = Math.max(1, Math.round(image.width * scale));
+  const height = Math.max(1, Math.round(image.height * scale));
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+
+  if (!context) {
+    image.close?.();
+    throw new CampSnapBrowserError(
+      "Canvas rendering is not available in this browser",
+    );
+  }
+
+  canvas.width = width;
+  canvas.height = height;
+  context.drawImage(image.source, 0, 0, width, height);
+  image.close?.();
+
+  const imageData = context.getImageData(0, 0, width, height);
+  const pixels = new Uint8ClampedArray(imageData.data);
+
+  applyInverseGammaTableRGBA(pixels);
+  applyMatrixRGBAFloat(pixels, filter.matrix);
+  applyGammaTableRGBA(pixels);
+
+  return { pixels, width, height };
+}
+
 export async function exportCampSnapPhotos(
   photos: ProcessedCampSnapPhoto[],
   filterFileName: string | undefined,
@@ -290,6 +338,16 @@ function canvasToBlob(
       quality,
     );
   });
+}
+
+function createEditedFilterFileName(filterFileName: string | undefined) {
+  const base = filterFileName?.replace(/\.flt$/i, "") || "filter";
+
+  return sanitizeFltFileName(`${base}--edited.flt`);
+}
+
+function sanitizeFltFileName(fileName: string) {
+  return fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
 }
 
 function downloadBlob(blob: Blob, fileName: string) {

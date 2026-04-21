@@ -7,14 +7,27 @@ export {
   createCampSnapOutputName,
   createCampSnapZipName,
   parseFlt,
+  serializeFlt,
 } from "./CampSnap";
+
+export {
+  createBaselineCurvePoints,
+  curvePointsToLut,
+  insertCurvePoint,
+  moveCurvePoint,
+  removeCurvePoint,
+} from "./curves";
+
+export type { CurvePoint } from "./curves";
 
 export type { ParseFltResult, ParsedFilter, RGBAImage } from "./CampSnap";
 
 export {
   CAMP_SNAP_LIMITS,
   CampSnapBrowserError,
+  buildCampSnapPreLutBytes,
   createProcessedCampSnapPhotoId,
+  exportCampSnapFilter,
   exportCampSnapPhotos,
   renderCampSnapPhoto,
   revokeCampSnapPhotoUrls,

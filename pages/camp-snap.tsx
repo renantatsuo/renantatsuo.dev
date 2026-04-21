@@ -2,13 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   ChevronsLeftRight,
   Download,
+  FileDown,
   Image as ImageIcon,
   Images,
   SlidersHorizontal,
   Sparkles,
+  Spline,
   Upload,
 } from "lucide-react";
 import * as React from "react";
+import CampSnapCurveEditor, {
+  type ChannelKey,
+} from "~/components/CampSnapCurveEditor";
 import UserInfo from "~/components/UserInfo";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -24,13 +29,19 @@ import { Label } from "~/components/ui/label";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Separator } from "~/components/ui/separator";
 import {
+  applyPerChannelLUT,
+  buildCampSnapPreLutBytes,
   CampSnapBrowserError,
+  createBaselineCurvePoints,
+  curvePointsToLut,
+  exportCampSnapFilter,
   exportCampSnapPhotos,
   parseFlt,
   renderCampSnapPhoto,
   revokeCampSnapPhotoUrls,
   validateCampSnapFilterFile,
   validateCampSnapPhotoBatch,
+  type CurvePoint,
   type ParsedFilter,
   type ProcessedCampSnapPhoto,
 } from "~/lib/campsnap";
@@ -46,9 +57,14 @@ type ProcessingState = {
   message: string;
 };
 
+type CurvePointsByChannel = Record<ChannelKey, CurvePoint[]>;
+type LutsByChannel = Record<ChannelKey, number[]>;
+
 const PHOTO_ACCEPT = "image/jpeg,image/png,image/webp";
 const PHOTO_EXTENSION_PATTERN = /\.(jpe?g|png|webp)$/i;
 const PHOTO_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const LIVE_PREVIEW_MAX_EDGE = 1024;
+const LIVE_PREVIEW_DEBOUNCE_MS = 90;
 
 export const Route = createFileRoute("/camp-snap")({
   component: CampSnapPage,
@@ -87,19 +103,88 @@ function CampSnapPage() {
       message: "",
     },
   );
+  const [curvePoints, setCurvePoints] =
+    React.useState<CurvePointsByChannel | null>(null);
+  const [activeCurveChannel, setActiveCurveChannel] =
+    React.useState<ChannelKey>("R");
+  const [arePhotosStale, setArePhotosStale] = React.useState(false);
 
   const selectedPhoto =
     processedPhotos.find((photo) => photo.id === selectedPhotoId) ??
     processedPhotos[0];
 
+  const baselines = React.useMemo<LutsByChannel | null>(() => {
+    if (!filterState.data) return null;
+    return {
+      R: filterState.data.lutR,
+      G: filterState.data.lutG,
+      B: filterState.data.lutB,
+    };
+  }, [filterState.data]);
+
+  const editedLuts = React.useMemo<LutsByChannel | null>(() => {
+    if (!curvePoints) return null;
+    return {
+      R: curvePointsToLut(curvePoints.R),
+      G: curvePointsToLut(curvePoints.G),
+      B: curvePointsToLut(curvePoints.B),
+    };
+  }, [curvePoints]);
+
+  const renderFilter = React.useMemo<ParsedFilter | null>(() => {
+    if (!filterState.data) return null;
+    if (!editedLuts) return filterState.data;
+    return {
+      ...filterState.data,
+      lutR: editedLuts.R,
+      lutG: editedLuts.G,
+      lutB: editedLuts.B,
+    };
+  }, [filterState.data, editedLuts]);
+
+  const isEdited = React.useMemo(() => {
+    if (!baselines || !editedLuts) return false;
+    for (const channel of ["R", "G", "B"] as const) {
+      const baseline = baselines[channel];
+      const edited = editedLuts[channel];
+      for (let index = 0; index < baseline.length; index += 1) {
+        if (baseline[index] !== edited[index]) return true;
+      }
+    }
+    return false;
+  }, [baselines, editedLuts]);
+
+  const sourceFileByPhotoId = React.useMemo(() => {
+    const map = new Map<string, File>();
+    processedPhotos.forEach((photo, index) => {
+      const file = sourceFiles[index];
+      if (file) map.set(photo.id, file);
+    });
+    return map;
+  }, [processedPhotos, sourceFiles]);
+
+  const livePreviewUrl = useCampSnapLivePreview({
+    selectedPhoto: selectedPhoto ?? null,
+    sourceFile: selectedPhoto
+      ? (sourceFileByPhotoId.get(selectedPhoto.id) ?? null)
+      : null,
+    filter: filterState.data ?? null,
+    editedLuts,
+    enabled: isEdited,
+  });
+
   const canProcess =
     !processingState.isProcessing &&
     filterState.data !== undefined &&
-    sourceFiles.length > 0;
+    sourceFiles.length > 0 &&
+    (processedPhotos.length === 0 || arePhotosStale);
   const canExport =
     !processingState.isProcessing &&
     processedPhotos.length > 0 &&
+    !arePhotosStale &&
     !filterState.error;
+  const canExportFilter =
+    filterState.data !== undefined && !processingState.isProcessing;
 
   const filterSummary = React.useMemo(() => {
     if (!filterState.data) {
@@ -134,6 +219,9 @@ function CampSnapPage() {
     const file = event.target.files?.[0];
 
     clearProcessedPhotos();
+    setCurvePoints(null);
+    setActiveCurveChannel("R");
+    setArePhotosStale(false);
 
     if (!file) {
       setFilterState({});
@@ -163,6 +251,7 @@ function CampSnapPage() {
       data: parsed.data,
       fileName: file.name,
     });
+    setCurvePoints(createCurvePointsFromFilter(parsed.data));
   }
 
   function handlePhotoChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -175,6 +264,7 @@ function CampSnapPage() {
     const validationError = validateCampSnapPhotoBatch(acceptedFiles);
 
     clearProcessedPhotos();
+    setArePhotosStale(false);
 
     if (validationError) {
       setSourceFiles([]);
@@ -194,7 +284,7 @@ function CampSnapPage() {
   }
 
   async function handleProcessPhotos() {
-    if (!filterState.data || sourceFiles.length === 0) {
+    if (!renderFilter || !filterState.data || sourceFiles.length === 0) {
       return;
     }
 
@@ -220,7 +310,7 @@ function CampSnapPage() {
 
         const processedPhoto = await renderCampSnapPhoto(
           file,
-          filterState.data,
+          renderFilter,
           filterState.fileName,
         );
         nextPhotos.push(processedPhoto);
@@ -251,6 +341,7 @@ function CampSnapPage() {
         isProcessing: false,
         message: `Processed ${nextPhotos.length} photo${nextPhotos.length === 1 ? "" : "s"}`,
       });
+      setArePhotosStale(false);
     } catch (error) {
       revokeCampSnapPhotoUrls(nextPhotos);
 
@@ -274,6 +365,55 @@ function CampSnapPage() {
     }
 
     await exportCampSnapPhotos(processedPhotos, filterState.fileName);
+  }
+
+  function handleExportFilter() {
+    if (!renderFilter) {
+      return;
+    }
+
+    exportCampSnapFilter(renderFilter, filterState.fileName);
+  }
+
+  function handleCurvePointsChange(channel: ChannelKey, points: CurvePoint[]) {
+    setCurvePoints((currentPoints) => {
+      if (!currentPoints || currentPoints[channel] === points) {
+        return currentPoints;
+      }
+
+      if (processedPhotosRef.current.length > 0) {
+        setArePhotosStale(true);
+      }
+
+      return {
+        ...currentPoints,
+        [channel]: points,
+      };
+    });
+  }
+
+  function handleResetCurveChannel(channel: ChannelKey) {
+    if (!filterState.data) {
+      return;
+    }
+
+    const nextPoints = createBaselineCurvePoints(
+      getFilterLut(filterState.data, channel),
+    );
+
+    handleCurvePointsChange(channel, nextPoints);
+  }
+
+  function handleResetAllCurves() {
+    if (!filterState.data) {
+      return;
+    }
+
+    setCurvePoints(createCurvePointsFromFilter(filterState.data));
+
+    if (processedPhotosRef.current.length > 0) {
+      setArePhotosStale(true);
+    }
   }
 
   function clearProcessedPhotos() {
@@ -328,22 +468,37 @@ function CampSnapPage() {
             <PhotoCarousel
               photos={processedPhotos}
               selectedPhoto={selectedPhoto}
+              arePhotosStale={arePhotosStale}
               onSelectPhoto={handleSelectPhoto}
             />
 
-            <BeforeAfterPreview photo={selectedPhoto} />
+            <BeforeAfterPreview
+              photo={selectedPhoto}
+              overrideProcessedUrl={livePreviewUrl}
+            />
           </section>
 
           <ControlsSidebar
+            activeCurveChannel={activeCurveChannel}
+            baselines={baselines}
             canExport={canExport}
+            canExportFilter={canExportFilter}
             canProcess={canProcess}
+            curvePoints={curvePoints}
+            editedLuts={editedLuts}
             filterState={filterState}
             filterSummary={filterSummary}
+            isPhotosStale={arePhotosStale}
+            onActiveCurveChannelChange={setActiveCurveChannel}
+            onCurvePointsChange={handleCurvePointsChange}
+            onExportFilter={handleExportFilter}
             onExportZip={handleExportZip}
             onFilterChange={handleFilterChange}
             onPhotoChange={handlePhotoChange}
             onPhotoFiles={handlePhotoFiles}
             onProcessPhotos={handleProcessPhotos}
+            onResetAllCurves={handleResetAllCurves}
+            onResetCurveChannel={handleResetCurveChannel}
             processingState={processingState}
             selectedPhoto={selectedPhoto}
             sourceFiles={sourceFiles}
@@ -368,6 +523,186 @@ function getProcessingErrorMessage(error: unknown) {
   return "Failed to process photos";
 }
 
+function createCurvePointsFromFilter(
+  filter: ParsedFilter,
+): CurvePointsByChannel {
+  return {
+    R: createBaselineCurvePoints(filter.lutR),
+    G: createBaselineCurvePoints(filter.lutG),
+    B: createBaselineCurvePoints(filter.lutB),
+  };
+}
+
+function getFilterLut(filter: ParsedFilter, channel: ChannelKey) {
+  if (channel === "R") return filter.lutR;
+  if (channel === "G") return filter.lutG;
+
+  return filter.lutB;
+}
+
+type CampSnapLivePreviewInput = {
+  selectedPhoto: ProcessedCampSnapPhoto | null;
+  sourceFile: File | null;
+  filter: ParsedFilter | null;
+  editedLuts: LutsByChannel | null;
+  enabled: boolean;
+};
+
+type CampSnapPreLutPreview = {
+  pixels: Uint8ClampedArray;
+  width: number;
+  height: number;
+};
+
+function useCampSnapLivePreview({
+  selectedPhoto,
+  sourceFile,
+  filter,
+  editedLuts,
+  enabled,
+}: CampSnapLivePreviewInput) {
+  const cacheRef = React.useRef<CampSnapPreLutPreview | null>(null);
+  const previewUrlRef = React.useRef<string | null>(null);
+  const [cacheVersion, setCacheVersion] = React.useState(0);
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    previewUrlRef.current = previewUrl;
+  }, [previewUrl]);
+
+  React.useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    let isCurrent = true;
+
+    cacheRef.current = null;
+    setCacheVersion((version) => version + 1);
+    setPreviewUrl((currentUrl) => {
+      if (currentUrl) URL.revokeObjectURL(currentUrl);
+      return null;
+    });
+
+    if (!enabled || !selectedPhoto || !sourceFile || !filter) {
+      return () => {
+        isCurrent = false;
+      };
+    }
+
+    void buildCampSnapPreLutBytes(
+      sourceFile,
+      filter,
+      LIVE_PREVIEW_MAX_EDGE,
+    ).then(
+      (cache) => {
+        if (isCurrent) {
+          cacheRef.current = cache;
+          setCacheVersion((version) => version + 1);
+        }
+      },
+      () => {
+        if (isCurrent) {
+          cacheRef.current = null;
+        }
+      },
+    );
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [enabled, selectedPhoto?.id, sourceFile, filter]);
+
+  React.useEffect(() => {
+    if (!enabled || !editedLuts) {
+      setPreviewUrl((currentUrl) => {
+        if (currentUrl) URL.revokeObjectURL(currentUrl);
+        return null;
+      });
+      return;
+    }
+
+    let isCurrent = true;
+    const timeout = window.setTimeout(() => {
+      const cache = cacheRef.current;
+
+      if (!cache) {
+        return;
+      }
+
+      void createEditedPreviewUrl(cache, editedLuts).then(
+        (nextUrl) => {
+          if (!isCurrent) {
+            URL.revokeObjectURL(nextUrl);
+            return;
+          }
+
+          setPreviewUrl((currentUrl) => {
+            if (currentUrl) URL.revokeObjectURL(currentUrl);
+            return nextUrl;
+          });
+        },
+        () => undefined,
+      );
+    }, LIVE_PREVIEW_DEBOUNCE_MS);
+
+    return () => {
+      isCurrent = false;
+      window.clearTimeout(timeout);
+    };
+  }, [enabled, editedLuts, cacheVersion]);
+
+  return previewUrl;
+}
+
+async function createEditedPreviewUrl(
+  cache: CampSnapPreLutPreview,
+  editedLuts: LutsByChannel,
+) {
+  const pixels = new Uint8ClampedArray(cache.pixels);
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+
+  if (!context) {
+    throw new CampSnapBrowserError(
+      "Canvas rendering is not available in this browser",
+    );
+  }
+
+  applyPerChannelLUT(pixels, editedLuts.R, editedLuts.G, editedLuts.B);
+
+  canvas.width = cache.width;
+  canvas.height = cache.height;
+  context.putImageData(new ImageData(pixels, cache.width, cache.height), 0, 0);
+
+  const blob = await canvasToBlob(canvas, "image/webp", 0.9);
+
+  return URL.createObjectURL(blob);
+}
+
+function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  type: string,
+  quality?: number,
+) {
+  return new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) {
+          reject(new CampSnapBrowserError("Failed to encode image"));
+          return;
+        }
+
+        resolve(blob);
+      },
+      type,
+      quality,
+    );
+  });
+}
+
 type MetricProps = {
   label: string;
   value: React.ReactNode;
@@ -387,12 +722,14 @@ function Metric({ label, value }: MetricProps) {
 type PhotoCarouselProps = {
   photos: ProcessedCampSnapPhoto[];
   selectedPhoto: ProcessedCampSnapPhoto | null;
+  arePhotosStale: boolean;
   onSelectPhoto: (photoId: string) => void;
 };
 
 function PhotoCarousel({
   photos,
   selectedPhoto,
+  arePhotosStale,
   onSelectPhoto,
 }: PhotoCarouselProps) {
   return (
@@ -403,6 +740,9 @@ function PhotoCarousel({
             <CardTitle className="flex items-center gap-2">
               <Images className="size-4" />
               Uploaded Pictures
+              {arePhotosStale && (
+                <Badge variant="outline">Edited - re-process to refresh</Badge>
+              )}
             </CardTitle>
             <CardDescription>{photos.length} processed photos</CardDescription>
           </div>
@@ -461,9 +801,13 @@ function PhotoCarousel({
 
 type BeforeAfterPreviewProps = {
   photo: ProcessedCampSnapPhoto | null;
+  overrideProcessedUrl?: string | null;
 };
 
-function BeforeAfterPreview({ photo }: BeforeAfterPreviewProps) {
+function BeforeAfterPreview({
+  photo,
+  overrideProcessedUrl,
+}: BeforeAfterPreviewProps) {
   const [comparisonPosition, setComparisonPosition] = React.useState(50);
 
   React.useEffect(() => {
@@ -537,6 +881,8 @@ function BeforeAfterPreview({ photo }: BeforeAfterPreviewProps) {
     );
   }
 
+  const processedUrl = overrideProcessedUrl ?? photo.processedUrl;
+
   return (
     <Card className="rounded-lg">
       <CardHeader className="pb-0">
@@ -569,7 +915,7 @@ function BeforeAfterPreview({ photo }: BeforeAfterPreviewProps) {
           onKeyDown={handleComparisonKeyDown}
         >
           <img
-            src={photo.processedUrl}
+            src={processedUrl}
             alt={`${photo.name} processed`}
             draggable={false}
             className="pointer-events-none absolute inset-0 size-full
@@ -616,30 +962,52 @@ function BeforeAfterPreview({ photo }: BeforeAfterPreviewProps) {
 }
 
 type ControlsSidebarProps = {
+  activeCurveChannel: ChannelKey;
+  baselines: LutsByChannel | null;
   canExport: boolean;
+  canExportFilter: boolean;
   canProcess: boolean;
+  curvePoints: CurvePointsByChannel | null;
+  editedLuts: LutsByChannel | null;
   filterState: FilterState;
   filterSummary: readonly (readonly [string, number])[];
+  isPhotosStale: boolean;
+  onActiveCurveChannelChange: (channel: ChannelKey) => void;
+  onCurvePointsChange: (channel: ChannelKey, points: CurvePoint[]) => void;
+  onExportFilter: () => void;
   onExportZip: () => void;
   onFilterChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onPhotoChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onPhotoFiles: (files: File[]) => void;
   onProcessPhotos: () => void;
+  onResetAllCurves: () => void;
+  onResetCurveChannel: (channel: ChannelKey) => void;
   processingState: ProcessingState;
   selectedPhoto: ProcessedCampSnapPhoto | null;
   sourceFiles: File[];
 };
 
 function ControlsSidebar({
+  activeCurveChannel,
+  baselines,
   canExport,
+  canExportFilter,
   canProcess,
+  curvePoints,
+  editedLuts,
   filterState,
   filterSummary,
+  isPhotosStale,
+  onActiveCurveChannelChange,
+  onCurvePointsChange,
+  onExportFilter,
   onExportZip,
   onFilterChange,
   onPhotoChange,
   onPhotoFiles,
   onProcessPhotos,
+  onResetAllCurves,
+  onResetCurveChannel,
   processingState,
   selectedPhoto,
   sourceFiles,
@@ -687,7 +1055,7 @@ function ControlsSidebar({
               className="w-full"
             >
               <Upload className="size-4" />
-              Process
+              {isPhotosStale ? "Re-process" : "Process"}
             </Button>
             <Button
               type="button"
@@ -699,7 +1067,39 @@ function ControlsSidebar({
               <Download className="size-4" />
               Export
             </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onExportFilter}
+              disabled={!canExportFilter}
+              className="col-span-2 w-full"
+            >
+              <FileDown className="size-4" />
+              Export filter
+            </Button>
           </div>
+
+          {filterState.data && curvePoints && baselines && editedLuts && (
+            <div className="grid gap-3">
+              <Separator />
+              <div className="grid gap-2">
+                <h2 className="m-0 flex items-center gap-2 text-base!">
+                  <Spline className="size-4" />
+                  RGB Curves
+                </h2>
+                <CampSnapCurveEditor
+                  activeChannel={activeCurveChannel}
+                  baselines={baselines}
+                  curvePoints={curvePoints}
+                  editedLuts={editedLuts}
+                  onActiveChannelChange={onActiveCurveChannelChange}
+                  onCurvePointsChange={onCurvePointsChange}
+                  onResetAll={onResetAllCurves}
+                  onResetChannel={onResetCurveChannel}
+                />
+              </div>
+            </div>
+          )}
 
           <Separator />
 
