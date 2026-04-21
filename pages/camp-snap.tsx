@@ -76,7 +76,6 @@ function CampSnapPage() {
   const [selectedPhotoId, setSelectedPhotoId] = React.useState<string | null>(
     null,
   );
-  const [comparisonPosition, setComparisonPosition] = React.useState(50);
   const [processingState, setProcessingState] = React.useState<ProcessingState>(
     {
       isProcessing: false,
@@ -224,7 +223,6 @@ function CampSnapPage() {
 
   function handleSelectPhoto(photoId: string) {
     setSelectedPhotoId(photoId);
-    setComparisonPosition(50);
   }
 
   return (
@@ -269,11 +267,7 @@ function CampSnapPage() {
               onSelectPhoto={handleSelectPhoto}
             />
 
-            <BeforeAfterPreview
-              comparisonPosition={comparisonPosition}
-              photo={selectedPhoto}
-              onComparisonPositionChange={setComparisonPosition}
-            />
+            <BeforeAfterPreview photo={selectedPhoto} />
           </section>
 
           <ControlsSidebar
@@ -364,10 +358,12 @@ function PhotoCarousel({
                       }`}
                   >
                     <img
-                      src={photo.processedUrl}
+                      src={photo.thumbnailUrl}
                       alt={`${photo.name} processed thumbnail`}
                       className="bg-muted aspect-4/3 w-full rounded-md
                         object-cover"
+                      decoding="async"
+                      loading="lazy"
                     />
                     <span className="mt-2 block truncate px-1 text-sm font-bold">
                       {photo.name}
@@ -392,23 +388,23 @@ function PhotoCarousel({
 }
 
 type BeforeAfterPreviewProps = {
-  comparisonPosition: number;
   photo: ProcessedCampSnapPhoto | null;
-  onComparisonPositionChange: (value: number) => void;
 };
 
-function BeforeAfterPreview({
-  comparisonPosition,
-  photo,
-  onComparisonPositionChange,
-}: BeforeAfterPreviewProps) {
+function BeforeAfterPreview({ photo }: BeforeAfterPreviewProps) {
+  const [comparisonPosition, setComparisonPosition] = React.useState(50);
+
+  React.useEffect(() => {
+    setComparisonPosition(50);
+  }, [photo?.id]);
+
   function updateComparisonFromPointer(
     event: React.PointerEvent<HTMLDivElement>,
   ) {
     const rect = event.currentTarget.getBoundingClientRect();
     const position = ((event.clientX - rect.left) / rect.width) * 100;
 
-    onComparisonPositionChange(Math.min(100, Math.max(0, position)));
+    setComparisonPosition(Math.min(100, Math.max(0, position)));
   }
 
   function handleComparisonPointerDown(

@@ -33,6 +33,8 @@ const PARAM_COUNT = 7;
 const MATRIX_VALUE_COUNT = 9;
 const LUT_LENGTH = 256;
 const FILTER_VALUE_COUNT = MATRIX_VALUE_COUNT + LUT_LENGTH * 3;
+const INVERSE_GAMMA_TABLE = createInverseGammaTable();
+const GAMMA_TABLE = createGammaTable();
 
 export function createCampSnapOutputName(
   sourceFileName: string,
@@ -122,13 +124,16 @@ export function parseFlt(text: string): ParseFltResult {
 }
 
 export function applyInverseGammaTableRGBA(pixels: Uint8ClampedArray) {
-  const table = createInverseGammaTable();
-  applyTableToPixels(pixels, table, table, table);
+  applyTableToPixels(
+    pixels,
+    INVERSE_GAMMA_TABLE,
+    INVERSE_GAMMA_TABLE,
+    INVERSE_GAMMA_TABLE,
+  );
 }
 
 export function applyGammaTableRGBA(pixels: Uint8ClampedArray) {
-  const table = createGammaTable();
-  applyTableToPixels(pixels, table, table, table);
+  applyTableToPixels(pixels, GAMMA_TABLE, GAMMA_TABLE, GAMMA_TABLE);
 }
 
 export function applyMatrixRGBAFloat(
