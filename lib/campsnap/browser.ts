@@ -7,6 +7,20 @@ import {
 } from "~/lib/campsnap/CampSnap";
 import { createZipArchive } from "~/lib/zip";
 
+export const CAMP_SNAP_LIMITS = {
+  filterBytes: 1024 * 1024,
+  maxPhotoCount: 50,
+  photoBytes: 25 * 1024 * 1024,
+  imagePixels: 40_000_000,
+} as const;
+
+export class CampSnapBrowserError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "CampSnapBrowserError";
+  }
+}
+
 export type ProcessedCampSnapPhoto = {
   id: string;
   name: string;
@@ -19,18 +33,66 @@ export type ProcessedCampSnapPhoto = {
   height: number;
 };
 
+let processedPhotoCounter = 0;
+
+export function createProcessedCampSnapPhotoId(file: File) {
+  processedPhotoCounter += 1;
+
+  return [
+    "camp-snap-photo",
+    processedPhotoCounter,
+    file.name,
+    file.lastModified,
+    file.size,
+  ].join("-");
+}
+
+export function validateCampSnapPhotoBatch(files: File[]) {
+  if (files.length > CAMP_SNAP_LIMITS.maxPhotoCount) {
+    return `Select ${CAMP_SNAP_LIMITS.maxPhotoCount} photos or fewer.`;
+  }
+
+  const oversizedFile = files.find(
+    (file) => file.size > CAMP_SNAP_LIMITS.photoBytes,
+  );
+
+  if (oversizedFile) {
+    return `Each photo must be ${formatBytes(CAMP_SNAP_LIMITS.photoBytes)} or smaller.`;
+  }
+
+  return undefined;
+}
+
+export function validateCampSnapFilterFile(file: File) {
+  if (file.size > CAMP_SNAP_LIMITS.filterBytes) {
+    return `Filter files must be ${formatBytes(CAMP_SNAP_LIMITS.filterBytes)} or smaller.`;
+  }
+
+  return undefined;
+}
+
 export async function renderCampSnapPhoto(
   file: File,
   filter: ParsedFilter,
   filterFileName: string,
 ) {
   const image = await decodePhoto(file);
+
+  if (image.width * image.height > CAMP_SNAP_LIMITS.imagePixels) {
+    image.close?.();
+    throw new CampSnapBrowserError(
+      `Images must be ${formatMegapixels(CAMP_SNAP_LIMITS.imagePixels)} or smaller.`,
+    );
+  }
+
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
 
   if (!context) {
     image.close?.();
-    throw new Error("Canvas rendering is not available in this browser");
+    throw new CampSnapBrowserError(
+      "Canvas rendering is not available in this browser",
+    );
   }
 
   canvas.width = image.width;
@@ -58,7 +120,7 @@ export async function renderCampSnapPhoto(
   const thumbnailUrl = URL.createObjectURL(thumbnailBlob);
 
   return {
-    id: `${file.name}-${file.lastModified}`,
+    id: createProcessedCampSnapPhotoId(file),
     name: file.name,
     outputName: createCampSnapOutputName(file.name, filterFileName),
     originalUrl,
@@ -68,6 +130,22 @@ export async function renderCampSnapPhoto(
     width: canvas.width,
     height: canvas.height,
   } satisfies ProcessedCampSnapPhoto;
+}
+
+function formatBytes(bytes: number) {
+  const megabytes = bytes / (1024 * 1024);
+
+  return `${megabytes.toLocaleString("en-US", {
+    maximumFractionDigits: 1,
+  })} MB`;
+}
+
+function formatMegapixels(pixels: number) {
+  const megapixels = pixels / 1_000_000;
+
+  return `${megapixels.toLocaleString("en-US", {
+    maximumFractionDigits: 1,
+  })} MP`;
 }
 
 export function revokeCampSnapPhotoUrls(photos: ProcessedCampSnapPhoto[]) {
@@ -154,7 +232,8 @@ function loadImage(url: string) {
     const image = new Image();
     image.decoding = "async";
     image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error("Failed to decode image"));
+    image.onerror = () =>
+      reject(new CampSnapBrowserError("Failed to decode image"));
     image.src = url;
   });
 }
@@ -180,7 +259,9 @@ function createScaledBlob(
   const context = scaled.getContext("2d");
 
   if (!context) {
-    throw new Error("Canvas rendering is not available in this browser");
+    throw new CampSnapBrowserError(
+      "Canvas rendering is not available in this browser",
+    );
   }
 
   scaled.width = width;
@@ -199,7 +280,7 @@ function canvasToBlob(
     canvas.toBlob(
       (blob) => {
         if (!blob) {
-          reject(new Error("Failed to encode image"));
+          reject(new CampSnapBrowserError("Failed to encode image"));
           return;
         }
 

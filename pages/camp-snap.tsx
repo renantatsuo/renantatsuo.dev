@@ -24,10 +24,13 @@ import { Label } from "~/components/ui/label";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Separator } from "~/components/ui/separator";
 import {
+  CampSnapBrowserError,
   exportCampSnapPhotos,
   parseFlt,
   renderCampSnapPhoto,
   revokeCampSnapPhotoUrls,
+  validateCampSnapFilterFile,
+  validateCampSnapPhotoBatch,
   type ParsedFilter,
   type ProcessedCampSnapPhoto,
 } from "~/lib/campsnap";
@@ -68,6 +71,8 @@ export const Route = createFileRoute("/camp-snap")({
 
 function CampSnapPage() {
   const { user } = Route.useLoaderData();
+  const isMountedRef = React.useRef(true);
+  const processedPhotosRef = React.useRef<ProcessedCampSnapPhoto[]>([]);
   const [filterState, setFilterState] = React.useState<FilterState>({});
   const [sourceFiles, setSourceFiles] = React.useState<File[]>([]);
   const [processedPhotos, setProcessedPhotos] = React.useState<
@@ -113,12 +118,15 @@ function CampSnapPage() {
   }, [filterState.data]);
 
   React.useEffect(() => {
+    processedPhotosRef.current = processedPhotos;
+  }, [processedPhotos]);
+
+  React.useEffect(() => {
     return () => {
-      if (!processingState.isProcessing) {
-        revokeCampSnapPhotoUrls(processedPhotos);
-      }
+      isMountedRef.current = false;
+      revokeCampSnapPhotoUrls(processedPhotosRef.current);
     };
-  }, [processedPhotos, processingState.isProcessing]);
+  }, []);
 
   async function handleFilterChange(
     event: React.ChangeEvent<HTMLInputElement>,
@@ -132,8 +140,19 @@ function CampSnapPage() {
       return;
     }
 
+    const validationError = validateCampSnapFilterFile(file);
+
+    if (validationError) {
+      setFilterState({ error: validationError, fileName: file.name });
+      return;
+    }
+
     const text = await file.text();
     const parsed = parseFlt(text);
+
+    if (!isMountedRef.current) {
+      return;
+    }
 
     if (parsed.error) {
       setFilterState({ error: parsed.error.message, fileName: file.name });
@@ -152,8 +171,26 @@ function CampSnapPage() {
   }
 
   function handlePhotoFiles(files: File[]) {
+    const acceptedFiles = files.filter(isAcceptedPhotoFile);
+    const validationError = validateCampSnapPhotoBatch(acceptedFiles);
+
     clearProcessedPhotos();
-    setSourceFiles(files.filter(isAcceptedPhotoFile));
+
+    if (validationError) {
+      setSourceFiles([]);
+      setProcessingState({
+        isProcessing: false,
+        message: validationError,
+      });
+      return;
+    }
+
+    setSourceFiles(acceptedFiles);
+    setProcessingState({
+      isProcessing: false,
+      message:
+        acceptedFiles.length === 0 ? "Ready for a filter and photo batch" : "",
+    });
   }
 
   async function handleProcessPhotos() {
@@ -171,6 +208,11 @@ function CampSnapPage() {
 
     try {
       for (const [index, file] of sourceFiles.entries()) {
+        if (!isMountedRef.current) {
+          revokeCampSnapPhotoUrls(nextPhotos);
+          return;
+        }
+
         setProcessingState({
           isProcessing: true,
           message: `Processing ${index + 1}/${sourceFiles.length} photos`,
@@ -182,13 +224,27 @@ function CampSnapPage() {
           filterState.fileName,
         );
         nextPhotos.push(processedPhoto);
-        setProcessedPhotos((currentPhotos) => [
-          ...currentPhotos,
-          processedPhoto,
-        ]);
+
+        if (!isMountedRef.current) {
+          revokeCampSnapPhotoUrls(nextPhotos);
+          return;
+        }
+
+        setProcessedPhotos((currentPhotos) => {
+          const updatedPhotos = [...currentPhotos, processedPhoto];
+
+          processedPhotosRef.current = updatedPhotos;
+
+          return updatedPhotos;
+        });
         if (index === 0) {
           setSelectedPhotoId(processedPhoto.id);
         }
+      }
+
+      if (!isMountedRef.current) {
+        revokeCampSnapPhotoUrls(nextPhotos);
+        return;
       }
 
       setProcessingState({
@@ -197,10 +253,17 @@ function CampSnapPage() {
       });
     } catch (error) {
       revokeCampSnapPhotoUrls(nextPhotos);
+
+      if (!isMountedRef.current) {
+        return;
+      }
+
+      setProcessedPhotos([]);
+      processedPhotosRef.current = [];
+      setSelectedPhotoId(null);
       setProcessingState({
         isProcessing: false,
-        message:
-          error instanceof Error ? error.message : "Failed to process photos",
+        message: getProcessingErrorMessage(error),
       });
     }
   }
@@ -216,6 +279,7 @@ function CampSnapPage() {
   function clearProcessedPhotos() {
     setProcessedPhotos((currentPhotos) => {
       revokeCampSnapPhotoUrls(currentPhotos);
+      processedPhotosRef.current = [];
       return [];
     });
     setSelectedPhotoId(null);
@@ -294,6 +358,14 @@ function isAcceptedPhotoFile(file: File) {
   return (
     PHOTO_MIME_TYPES.has(file.type) || PHOTO_EXTENSION_PATTERN.test(file.name)
   );
+}
+
+function getProcessingErrorMessage(error: unknown) {
+  if (error instanceof CampSnapBrowserError) {
+    return error.message;
+  }
+
+  return "Failed to process photos";
 }
 
 type MetricProps = {
@@ -398,13 +470,17 @@ function BeforeAfterPreview({ photo }: BeforeAfterPreviewProps) {
     setComparisonPosition(50);
   }, [photo?.id]);
 
+  function setClampedComparisonPosition(position: number) {
+    setComparisonPosition(Math.min(100, Math.max(0, position)));
+  }
+
   function updateComparisonFromPointer(
     event: React.PointerEvent<HTMLDivElement>,
   ) {
     const rect = event.currentTarget.getBoundingClientRect();
     const position = ((event.clientX - rect.left) / rect.width) * 100;
 
-    setComparisonPosition(Math.min(100, Math.max(0, position)));
+    setClampedComparisonPosition(position);
   }
 
   function handleComparisonPointerDown(
@@ -422,6 +498,26 @@ function BeforeAfterPreview({ photo }: BeforeAfterPreviewProps) {
     }
 
     updateComparisonFromPointer(event);
+  }
+
+  function handleComparisonKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    const step = event.shiftKey ? 10 : 5;
+    const keyPositions: Partial<Record<string, number>> = {
+      ArrowLeft: comparisonPosition - step,
+      ArrowDown: comparisonPosition - step,
+      ArrowRight: comparisonPosition + step,
+      ArrowUp: comparisonPosition + step,
+      Home: 0,
+      End: 100,
+    };
+    const nextPosition = keyPositions[event.key];
+
+    if (nextPosition === undefined) {
+      return;
+    }
+
+    event.preventDefault();
+    setClampedComparisonPosition(nextPosition);
   }
 
   if (!photo) {
@@ -459,11 +555,18 @@ function BeforeAfterPreview({ photo }: BeforeAfterPreviewProps) {
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div
+          role="slider"
+          tabIndex={0}
+          aria-label="Before and after comparison position"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(comparisonPosition)}
           className="bg-background relative isolate h-[min(70vh,34rem)] min-h-96
             cursor-ew-resize touch-none overflow-hidden rounded-lg border
             select-none"
           onPointerDown={handleComparisonPointerDown}
           onPointerMove={handleComparisonPointerMove}
+          onKeyDown={handleComparisonKeyDown}
         >
           <img
             src={photo.processedUrl}
@@ -678,7 +781,7 @@ function PhotoDropzone({
     files.length === 0
       ? "JPEG, PNG, or WebP"
       : `${files.length} photo${files.length === 1 ? "" : "s"} selected`;
-  const previewNames = files.slice(0, 3).map((file) => file.name);
+  const previewFiles = files.slice(0, 3);
 
   function openFilePicker() {
     inputRef.current?.click();
@@ -714,6 +817,7 @@ function PhotoDropzone({
   return (
     <div
       role="button"
+      aria-label="Choose photos to process"
       tabIndex={0}
       onClick={openFilePicker}
       onKeyDown={handleKeyDown}
@@ -749,18 +853,18 @@ function PhotoDropzone({
         <strong className="text-sm">Drop photos here or click to upload</strong>
         <span className="text-muted-foreground text-xs">{selectedLabel}</span>
       </span>
-      {previewNames.length > 0 && (
+      {previewFiles.length > 0 && (
         <span
           className="text-muted-foreground flex max-w-full flex-col gap-1
             text-xs"
         >
-          {previewNames.map((name) => (
-            <span key={name} className="max-w-64 truncate">
-              {name}
+          {previewFiles.map((file, index) => (
+            <span key={`${file.name}-${index}`} className="max-w-64 truncate">
+              {file.name}
             </span>
           ))}
-          {files.length > previewNames.length && (
-            <span>+{files.length - previewNames.length} more</span>
+          {files.length > previewFiles.length && (
+            <span>+{files.length - previewFiles.length} more</span>
           )}
         </span>
       )}
