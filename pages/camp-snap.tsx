@@ -23,7 +23,6 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Separator } from "~/components/ui/separator";
-import { Slider } from "~/components/ui/slider";
 import {
   exportCampSnapPhotos,
   parseFlt,
@@ -399,6 +398,32 @@ function BeforeAfterPreview({
   photo,
   onComparisonPositionChange,
 }: BeforeAfterPreviewProps) {
+  function updateComparisonFromPointer(
+    event: React.PointerEvent<HTMLDivElement>,
+  ) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const position = ((event.clientX - rect.left) / rect.width) * 100;
+
+    onComparisonPositionChange(Math.min(100, Math.max(0, position)));
+  }
+
+  function handleComparisonPointerDown(
+    event: React.PointerEvent<HTMLDivElement>,
+  ) {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    updateComparisonFromPointer(event);
+  }
+
+  function handleComparisonPointerMove(
+    event: React.PointerEvent<HTMLDivElement>,
+  ) {
+    if (event.buttons !== 1) {
+      return;
+    }
+
+    updateComparisonFromPointer(event);
+  }
+
   if (!photo) {
     return (
       <Card className="rounded-lg">
@@ -435,24 +460,31 @@ function BeforeAfterPreview({
       <CardContent className="flex flex-col gap-4">
         <div
           className="bg-background relative isolate h-[min(70vh,34rem)] min-h-96
-            overflow-hidden rounded-lg border"
+            cursor-ew-resize touch-none overflow-hidden rounded-lg border
+            select-none"
+          onPointerDown={handleComparisonPointerDown}
+          onPointerMove={handleComparisonPointerMove}
         >
           <img
             src={photo.processedUrl}
             alt={`${photo.name} processed`}
-            className="absolute inset-0 size-full object-contain"
+            draggable={false}
+            className="pointer-events-none absolute inset-0 size-full
+              object-contain"
           />
           <img
             src={photo.originalUrl}
             alt={`${photo.name} original`}
-            className="absolute inset-0 size-full object-contain"
+            draggable={false}
+            className="pointer-events-none absolute inset-0 size-full
+              object-contain"
             style={{
               clipPath: `inset(0 ${100 - comparisonPosition}% 0 0)`,
             }}
           />
           <div
-            className="bg-primary absolute top-0 bottom-0 z-10 w-0.5
-              -translate-x-1/2"
+            className="bg-primary pointer-events-none absolute top-0 bottom-0
+              z-10 w-0.5 -translate-x-1/2"
             style={{ left: `${comparisonPosition}%` }}
           >
             <div
@@ -466,23 +498,13 @@ function BeforeAfterPreview({
             </div>
           </div>
           <div
-            className="absolute right-3 bottom-3 left-3 flex justify-between
-              text-xs font-bold"
+            className="pointer-events-none absolute right-3 bottom-3 left-3 flex
+              justify-between text-xs font-bold"
           >
             <Badge variant="secondary">Original</Badge>
             <Badge variant="secondary">Processed</Badge>
           </div>
         </div>
-
-        <Slider
-          min={0}
-          max={100}
-          step={1}
-          value={comparisonPosition}
-          onValueChange={onComparisonPositionChange}
-          aria-label="Before after comparison"
-          className="cursor-pointer"
-        />
       </CardContent>
     </Card>
   );
