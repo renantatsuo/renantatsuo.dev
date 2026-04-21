@@ -4,6 +4,8 @@ import {
   applyInverseGammaTableRGBA,
   applyMatrixRGBAFloat,
   applyPerChannelLUT,
+  createCampSnapOutputName,
+  createCampSnapZipName,
   parseFlt,
   type ParsedFilter,
 } from "~/lib/campsnap";
@@ -155,6 +157,24 @@ describe("pixel transforms", () => {
     );
 
     expect(Array.from(result.data)).toStrictEqual([48, 70, 91, 70]);
+  });
+});
+
+describe("file naming", () => {
+  it("creates sanitized processed photo names from the source and filter", () => {
+    expect(createCampSnapOutputName("IMG 001.JPG", "warm day.flt")).toBe(
+      "IMG_001--warm_day.png",
+    );
+  });
+
+  it("creates sanitized ZIP names from the filter", () => {
+    expect(createCampSnapZipName("Portra-ish.flt")).toBe(
+      "camp-snap-Portra-ish.zip",
+    );
+  });
+
+  it("uses a fallback filter name for ZIP exports", () => {
+    expect(createCampSnapZipName(undefined)).toBe("camp-snap-filter.zip");
   });
 });
 

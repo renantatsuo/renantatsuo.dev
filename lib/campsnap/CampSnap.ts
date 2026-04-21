@@ -34,6 +34,22 @@ const MATRIX_VALUE_COUNT = 9;
 const LUT_LENGTH = 256;
 const FILTER_VALUE_COUNT = MATRIX_VALUE_COUNT + LUT_LENGTH * 3;
 
+export function createCampSnapOutputName(
+  sourceFileName: string,
+  filterFileName: string,
+) {
+  const filterName = filterFileName.replace(/\.flt$/i, "");
+  const sourceName = sourceFileName.replace(/\.[^.]+$/, "");
+
+  return sanitizeCampSnapFileName(`${sourceName}--${filterName}.png`);
+}
+
+export function createCampSnapZipName(filterFileName: string | undefined) {
+  const filterName = filterFileName?.replace(/\.flt$/i, "") || "filter";
+
+  return sanitizeCampSnapFileName(`camp-snap-${filterName}.zip`);
+}
+
 export function parseFlt(text: string): ParseFltResult {
   const lines = text
     .split(/\r?\n/)
@@ -214,4 +230,8 @@ function applyTableToPixels(
 
 function clampToByte(value: number) {
   return Math.min(255, Math.max(0, Math.round(value)));
+}
+
+function sanitizeCampSnapFileName(fileName: string) {
+  return fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
 }

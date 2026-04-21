@@ -3,11 +3,13 @@ import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import UserInfo from "~/components/UserInfo";
 import {
   applyCampSnapV105,
+  createCampSnapOutputName,
+  createCampSnapZipName,
   parseFlt,
   type ParsedFilter,
   type RGBAImage,
 } from "~/lib/campsnap";
-import { createZipArchive, sanitizeFileName } from "~/lib/zip";
+import { createZipArchive } from "~/lib/zip";
 import { loadUser } from "~/pages";
 
 type ProcessedPhoto = {
@@ -176,8 +178,7 @@ function CampSnapPage() {
       }),
     );
     const zipBlob = createZipArchive(files);
-    const filterName = filterState.fileName?.replace(/\.flt$/i, "") || "filter";
-    const zipName = sanitizeFileName(`camp-snap-${filterName}.zip`);
+    const zipName = createCampSnapZipName(filterState.fileName);
     downloadBlob(zipBlob, zipName);
   }
 
@@ -378,13 +379,11 @@ async function renderPhoto(
 
   const blob = await canvasToBlob(canvas);
   const processedUrl = URL.createObjectURL(blob);
-  const filterName = filterFileName.replace(/\.flt$/i, "");
-  const sourceName = file.name.replace(/\.[^.]+$/, "");
 
   return {
     id: `${file.name}-${file.lastModified}`,
     name: file.name,
-    outputName: sanitizeFileName(`${sourceName}--${filterName}.png`),
+    outputName: createCampSnapOutputName(file.name, filterFileName),
     originalUrl,
     processedUrl,
     blob,

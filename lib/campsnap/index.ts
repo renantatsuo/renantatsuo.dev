@@ -4,6 +4,8 @@ export {
   applyInverseGammaTableRGBA,
   applyMatrixRGBAFloat,
   applyPerChannelLUT,
+  createCampSnapOutputName,
+  createCampSnapZipName,
   parseFlt,
 } from "./CampSnap";
 
