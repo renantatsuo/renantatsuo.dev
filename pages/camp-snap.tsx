@@ -84,13 +84,9 @@ function CampSnapPage() {
     },
   );
 
-  const selectedPhoto = React.useMemo(
-    () =>
-      processedPhotos.find((photo) => photo.id === selectedPhotoId) ??
-      processedPhotos[0] ??
-      null,
-    [processedPhotos, selectedPhotoId],
-  );
+  const selectedPhoto =
+    processedPhotos.find((photo) => photo.id === selectedPhotoId) ??
+    processedPhotos[0];
 
   const canProcess =
     !processingState.isProcessing &&
@@ -119,13 +115,11 @@ function CampSnapPage() {
 
   React.useEffect(() => {
     return () => {
-      revokeCampSnapPhotoUrls(processedPhotos);
+      if (!processingState.isProcessing) {
+        revokeCampSnapPhotoUrls(processedPhotos);
+      }
     };
-  }, [processedPhotos]);
-
-  React.useEffect(() => {
-    setComparisonPosition(50);
-  }, [selectedPhoto?.id]);
+  }, [processedPhotos, processingState.isProcessing]);
 
   async function handleFilterChange(
     event: React.ChangeEvent<HTMLInputElement>,
@@ -189,10 +183,15 @@ function CampSnapPage() {
           filterState.fileName,
         );
         nextPhotos.push(processedPhoto);
+        setProcessedPhotos((currentPhotos) => [
+          ...currentPhotos,
+          processedPhoto,
+        ]);
+        if (index === 0) {
+          setSelectedPhotoId(processedPhoto.id);
+        }
       }
 
-      setProcessedPhotos(nextPhotos);
-      setSelectedPhotoId(nextPhotos[0]?.id ?? null);
       setProcessingState({
         isProcessing: false,
         message: `Processed ${nextPhotos.length} photo${nextPhotos.length === 1 ? "" : "s"}`,
@@ -221,6 +220,11 @@ function CampSnapPage() {
       return [];
     });
     setSelectedPhotoId(null);
+  }
+
+  function handleSelectPhoto(photoId: string) {
+    setSelectedPhotoId(photoId);
+    setComparisonPosition(50);
   }
 
   return (
@@ -262,7 +266,7 @@ function CampSnapPage() {
             <PhotoCarousel
               photos={processedPhotos}
               selectedPhoto={selectedPhoto}
-              onSelectPhoto={setSelectedPhotoId}
+              onSelectPhoto={handleSelectPhoto}
             />
 
             <BeforeAfterPreview
@@ -471,11 +475,13 @@ function BeforeAfterPreview({
             draggable={false}
             className="pointer-events-none absolute inset-0 size-full
               object-contain"
+            decoding="async"
           />
           <img
             src={photo.originalUrl}
             alt={`${photo.name} original`}
             draggable={false}
+            decoding="async"
             className="pointer-events-none absolute inset-0 size-full
               object-contain"
             style={{
