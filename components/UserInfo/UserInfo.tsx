@@ -9,7 +9,8 @@ type UserInfoProps = {
 function UserInfo({ user }: UserInfoProps) {
   return (
     <div
-      className="grid grid-cols-[auto_1fr] grid-rows-2 gap-x-4 h-[60px] w-full my-8"
+      className="my-8 grid h-[60px] w-full grid-cols-[auto_1fr] grid-rows-2
+        gap-x-4"
       style={{ gridTemplateAreas: '"avatar username" "avatar social"' }}
     >
       <img
@@ -19,10 +20,10 @@ function UserInfo({ user }: UserInfoProps) {
         style={{ gridArea: "avatar" }}
       />
       <h2
-        className="m-0 text-xl! leading-none self-start grid-area"
+        className="grid-area m-0 self-start text-xl! leading-none"
         style={{ gridArea: "username" }}
       >
-        <Link to="/" className="font-bold text-foreground! border-none!">
+        <Link to="/" className="text-foreground! border-none! font-bold">
           @{user.username}
         </Link>
       </h2>

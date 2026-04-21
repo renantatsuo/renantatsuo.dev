@@ -8,13 +8,15 @@ type PostPaginationProps = {
 function PostPagination({ nextPost, prevPost }: PostPaginationProps) {
   return (
     <article
-      className="grid grid-cols-1 grid-rows-[auto_auto] gap-y-4 justify-end w-full text-sm mt-4 mb-8 sm:grid-cols-2 sm:grid-rows-1 sm:justify-between"
+      className="mt-4 mb-8 grid w-full grid-cols-1 grid-rows-[auto_auto]
+        justify-end gap-y-4 text-sm sm:grid-cols-2 sm:grid-rows-1
+        sm:justify-between"
       style={{ gridTemplate: '"next prev"' }}
     >
       {nextPost && (
         <Link to="/post/$slug" params={{ slug: nextPost.slug }}>
           <a
-            className="cursor-pointer max-w-44 border-none md:max-w-88 md:m-0"
+            className="max-w-44 cursor-pointer border-none md:m-0 md:max-w-88"
             style={{ gridArea: "next" }}
           >
             {"<= "} {nextPost.title}
@@ -24,7 +26,7 @@ function PostPagination({ nextPost, prevPost }: PostPaginationProps) {
       {prevPost && (
         <Link to="/post/$slug" params={{ slug: prevPost.slug }}>
           <a
-            className="cursor-pointer max-w-44 border-none md:max-w-88 md:m-0"
+            className="max-w-44 cursor-pointer border-none md:m-0 md:max-w-88"
             style={{ gridArea: "prev" }}
           >
             {prevPost.title}

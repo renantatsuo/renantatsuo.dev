@@ -45,11 +45,14 @@ export const Route = createFileRoute("/post/$slug")({
 function PostPage() {
   const { user, post, nextPost, prevPost } = Route.useLoaderData();
   return (
-    <>
+    <main
+      className="bg-background flex w-full max-w-185 flex-col items-start gap-8
+        p-4"
+    >
       <UserInfo user={user} />
       <PostContent post={post} />
       <PostPagination nextPost={nextPost} prevPost={prevPost} />
       <Comments />
-    </>
+    </main>
   );
 }

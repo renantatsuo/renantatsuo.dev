@@ -9,9 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './pages/__root'
+import { Route as CampSnapRouteImport } from './pages/camp-snap'
 import { Route as IndexRouteImport } from './pages/index'
 import { Route as PostSlugRouteImport } from './pages/post/$slug'
 
+const CampSnapRoute = CampSnapRouteImport.update({
+  id: '/camp-snap',
+  path: '/camp-snap',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -25,32 +31,43 @@ const PostSlugRoute = PostSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/camp-snap': typeof CampSnapRoute
   '/post/$slug': typeof PostSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/camp-snap': typeof CampSnapRoute
   '/post/$slug': typeof PostSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/camp-snap': typeof CampSnapRoute
   '/post/$slug': typeof PostSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/post/$slug'
+  fullPaths: '/' | '/camp-snap' | '/post/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/post/$slug'
-  id: '__root__' | '/' | '/post/$slug'
+  to: '/' | '/camp-snap' | '/post/$slug'
+  id: '__root__' | '/' | '/camp-snap' | '/post/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CampSnapRoute: typeof CampSnapRoute
   PostSlugRoute: typeof PostSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/camp-snap': {
+      id: '/camp-snap'
+      path: '/camp-snap'
+      fullPath: '/camp-snap'
+      preLoaderRoute: typeof CampSnapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CampSnapRoute: CampSnapRoute,
   PostSlugRoute: PostSlugRoute,
 }
 export const routeTree = rootRouteImport
