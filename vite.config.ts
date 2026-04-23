@@ -26,9 +26,10 @@ export default defineConfig({
       },
       sitemap: {
         enabled: true,
-        host: process.env.VERCEL_URL
-          ? `https://${process.env.VERCEL_URL}`
-          : "http://localhost:3000",
+        host:
+          process.env.VERCEL_ENV === "production"
+            ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+            : `https://${process.env.VERCEL_URL ?? "localhost:3000"}`,
       },
     }),
     nitro(),
