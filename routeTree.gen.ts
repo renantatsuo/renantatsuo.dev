@@ -9,18 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './pages/__root'
-import { Route as CampSnapRouteImport } from './pages/camp-snap'
 import { Route as IndexRouteImport } from './pages/index'
+import { Route as CampSnapRouteImport } from './pages/camp-snap'
 import { Route as PostSlugRouteImport } from './pages/post/$slug'
 
-const CampSnapRoute = CampSnapRouteImport.update({
-  id: '/camp-snap',
-  path: '/camp-snap',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CampSnapRoute = CampSnapRouteImport.update({
+  id: '/camp-snap',
+  path: '/camp-snap',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PostSlugRoute = PostSlugRouteImport.update({
@@ -61,18 +61,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/camp-snap': {
-      id: '/camp-snap'
-      path: '/camp-snap'
-      fullPath: '/camp-snap'
-      preLoaderRoute: typeof CampSnapRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/camp-snap': {
+      id: '/camp-snap'
+      path: '/camp-snap'
+      fullPath: '/camp-snap'
+      preLoaderRoute: typeof CampSnapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/post/$slug': {
