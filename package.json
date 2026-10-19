@@ -52,7 +52,7 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.2.3",
     "typescript": "^6.0.3",
-    "vite": "^7.3.2",
+    "vite": "^8.3.4",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^5.0.1",
     "vitest-mock-extended": "^2.0.2"
