@@ -1,6 +1,6 @@
-import matter from "gray-matter";
 import { FileSystem } from "~/lib/filesystem/FileSystem";
 import { LocalFileSystem } from "~/lib/filesystem/LocalFileSystem";
+import { parseFrontMatter } from "~/lib/frontmatter/frontmatter";
 import { POSTS_LOCATION } from "~/lib/static";
 
 export default class Posts {
@@ -45,12 +45,13 @@ export default class Posts {
    */
   private loadPostFromFile = async (filename: string): Promise<Post> => {
     const file = await this.fs.readFile(`${POSTS_LOCATION}/${filename}`);
-    const { data, content } = matter(file);
-    const keywords = data.keywords?.split(",") ?? [];
+    const { data, content } = parseFrontMatter(file.toString("utf8"));
+    const keywords =
+      typeof data.keywords === "string" ? data.keywords.split(",") : [];
 
     return {
       ...data,
-      keywords: keywords.map((s: string) => s.trim()),
+      keywords: keywords.map((s) => s.trim()),
       content,
       excerpt: this.createExcerpt(content),
     } as Post;
