@@ -1,4 +1,4 @@
-import Lottie from "lottie-react";
+import { Lottie } from "lottie-react";
 import * as React from "react";
 import FlatColorLottie from "./FlatColorLottie";
 import LottieFactory from "./LottieFactory";
@@ -18,7 +18,7 @@ export default function HoverLottie({ icon, title, color }: HoverLottieProps) {
 
   return (
     <Lottie
-      animationData={animationData}
+      src={animationData}
       title={title}
       autoplay={isHover}
       onPointerOver={() => setIsHover(true)}
