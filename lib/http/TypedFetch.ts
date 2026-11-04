@@ -1,5 +1,5 @@
 import { HttpError } from "~/lib/http/HttpError";
-import { HttpClient } from "./HttpClient";
+import type { HttpClient } from "./HttpClient";
 
 /**
  * A "Typed" fetch implementation of Http.

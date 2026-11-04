@@ -1,5 +1,5 @@
 import { mock } from "vitest-mock-extended";
-import { FileSystem } from "~/lib/filesystem/FileSystem";
+import type { FileSystem } from "~/lib/filesystem/FileSystem";
 import Posts from "~/lib/post/Posts";
 
 const fsMock = mock<FileSystem>();

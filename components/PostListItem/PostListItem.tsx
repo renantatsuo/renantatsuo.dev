@@ -16,7 +16,7 @@ function PostListItem({
           <Link
             to="/post/$slug"
             params={{ slug }}
-            className="text-accent! border-none! font-bold"
+            className="border-none! font-bold text-accent!"
           >
             {title}
           </Link>

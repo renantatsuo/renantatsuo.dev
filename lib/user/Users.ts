@@ -1,4 +1,4 @@
-import { HttpClient } from "~/lib/http/HttpClient";
+import type { HttpClient } from "~/lib/http/HttpClient";
 import { TypedFetch } from "~/lib/http/TypedFetch";
 import { GITHUB_URL } from "~/lib/static";
 

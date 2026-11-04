@@ -81,9 +81,12 @@ export function createZipArchive(files: ZipEntry[]) {
   endRecordView.setUint32(16, offset, true);
   endRecordView.setUint16(20, 0, true);
 
-  return new Blob([...localParts, ...centralParts, toExactArrayBuffer(endRecord)], {
-    type: "application/zip",
-  });
+  return new Blob(
+    [...localParts, ...centralParts, toExactArrayBuffer(endRecord)],
+    {
+      type: "application/zip",
+    },
+  );
 }
 
 export function sanitizeFileName(name: string) {

@@ -68,10 +68,7 @@ export const Route = createFileRoute("/")({
 function Home() {
   const { user, posts } = Route.useLoaderData();
   return (
-    <main
-      className="bg-background flex w-full max-w-185 flex-col items-start gap-8
-        p-4"
-    >
+    <main className="flex w-full max-w-185 flex-col items-start gap-8 bg-background p-4">
       <UserInfo user={user} />
       {posts.map((post) => (
         <PostListItem key={post.slug} post={post} />

@@ -32,19 +32,19 @@ import {
   applyCampSnapPreviewLutBytes,
   buildCampSnapPreLutBytes,
   CampSnapBrowserError,
+  type CurvePoint,
   cleanupCampSnapProcessingWorker,
   createBaselineCurvePoints,
   curvePointsToLut,
   exportCampSnapFilter,
   exportCampSnapPhotos,
+  type ParsedFilter,
+  type ProcessedCampSnapPhoto,
   parseFlt,
   renderCampSnapPhoto,
   revokeCampSnapPhotoUrls,
   validateCampSnapFilterFile,
   validateCampSnapPhotoBatch,
-  type CurvePoint,
-  type ParsedFilter,
-  type ProcessedCampSnapPhoto,
 } from "~/lib/campsnap";
 import { loadUser } from "~/pages";
 
@@ -432,10 +432,7 @@ function CampSnapPage() {
   }
 
   return (
-    <main
-      className="bg-background flex min-h-screen w-full flex-col items-center
-        gap-8 p-4"
-    >
+    <main className="flex min-h-screen w-full flex-col items-center gap-8 bg-background p-4">
       <header className="w-full max-w-185">
         <UserInfo user={user} />
         <section className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
@@ -444,7 +441,7 @@ function CampSnapPage() {
               <Badge variant="outline" className="mb-3 w-fit">
                 Camp Snap V105
               </Badge>
-              <h1 className="text-accent m-0">Filter Workbench</h1>
+              <h1 className="m-0 text-accent">Filter Workbench</h1>
             </div>
             <small className="text-muted">
               Apply a V105 <code>.flt</code> file to local photos offline,
@@ -757,19 +754,16 @@ function PhotoCarousel({
                     key={photo.id}
                     type="button"
                     onClick={() => onSelectPhoto(photo.id)}
-                    className={`group w-36 shrink-0 rounded-lg border p-1
-                      text-left transition ${
-                        isSelected
-                          ? "border-primary bg-primary/10"
-                          : `border-border bg-background
-                            hover:border-primary/60`
-                      }`}
+                    className={`group w-36 shrink-0 rounded-lg border p-1 text-left transition ${
+                      isSelected
+                        ? "border-primary bg-primary/10"
+                        : `border-border bg-background hover:border-primary/60`
+                    }`}
                   >
                     <img
                       src={photo.thumbnailUrl}
                       alt={`${photo.name} processed thumbnail`}
-                      className="bg-muted aspect-4/3 w-full rounded-md
-                        object-cover"
+                      className="aspect-4/3 w-full rounded-md bg-muted object-cover"
                       decoding="async"
                       loading="lazy"
                     />
@@ -782,11 +776,7 @@ function PhotoCarousel({
             </div>
           </ScrollArea>
         ) : (
-          <div
-            className="border-border bg-background text-muted-foreground flex
-              min-h-32 items-center justify-center rounded-lg border
-              border-dashed text-sm"
-          >
+          <div className="flex min-h-32 items-center justify-center rounded-lg border border-dashed border-border bg-background text-sm text-muted-foreground">
             Process photos to populate the carousel.
           </div>
         )}
@@ -873,10 +863,7 @@ function BeforeAfterPreview({
   if (!displayPhoto) {
     return (
       <Card className="rounded-lg">
-        <CardContent
-          className="text-muted-foreground flex min-h-112 flex-col items-center
-            justify-center gap-3 text-center"
-        >
+        <CardContent className="flex min-h-112 flex-col items-center justify-center gap-3 text-center text-muted-foreground">
           <ImageIcon className="size-10" />
           <p className="m-0 max-w-sm">
             Select a filter and photos, then process the batch to inspect the
@@ -911,9 +898,7 @@ function BeforeAfterPreview({
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={Math.round(comparisonPosition)}
-          className="bg-background relative isolate h-[min(70vh,34rem)] min-h-96
-            cursor-ew-resize touch-none overflow-hidden rounded-lg border
-            select-none"
+          className="relative isolate h-[min(70vh,34rem)] min-h-96 cursor-ew-resize touch-none overflow-hidden rounded-lg border bg-background select-none"
           onPointerDown={handleComparisonPointerDown}
           onPointerMove={handleComparisonPointerMove}
           onKeyDown={handleComparisonKeyDown}
@@ -922,8 +907,7 @@ function BeforeAfterPreview({
             src={displayPhoto.processedUrl}
             alt={`${displayPhoto.name} processed`}
             draggable={false}
-            className="pointer-events-none absolute inset-0 size-full
-              object-contain"
+            className="pointer-events-none absolute inset-0 size-full object-contain"
             decoding="sync"
           />
           <img
@@ -931,31 +915,23 @@ function BeforeAfterPreview({
             alt={`${displayPhoto.name} original`}
             draggable={false}
             decoding="sync"
-            className="pointer-events-none absolute inset-0 size-full
-              object-contain"
+            className="pointer-events-none absolute inset-0 size-full object-contain"
             style={{
               clipPath: `inset(0 ${100 - comparisonPosition}% 0 0)`,
             }}
           />
           <div
-            className="bg-primary pointer-events-none absolute top-0 bottom-0
-              z-10 w-0.5 -translate-x-1/2"
+            className="pointer-events-none absolute top-0 bottom-0 z-10 w-0.5 -translate-x-1/2 bg-primary"
             style={{ left: `${comparisonPosition}%` }}
           >
             <div
-              className="border-background bg-primary text-primary-foreground
-                absolute top-1/2 left-1/2 flex size-10 -translate-x-1/2
-                -translate-y-1/2 items-center justify-center rounded-full
-                border-2 shadow-md"
+              className="absolute top-1/2 left-1/2 flex size-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-background bg-primary text-primary-foreground shadow-md"
               aria-hidden="true"
             >
               <ChevronsLeftRight className="size-5" />
             </div>
           </div>
-          <div
-            className="pointer-events-none absolute right-3 bottom-3 left-3 flex
-              justify-between text-xs font-bold"
-          >
+          <div className="pointer-events-none absolute right-3 bottom-3 left-3 flex justify-between text-xs font-bold">
             <Badge variant="secondary">Original</Badge>
             <Badge variant="secondary">Processed</Badge>
           </div>
@@ -1176,7 +1152,7 @@ function ControlsSidebar({
           )}
 
           {filterState.error && (
-            <p className="text-destructive m-0 text-sm font-bold">
+            <p className="m-0 text-sm font-bold text-destructive">
               {filterState.error}
             </p>
           )}
@@ -1249,13 +1225,9 @@ function PhotoDropzone({
       onDragEnter={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className={`border-border bg-background hover:border-primary/60
-        hover:bg-muted/40 focus-visible:border-ring focus-visible:ring-ring/50
-        flex min-h-36 cursor-pointer flex-col items-center justify-center gap-3
-        rounded-lg border border-dashed p-4 text-center transition-colors
-        outline-none focus-visible:ring-3 ${
-          isDragging ? "border-primary bg-primary/10" : ""
-        }`}
+      className={`flex min-h-36 cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-background p-4 text-center transition-colors outline-none hover:border-primary/60 hover:bg-muted/40 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 ${
+        isDragging ? "border-primary bg-primary/10" : ""
+      }`}
     >
       <Input
         ref={inputRef}
@@ -1267,21 +1239,15 @@ function PhotoDropzone({
         className="sr-only"
         tabIndex={-1}
       />
-      <span
-        className="bg-secondary text-secondary-foreground flex size-10
-          items-center justify-center rounded-lg"
-      >
+      <span className="flex size-10 items-center justify-center rounded-lg bg-secondary text-secondary-foreground">
         <ImageIcon className="size-5" />
       </span>
       <span className="grid gap-1">
         <strong className="text-sm">Drop photos here or click to upload</strong>
-        <span className="text-muted-foreground text-xs">{selectedLabel}</span>
+        <span className="text-xs text-muted-foreground">{selectedLabel}</span>
       </span>
       {previewFiles.length > 0 && (
-        <span
-          className="text-muted-foreground flex max-w-full flex-col gap-1
-            text-xs"
-        >
+        <span className="flex max-w-full flex-col gap-1 text-xs text-muted-foreground">
           {previewFiles.map((file, index) => (
             <span key={`${file.name}-${index}`} className="max-w-64 truncate">
               {file.name}

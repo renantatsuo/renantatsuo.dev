@@ -2,7 +2,7 @@ import Codepen from "./Animations/codepen.json";
 import Github from "./Animations/github.json";
 import Linkedin from "./Animations/linkedin.json";
 import Twitter from "./Animations/twitter.json";
-import Lottie from "./Lottie";
+import type Lottie from "./Lottie";
 import LottieType from "./LottieType";
 
 /**

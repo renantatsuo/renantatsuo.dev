@@ -1,10 +1,10 @@
 import {
+  type CurvePoint,
   createBaselineCurvePoints,
   curvePointsToLut,
   insertCurvePoint,
   moveCurvePoint,
   removeCurvePoint,
-  type CurvePoint,
 } from "~/lib/campsnap/curves";
 
 describe("createBaselineCurvePoints()", () => {

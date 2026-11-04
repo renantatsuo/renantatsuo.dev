@@ -1,4 +1,5 @@
 ---
+
 title: Javascript Series - Typing
 slug: js-series-typing
 createdAt: "2021-05-14"
@@ -80,16 +81,19 @@ So, when we need to check if a given object is an Array, we have a few options:
 
 - use the Array API.
   E.g.
+
   ```js
   Array.isArray([]); // true
   ```
 - use `instanceof`.
   E.g.
+
   ```js
   [] instanceof Array; // true
   ```
 - use `Object.prototype.toString.call()`.
   E.g.
+
   ```js
   Object.prototype.toString.call([]); // "[object Array]"
   ```

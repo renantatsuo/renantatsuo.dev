@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Button } from "~/components/ui/button";
 import {
+  type CurvePoint,
   insertCurvePoint,
   moveCurvePoint,
   removeCurvePoint,
-  type CurvePoint,
 } from "~/lib/campsnap";
 
 export type ChannelKey = "R" | "G" | "B";
@@ -212,12 +212,10 @@ function CampSnapCurveEditor({
                 onActiveChannelChange(channel);
                 setFocusedPointIndex(null);
               }}
-              className={`flex-1 rounded-md border px-2.5 py-1 text-xs font-bold
-              transition-colors ${
+              className={`flex-1 rounded-md border px-2.5 py-1 text-xs font-bold transition-colors ${
                 isActive
                   ? "text-white"
-                  : `border-border bg-background text-muted-foreground
-                    hover:bg-muted/40`
+                  : `border-border bg-background text-muted-foreground hover:bg-muted/40`
               }`}
               style={
                 isActive
@@ -238,8 +236,7 @@ function CampSnapCurveEditor({
         aria-label={`${CHANNEL_LABELS[activeChannel]} channel curve editor`}
         tabIndex={0}
         preserveAspectRatio="none"
-        className="bg-background ring-ring/40 w-full touch-none rounded-md
-          border select-none focus-visible:ring-2 focus-visible:outline-none"
+        className="w-full touch-none rounded-md border bg-background ring-ring/40 select-none focus-visible:ring-2 focus-visible:outline-none"
         style={{ aspectRatio: "1 / 1" }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
@@ -318,7 +315,7 @@ function CampSnapCurveEditor({
         })}
       </svg>
 
-      <p className="text-muted-foreground m-0 text-xs">
+      <p className="m-0 text-xs text-muted-foreground">
         Click empty space to add a point. Alt+click or press Delete on a focused
         point to remove it. Arrow keys nudge the focused point (Shift for x10).
       </p>

@@ -1,4 +1,4 @@
-import Lottie from "./Lottie";
+import type Lottie from "./Lottie";
 
 /**
  * Decorates an animation with a flat color.
@@ -26,7 +26,7 @@ function flattenColor(hexColor, animationData) {
   const color = hexColorToLottieColor(hexColor, 1);
   const string = JSON.stringify(animationData);
   const replaced = string.replace(
-    /\[\d+,\d+,\d+,[\d\.]+\]/g,
+    /\[\d+,\d+,\d+,[\d.]+\]/g,
     `[${color.join(",")}]`,
   );
   return JSON.parse(replaced);

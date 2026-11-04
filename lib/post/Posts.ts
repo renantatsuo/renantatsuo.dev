@@ -1,4 +1,4 @@
-import { FileSystem } from "~/lib/filesystem/FileSystem";
+import type { FileSystem } from "~/lib/filesystem/FileSystem";
 import { LocalFileSystem } from "~/lib/filesystem/LocalFileSystem";
 import { parseFrontMatter } from "~/lib/frontmatter/frontmatter";
 import { POSTS_LOCATION } from "~/lib/static";

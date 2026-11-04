@@ -1,5 +1,5 @@
-import fs from "fs/promises";
-import { FileSystem } from "./FileSystem";
+import fs from "node:fs/promises";
+import type { FileSystem } from "./FileSystem";
 
 /**
  * The FileSystem implementation using local fs module.

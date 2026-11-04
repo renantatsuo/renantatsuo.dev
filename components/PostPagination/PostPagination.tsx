@@ -8,9 +8,7 @@ type PostPaginationProps = {
 function PostPagination({ nextPost, prevPost }: PostPaginationProps) {
   return (
     <article
-      className="mt-4 mb-8 grid w-full grid-cols-1 grid-rows-[auto_auto]
-        justify-end gap-y-4 text-sm sm:grid-cols-2 sm:grid-rows-1
-        sm:justify-between"
+      className="mt-4 mb-8 grid w-full grid-cols-1 grid-rows-[auto_auto] justify-end gap-y-4 text-sm sm:grid-cols-2 sm:grid-rows-1 sm:justify-between"
       style={{ gridTemplate: '"next prev"' }}
     >
       {nextPost && (

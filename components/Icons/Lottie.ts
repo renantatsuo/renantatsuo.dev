@@ -1,4 +1,4 @@
-import LottieType from "./LottieType";
+import type LottieType from "./LottieType";
 
 /**
  * Lottie animation specification.

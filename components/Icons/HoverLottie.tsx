@@ -2,7 +2,8 @@ import { Lottie } from "lottie-react";
 import * as React from "react";
 import FlatColorLottie from "./FlatColorLottie";
 import LottieFactory from "./LottieFactory";
-import LottieType from "./LottieType";
+import type LottieType from "./LottieType";
+
 type HoverLottieProps = {
   icon: LottieType;
   title?: string;

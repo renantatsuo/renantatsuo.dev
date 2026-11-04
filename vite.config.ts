@@ -3,7 +3,7 @@ import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
-import { defineConfig, Plugin } from "vite";
+import { defineConfig, type Plugin } from "vite";
 
 export default defineConfig({
   resolve: {
@@ -45,8 +45,8 @@ async function copyResources(): Promise<Plugin> {
   // this is a workaround to copy the resources to the build directory
   // so the preview server can serve the resources and the prerender can work
   // properly.
-  const fs = await import("fs");
-  const path = await import("path");
+  const fs = await import("node:fs");
+  const path = await import("node:path");
   const posts = path.resolve(import.meta.dirname, "resources");
   const dist = path.resolve(import.meta.dirname, ".vercel/output/resources");
   fs.cpSync(posts, dist, { recursive: true });

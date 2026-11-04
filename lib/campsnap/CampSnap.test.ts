@@ -6,9 +6,9 @@ import {
   applyPerChannelLUT,
   createCampSnapOutputName,
   createCampSnapZipName,
+  type ParsedFilter,
   parseFlt,
   serializeFlt,
-  type ParsedFilter,
 } from "~/lib/campsnap";
 
 describe("parseFlt()", () => {
