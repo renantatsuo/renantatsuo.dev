@@ -5,5 +5,5 @@ import type LottieType from "./LottieType";
  */
 export default interface Lottie {
   type: LottieType;
-  data: Object;
+  data: object;
 }

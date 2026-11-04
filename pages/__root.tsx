@@ -46,7 +46,7 @@ export const Route = createRootRoute({
 function RootLayout() {
   const isProduction = import.meta.env.PROD;
   return (
-    <html className="dark">
+    <html lang="en" className="dark">
       <head>
         {isProduction && <GoogleAnalytics gaId={GA_ID} />}
         <HeadContent />

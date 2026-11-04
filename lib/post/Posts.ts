@@ -12,10 +12,10 @@ export default class Posts {
   }
 
   static getInstance(): Posts {
-    if (!this.instance) {
-      this.instance = new Posts(new LocalFileSystem());
+    if (!Posts.instance) {
+      Posts.instance = new Posts(new LocalFileSystem());
     }
-    return this.instance;
+    return Posts.instance;
   }
 
   /**

@@ -11,6 +11,7 @@ function GoogleAnalytics({ gaId }: GoogleAnalyticsProps) {
       ></script>
       <script
         async
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: static gtag bootstrap; gaId is a build-time constant
         dangerouslySetInnerHTML={{
           __html: `
               window.dataLayer = window.dataLayer || [];

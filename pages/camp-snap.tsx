@@ -187,22 +187,6 @@ function CampSnapPage() {
   const canExportFilter =
     filterState.data !== undefined && !processingState.isProcessing;
 
-  const filterSummary = React.useMemo(() => {
-    if (!filterState.data) {
-      return [];
-    }
-
-    return [
-      ["brightness", filterState.data.brightness],
-      ["contrast", filterState.data.contrast],
-      ["saturation", filterState.data.saturation],
-      ["hue", filterState.data.hue],
-      ["gammaR", filterState.data.gammaR],
-      ["gammaG", filterState.data.gammaG],
-      ["gammaB", filterState.data.gammaB],
-    ] as const;
-  }, [filterState.data]);
-
   React.useEffect(() => {
     processedPhotosRef.current = processedPhotos;
   }, [processedPhotos]);
@@ -579,7 +563,7 @@ function useCampSnapLivePreview({
       return null;
     });
 
-    if (!enabled || !selectedPhoto || !sourceFile || !filter) {
+    if (!enabled || !selectedPhotoId || !sourceFile || !filter) {
       return () => {
         isCurrent = false;
       };
@@ -608,6 +592,7 @@ function useCampSnapLivePreview({
     };
   }, [enabled, selectedPhotoId, sourceFile, filter]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: cacheVersion re-runs the preview once the pre-LUT cache is rebuilt
   React.useEffect(() => {
     if (!enabled || !editedLuts) {
       setPreviewUrl((currentPreviewUrl) => {
@@ -806,6 +791,7 @@ function BeforeAfterPreview({
   const [comparisonPosition, setComparisonPosition] = React.useState(50);
   const displayPhoto = useDecodedBeforeAfterPhoto(photo, overrideProcessedUrl);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: reset the comparison slider when the photo changes
   React.useEffect(() => {
     setComparisonPosition(50);
   }, [photo?.id]);
@@ -1187,48 +1173,26 @@ function PhotoDropzone({
     inputRef.current?.click();
   }
 
-  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (event.key !== "Enter" && event.key !== " ") {
-      return;
-    }
-
-    event.preventDefault();
-    openFilePicker();
-  }
-
-  function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
+  function handleDragOver(event: React.DragEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.dataTransfer.dropEffect = "copy";
     setIsDragging(true);
   }
 
-  function handleDragLeave(event: React.DragEvent<HTMLDivElement>) {
+  function handleDragLeave(event: React.DragEvent<HTMLButtonElement>) {
     if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
       setIsDragging(false);
     }
   }
 
-  function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+  function handleDrop(event: React.DragEvent<HTMLButtonElement>) {
     event.preventDefault();
     setIsDragging(false);
     onDropFiles(Array.from(event.dataTransfer.files));
   }
 
   return (
-    <div
-      role="button"
-      aria-label="Choose photos to process"
-      tabIndex={0}
-      onClick={openFilePicker}
-      onKeyDown={handleKeyDown}
-      onDragOver={handleDragOver}
-      onDragEnter={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-      className={`flex min-h-36 cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-background p-4 text-center transition-colors outline-none hover:border-primary/60 hover:bg-muted/40 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 ${
-        isDragging ? "border-primary bg-primary/10" : ""
-      }`}
-    >
+    <>
       <Input
         ref={inputRef}
         id={inputId}
@@ -1239,25 +1203,41 @@ function PhotoDropzone({
         className="sr-only"
         tabIndex={-1}
       />
-      <span className="flex size-10 items-center justify-center rounded-lg bg-secondary text-secondary-foreground">
-        <ImageIcon className="size-5" />
-      </span>
-      <span className="grid gap-1">
-        <strong className="text-sm">Drop photos here or click to upload</strong>
-        <span className="text-xs text-muted-foreground">{selectedLabel}</span>
-      </span>
-      {previewFiles.length > 0 && (
-        <span className="flex max-w-full flex-col gap-1 text-xs text-muted-foreground">
-          {previewFiles.map((file, index) => (
-            <span key={`${file.name}-${index}`} className="max-w-64 truncate">
-              {file.name}
-            </span>
-          ))}
-          {files.length > previewFiles.length && (
-            <span>+{files.length - previewFiles.length} more</span>
-          )}
+      <button
+        type="button"
+        aria-label="Choose photos to process"
+        onClick={openFilePicker}
+        onDragOver={handleDragOver}
+        onDragEnter={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        className={`flex min-h-36 w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-background p-4 text-center transition-colors outline-none hover:border-primary/60 hover:bg-muted/40 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 ${
+          isDragging ? "border-primary bg-primary/10" : ""
+        }`}
+      >
+        <span className="flex size-10 items-center justify-center rounded-lg bg-secondary text-secondary-foreground">
+          <ImageIcon className="size-5" />
         </span>
-      )}
-    </div>
+        <span className="grid gap-1">
+          <strong className="text-sm">
+            Drop photos here or click to upload
+          </strong>
+          <span className="text-xs text-muted-foreground">{selectedLabel}</span>
+        </span>
+        {previewFiles.length > 0 && (
+          <span className="flex max-w-full flex-col gap-1 text-xs text-muted-foreground">
+            {previewFiles.map((file, index) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: file names can repeat and the list is display-only
+              <span key={`${file.name}-${index}`} className="max-w-64 truncate">
+                {file.name}
+              </span>
+            ))}
+            {files.length > previewFiles.length && (
+              <span>+{files.length - previewFiles.length} more</span>
+            )}
+          </span>
+        )}
+      </button>
+    </>
   );
 }

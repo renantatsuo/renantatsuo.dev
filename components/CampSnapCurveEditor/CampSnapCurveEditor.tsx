@@ -234,6 +234,7 @@ function CampSnapCurveEditor({
         viewBox="0 0 256 256"
         role="application"
         aria-label={`${CHANNEL_LABELS[activeChannel]} channel curve editor`}
+        // biome-ignore lint/a11y/noNoninteractiveTabindex: the editor takes focus to handle keyboard nudges after adding a point
         tabIndex={0}
         preserveAspectRatio="none"
         className="w-full touch-none rounded-md border bg-background ring-ring/40 select-none focus-visible:ring-2 focus-visible:outline-none"
@@ -293,6 +294,7 @@ function CampSnapCurveEditor({
           const isFocused = index === focusedPointIndex;
           return (
             <circle
+              // biome-ignore lint/suspicious/noArrayIndexKey: points are ordered and focus is tracked by index
               key={index}
               role="slider"
               tabIndex={0}

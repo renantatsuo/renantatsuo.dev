@@ -13,7 +13,7 @@ export class TypedFetch implements HttpClient {
     try {
       const asJson = await response.json();
       return asJson as T;
-    } catch (error) {
+    } catch {
       throw new HttpError(500, "Failed to parse JSON response");
     }
   }

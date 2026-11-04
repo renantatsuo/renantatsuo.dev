@@ -12,24 +12,24 @@ function PostPagination({ nextPost, prevPost }: PostPaginationProps) {
       style={{ gridTemplate: '"next prev"' }}
     >
       {nextPost && (
-        <Link to="/post/$slug" params={{ slug: nextPost.slug }}>
-          <a
-            className="max-w-44 cursor-pointer border-none md:m-0 md:max-w-88"
-            style={{ gridArea: "next" }}
-          >
-            {"<= "} {nextPost.title}
-          </a>
+        <Link
+          to="/post/$slug"
+          params={{ slug: nextPost.slug }}
+          className="max-w-44 cursor-pointer border-none md:m-0 md:max-w-88"
+          style={{ gridArea: "next" }}
+        >
+          {"<= "} {nextPost.title}
         </Link>
       )}
       {prevPost && (
-        <Link to="/post/$slug" params={{ slug: prevPost.slug }}>
-          <a
-            className="max-w-44 cursor-pointer border-none md:m-0 md:max-w-88"
-            style={{ gridArea: "prev" }}
-          >
-            {prevPost.title}
-            {" =>"}
-          </a>
+        <Link
+          to="/post/$slug"
+          params={{ slug: prevPost.slug }}
+          className="max-w-44 cursor-pointer border-none md:m-0 md:max-w-88"
+          style={{ gridArea: "prev" }}
+        >
+          {prevPost.title}
+          {" =>"}
         </Link>
       )}
     </article>
