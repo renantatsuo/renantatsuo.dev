@@ -1,5 +1,4 @@
 ---
-
 title: Building a Camp Snap V105 filter tool
 slug: camp-snap-v105-filter-tool
 createdAt: "2026-04-21"
