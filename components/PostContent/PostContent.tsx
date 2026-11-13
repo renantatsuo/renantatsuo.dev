@@ -1,20 +1,19 @@
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CH from "~/components/CodeHighlighter";
+import { formatPostDate } from "~/lib/post/date";
 
 type PostProps = {
   post: Post;
 };
 
 function PostContent({ post }: PostProps) {
-  const postDate = new Date(post.createdAt);
-
   return (
     <article className="w-full [&_:not(pre)_code]:rounded [&_:not(pre)_code]:bg-card [&_:not(pre)_code]:px-1 [&_table]:border-collapse [&_table_td]:border-2 [&_table_td]:border-border [&_table_td]:px-3 [&_table_td]:py-2">
       <header className="flex flex-col">
         <h1 className="m-0 font-bold! text-accent!">{post.title}</h1>
         <small className="text-muted">
-          published on {postDate.toLocaleDateString()}
+          published on {formatPostDate(post.createdAt)}
         </small>
       </header>
       <Markdown

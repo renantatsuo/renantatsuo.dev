@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { formatPostDate } from "~/lib/post/date";
 
 type PostListElementProps = {
   post: Post;
@@ -7,8 +8,6 @@ type PostListElementProps = {
 function PostListItem({
   post: { createdAt, excerpt, slug, title },
 }: PostListElementProps) {
-  const postDate = new Date(createdAt);
-
   return (
     <article className="flex flex-col">
       <header className="flex flex-col">
@@ -21,7 +20,7 @@ function PostListItem({
             {title}
           </Link>
         </h2>
-        <small className="text-muted">{`published on ${postDate.toLocaleDateString()}`}</small>
+        <small className="text-muted">{`published on ${formatPostDate(createdAt)}`}</small>
       </header>
       <p className="my-2!">{excerpt}</p>
     </article>
