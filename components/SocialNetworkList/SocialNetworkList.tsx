@@ -1,4 +1,5 @@
 import HoverLottie from "~/components/Icons/HoverLottie";
+import { ICONS } from "~/components/Icons/icons";
 import type SocialNetwork from "~/lib/user/SocialNetwork";
 
 type SocialNetworkListProps = {
@@ -22,10 +23,13 @@ function SocialNetworkList({ socialNetworks }: SocialNetworkListProps) {
             target="_blank"
             className="flex items-center border-none!"
             rel="noopener"
+            aria-label={name}
+            title={name}
           >
-            <div className="flex h-6">
-              <HoverLottie icon={icon} title={name} color="#FF235B" />
-            </div>
+            <HoverLottie
+              {...ICONS[icon]}
+              className="size-6 text-primary [&_[fill]]:fill-current [&_[stroke]]:stroke-current"
+            />
           </a>
         </li>
       ))}
