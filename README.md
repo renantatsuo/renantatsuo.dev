@@ -16,6 +16,10 @@ Open [http://localhost:3000](http://localhost:3000) to view the site.
 bun run build
 ```
 
+The build reads the profile from the GitHub API. Set `GITHUB_TOKEN` (a
+fine-grained token with no extra permissions is enough) in CI so the request is
+authenticated; without it the build falls back to the anonymous rate limit.
+
 ## Type Checking
 
 ```bash
