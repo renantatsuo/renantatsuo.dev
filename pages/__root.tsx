@@ -1,9 +1,11 @@
+import { TanStackDevtools } from "@tanstack/react-devtools";
 import {
   createRootRoute,
   HeadContent,
   Outlet,
   Scripts,
 } from "@tanstack/react-router";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import GoogleAnalytics from "~/components/GoogleAnalytics";
 import { GA_ID } from "~/lib/static";
 import appCss from "~/styles/globals.css?url";
@@ -62,6 +64,14 @@ function RootLayout() {
       </head>
       <body>
         <Outlet />
+        <TanStackDevtools
+          plugins={[
+            {
+              name: "TanStack Router",
+              render: <TanStackRouterDevtoolsPanel />,
+            },
+          ]}
+        />
         <Scripts />
       </body>
     </html>
