@@ -1,9 +1,12 @@
+import { useHydrated } from "@tanstack/react-router";
 import * as React from "react";
 
 const Giscus = React.lazy(() => import("@giscus/react"));
 
 function Comments() {
-  if (typeof window === "undefined") {
+  // Not `typeof window`: the first client render has to match the server's.
+  const isHydrated = useHydrated();
+  if (!isHydrated) {
     return null;
   }
 
