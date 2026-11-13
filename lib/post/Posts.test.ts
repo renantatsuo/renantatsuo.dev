@@ -1,8 +1,10 @@
-import { mock } from "vitest-mock-extended";
 import type { FileSystem } from "~/lib/filesystem/FileSystem";
 import Posts from "~/lib/post/Posts";
 
-const fsMock = mock<FileSystem>();
+const fsMock = {
+  listFiles: vi.fn<FileSystem["listFiles"]>(),
+  readFile: vi.fn<FileSystem["readFile"]>(),
+} satisfies FileSystem;
 const PostsInstance = new Posts(fsMock);
 
 describe("Test getPosts()", () => {
