@@ -62,7 +62,8 @@ function RootLayout() {
         {isProduction && <GoogleAnalytics gaId={GA_ID} />}
         <HeadContent />
       </head>
-      <body>
+      {/* Browser extensions tag <body> with attributes of their own before hydration. */}
+      <body suppressHydrationWarning>
         <Outlet />
         <TanStackDevtools
           plugins={[
