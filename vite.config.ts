@@ -4,7 +4,7 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { defineConfig, type Plugin } from "vite";
-import { lottiePoster } from "./lib/lottie_poster/vite";
+import { lottiePoster } from "./lib/lottie_poster/vite.ts";
 
 export default defineConfig({
   resolve: {

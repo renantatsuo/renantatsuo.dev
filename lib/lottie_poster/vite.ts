@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import type { Plugin } from "vite";
-import { renderPoster } from "./render";
+import { renderPoster } from "./render.ts";
 
 const QUERY = "?poster";
 // The suffix keeps the id from ending in `.json`, which vite would parse.
