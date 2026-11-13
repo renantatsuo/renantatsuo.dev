@@ -149,6 +149,23 @@ describe("HoverLottie", () => {
     expect(item.goToAndPlay).toHaveBeenCalledTimes(1);
   });
 
+  it("stays quiet when a load fails after the pointer already left", async () => {
+    let fail = (_: Error) => {};
+    animation.mockReturnValueOnce(
+      new Promise((_, reject) => {
+        fail = reject;
+      }),
+    );
+    await render();
+    await pointer("pointerover");
+    await pointer("pointerout");
+
+    await React.act(async () => fail(new Error("offline")));
+
+    expect(poster()).not.toBeNull();
+    expect(item.goToAndStop).not.toHaveBeenCalled();
+  });
+
   it("destroys the animation on unmount", async () => {
     await render();
     await pointer("pointerover");
