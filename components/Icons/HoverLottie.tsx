@@ -20,24 +20,18 @@ const prefersReducedMotion = () =>
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /**
- * An icon that plays its Lottie animation while hovered.
- *
- * The poster is plain svg, so it is part of the server-rendered html. The
- * animation and its engine are only fetched on the first hover.
+ * Plays the animation on the stage while hovered, loading it on first use.
  */
-export default function HoverLottie({
-  poster,
-  animation,
-  className,
-}: HoverLottieProps) {
+function useHoverPlayback(animation: LottieIcon["animation"]) {
   const stage = React.useRef<HTMLSpanElement>(null);
   const player = React.useRef<Promise<AnimationItem> | null>(null);
   const isHovered = React.useRef(false);
-  const [isLive, setIsLive] = React.useState(false);
 
   React.useEffect(
     () => () => {
+      // Destroying empties the stage, which brings the poster back.
       player.current?.then((item) => item.destroy(), ignore);
+      player.current = null;
     },
     [],
   );
@@ -50,14 +44,14 @@ export default function HoverLottie({
     player.current ??= animation().then(({ default: data }) =>
       mountAnimation(container, data),
     );
-    player.current.then(
+    const loading = player.current;
+    loading.then(
       (item) => {
-        setIsLive(true);
         if (isHovered.current) item.goToAndPlay(0, true);
       },
       // The poster stays, and the next hover gets to try again.
       () => {
-        player.current = null;
+        if (player.current === loading) player.current = null;
       },
     );
   };
@@ -67,18 +61,36 @@ export default function HoverLottie({
     player.current?.then((item) => item.goToAndStop(0, true), ignore);
   };
 
+  return { stage, play, rewind };
+}
+
+/**
+ * An icon that plays its Lottie animation while hovered.
+ *
+ * The poster is plain svg, so it is part of the server-rendered html. The
+ * animation and its engine are only fetched on the first hover, and the
+ * poster hides itself (in css) for as long as the stage has something on it.
+ */
+export default function HoverLottie({
+  poster,
+  animation,
+  className,
+}: HoverLottieProps) {
+  const { stage, play, rewind } = useHoverPlayback(animation);
+
   return (
     <span
       aria-hidden="true"
-      className={cn("inline-grid *:col-start-1 *:row-start-1", className)}
+      className={cn(
+        "inline-grid *:col-start-1 *:row-start-1 [&>:not(:empty)+*]:hidden",
+        className,
+      )}
       onPointerEnter={play}
       onPointerLeave={rewind}
     >
       <span ref={stage} />
-      {!isLive && (
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: build-time svg from our own animation files
-        <span dangerouslySetInnerHTML={{ __html: poster }} />
-      )}
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: build-time svg from our own animation files */}
+      <span dangerouslySetInnerHTML={{ __html: poster }} />
     </span>
   );
 }

@@ -26,6 +26,7 @@ function SocialNetworkList({ socialNetworks }: SocialNetworkListProps) {
             aria-label={name}
             title={name}
           >
+            {/* Repaints every painted shape: only fits single-colour icons. */}
             <HoverLottie
               {...ICONS[icon]}
               className="size-6 text-primary [&_[fill]]:fill-current [&_[stroke]]:stroke-current"
