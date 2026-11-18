@@ -1,4 +1,4 @@
-# renantatsuo.dev
+# renan.dev
 
 Personal blog and portfolio website built with TanStack Start.
 

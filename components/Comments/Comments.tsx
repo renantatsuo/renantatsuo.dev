@@ -16,7 +16,7 @@ function Comments() {
     <React.Suspense>
       <Giscus
         id="comments"
-        repo="renantatsuo/renantatsuo.dev"
+        repo="renantatsuo/renan.dev"
         repoId="MDEwOlJlcG9zaXRvcnkyNzQ1MTk4MjY="
         category="Comments"
         categoryId="DIC_kwDOEFzXEs4C1vES"
